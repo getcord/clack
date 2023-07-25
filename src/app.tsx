@@ -1,6 +1,6 @@
-import { CordProvider, ThreadedComments } from "@cord-sdk/react";
-import * as React from "react";
-import ReactDOM from "react-dom/client";
+import { CordProvider, ThreadedComments } from '@cord-sdk/react';
+import * as React from 'react';
+import ReactDOM from 'react-dom/client';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <h1>Hello, ESBUILD ELENA!</h1>
         <Panel />
         <Panel />
-        <ThreadedComments location={{channel: '#general'}} />
+        <ThreadedComments location={{ channel: '#general' }} />
       </div>
     </CordProvider>
   );
@@ -17,5 +17,5 @@ function App() {
 
 const Panel = () => <h2>I'm a Panel</h2>;
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(<App />);
