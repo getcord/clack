@@ -7,8 +7,8 @@ set -x
 
 tsc --watch --preserveWatchOutput &
 
-npm run build-client &
 npm run build-server &
+npm run build-client &
 
 npm run run-server &
 npm run run-client &

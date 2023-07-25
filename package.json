@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-client": "npx esbuild src/app.tsx --bundle --watch --outdir=dist/client --sourcemap --minify",
+    "build-client": "npx esbuild src/client/app.tsx --bundle --watch --outdir=dist/client --sourcemap --minify",
     "build-server": "npx esbuild server/server.ts  --platform=node --bundle --watch --outdir=dist/server",
     "run-server": "nodemon -r dotenv/config -w dist/server/server.js dist/server/server.js",
     "run-client": "npx lite-server",
