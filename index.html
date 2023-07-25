@@ -1,10 +1,37 @@
 <html>
   <head>
     <style type="text/css">
+      @font-face {
+        font-family: Lato;
+        src: url('./src/client/static/lato-bold.woff2') format('woff2');
+        font-weight: 700;
+      }
+
+      @font-face {
+        font-family: Lato;
+        src: url('./src/client/static/lato-regular.woff2') format('woff2');
+        font-weight: 400;
+      } 
+      @font-face {
+        font-family: Lato;
+        src: url('./src/client/static/lato-black.woff2') format('woff2');
+        font-weight: 900;
+      } 
+      
+      * {
+        font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+              Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+              'Helvetica Neue', sans-serif;
+        font-size: 15px;
+      }
+
       html,
       body {
         height: 100vh;
         margin: 0;
+        --cord-font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+          'Helvetica Neue', sans-serif;
       }
     </style>
   </head>
