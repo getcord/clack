@@ -9,4 +9,4 @@ mkdir -p  "$CERTPATH"
 mkcert \
   -cert-file "$CERTPATH"/localhost.crt \
   -key-file "$CERTPATH"/localhost.key \
-  localhost 127.0.0.1 ::1 0.0.0.0
+  local.cord.com localhost 127.0.0.1 ::1 0.0.0.0

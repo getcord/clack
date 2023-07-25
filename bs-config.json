@@ -1,3 +1,7 @@
 {
-	"open": false
+  "open": false,
+  "https": {
+    "key": "localhost/localhost.key",
+    "cert": "localhost/localhost.crt"
+  }
 }
