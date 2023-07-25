@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx esbuild src/app.tsx --bundle --watch --outdir=dist --sourcemap --minify",
-    "server": "npx lite-server",
-    "dev": "tsc --watch --preserveWatchOutput & npm run server & npm run build"
+    "build-client": "npx esbuild src/app.tsx --bundle --watch --outdir=dist/client --sourcemap --minify",
+    "build-server": "npx esbuild server/server.ts  --platform=node --bundle --watch --outdir=dist/server",
+    "run-server": "nodemon -r dotenv/config -w dist/server/server.js dist/server/server.js",
+    "run-client": "npx lite-server",
+    "dev": "tsc --watch --preserveWatchOutput & npm run build-client & npm run build-server & npm run run-client & npm run run-server"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +35,7 @@
     "@types/express": "^4.17.17",
     "esbuild": "^0.18.16",
     "lite-server": "^2.6.1",
-    "tsc-watch": "^6.0.4",
+    "nodemon": "^3.0.1",
     "typescript": "^5.1.6"
   }
 }
