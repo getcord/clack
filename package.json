@@ -8,7 +8,7 @@
     "build-server": "npx esbuild server/server.ts  --platform=node --bundle --watch --outdir=dist/server",
     "run-server": "nodemon -r dotenv/config -w dist/server/server.js dist/server/server.js",
     "run-client": "npx lite-server",
-    "dev": "tsc --watch --preserveWatchOutput & npm run build-client & npm run build-server & npm run run-client & npm run run-server"
+    "dev": "./scripts/dev.sh"
   },
   "keywords": [],
   "author": "",
