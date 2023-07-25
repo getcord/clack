@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/app.tsx --bundle --watch --outdir=dist --sourcemap --minify",
-    "server": "lite-server",
+    "build": "npx esbuild src/app.tsx --bundle --watch --outdir=dist --sourcemap --minify",
+    "server": "npx lite-server",
     "dev": "npm run server & npm run build"
   },
   "keywords": [],
