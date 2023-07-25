@@ -28,7 +28,7 @@
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-jss": "^10.10.0"
+    "styled-components": "^6.0.5"
   },
   "devDependencies": {
     "@cord-sdk/api-types": "^1.1.0",
