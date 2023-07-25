@@ -26,7 +26,11 @@ function App() {
         <Layout>
           <Topbar userID={cordUserID} />
           <Sidebar>
-            <Channels setCurrentChannel={setCurrentChannel} />
+            <SidebarHeader>Clack</SidebarHeader>
+            <Channels
+              setCurrentChannel={setCurrentChannel}
+              currentChannel={currentChannel}
+            />
           </Sidebar>
           <Content>
             <ThreadedComments location={{ channel: currentChannel }} />
@@ -53,6 +57,16 @@ const Layout = styled.div({
 const Sidebar = styled.div({
   gridArea: 'sidebar',
   background: Colors.purple,
+  padding: '0 8px',
+});
+
+const SidebarHeader = styled.div({
+  display: 'flex',
+  borderBottom: `1px solid ${Colors.purple_border}`,
+  color: 'white',
+  position: 'sticky',
+  minHeight: '50px',
+  alignItems: 'center',
 });
 
 const Content = styled.div({
