@@ -2,9 +2,14 @@ import { CordProvider, ThreadedComments } from '@cord-sdk/react';
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
-import { useCordToken } from 'src/hooks/useCordToken';
 import { styled } from 'styled-components';
 import { Channels } from './channels';
+import { useAPIFetch } from 'src/hooks/useAPIFetch';
+
+function useCordToken(): [string | undefined, string | undefined] {
+  const data = useAPIFetch<{ userID: string; token: string }>('/token');
+  return [data?.token, data?.userID];
+}
 
 function App() {
   const [cordToken] = useCordToken();

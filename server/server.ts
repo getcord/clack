@@ -85,6 +85,10 @@ function main() {
     res.send({ token, userID });
   });
 
+  app.get('/channels', (_, res) => {
+    res.send(['general', 'what-the-quack', 'e', 'random']);
+  });
+
   // Catch errors and log them
   app.use(
     '/',

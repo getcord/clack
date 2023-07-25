@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Colors } from 'src/client/Colors';
+import { useAPIFetch } from 'src/hooks/useAPIFetch';
 import { styled } from 'styled-components';
-const channelsOptions = ['general', 'what-the-quack', 'e', 'random'];
 
 export function Channels({
   setCurrentChannel,
 }: {
   setCurrentChannel: (channel: string) => void;
 }) {
+  const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
   return (
     <ChannelsList>
       {channelsOptions.map((option, index) => (
