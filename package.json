@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx lite-server"
+    "build": "esbuild src/app.tsx --bundle --watch --outdir=dist --sourcemap --minify",
+    "server": "lite-server",
+    "dev": "npm run server & npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esbuild": "^0.18.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.16",
+    "lite-server": "^2.6.1"
   }
 }
