@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cord-sdk/react": "^1.1.0",
-    "@cord-sdk/server": "^1.1.0",
+    "@cord-sdk/react": "^1.2.0",
+    "@cord-sdk/server": "^1.2.0",
     "@heroicons/react": "^2.0.18",
     "@types/react": "^18.2.16",
     "@types/react-dom": "^18.2.7",

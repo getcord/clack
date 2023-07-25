@@ -6,4 +6,6 @@ export const Colors = {
   text: '#ffffffb3',
   purple_hover: '#4D2A51',
   blue_active: '#1164A3',
+  lightGray: '#F7F7F7',
+  darkGray: '#626162',
 };

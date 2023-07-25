@@ -1,8 +1,4 @@
-import {
-  CordProvider,
-  ThreadedComments,
-  PresenceObserver,
-} from '@cord-sdk/react';
+import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
@@ -15,6 +11,8 @@ function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<{ userID: string; token: string }>('/token');
   return [data?.token, data?.userID];
 }
+
+import { Chat } from './Chat';
 
 function App() {
   const [cordToken, cordUserID] = useCordToken();
@@ -33,7 +31,7 @@ function App() {
             />
           </Sidebar>
           <Content>
-            <ThreadedComments location={{ channel: currentChannel }} />
+            <Chat channel={currentChannel} />
           </Content>
         </Layout>
       </PresenceObserver>
@@ -77,4 +75,5 @@ const Content = styled.div({
 const Topbar = styled(TopbarDefault)({
   gridArea: 'topbar',
   background: Colors.purple_dark,
+  color: 'white',
 });
