@@ -4,16 +4,21 @@ import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
 import { useCordToken } from 'src/hooks/useCordToken';
 import { styled } from 'styled-components';
+import { Channels } from './channels';
 
 function App() {
   const [cordToken] = useCordToken();
+  const [currentChannel, setCurrentChannel] = React.useState('general');
+
   return (
     <CordProvider clientAuthToken={cordToken}>
       <Layout>
         <Topbar />
-        <Sidebar />
+        <Sidebar>
+          <Channels setCurrentChannel={setCurrentChannel} />
+        </Sidebar>
         <Content>
-          <ThreadedComments location={{ channel: '#general' }} />
+          <ThreadedComments location={{ channel: currentChannel }} />
         </Content>
       </Layout>
     </CordProvider>
