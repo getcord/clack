@@ -6,7 +6,7 @@ export const Topbar = ({
   userID,
   className,
 }: {
-  userID: string | undefined;
+  userID?: string;
   className?: string;
 }) => {
   if (!userID) {
