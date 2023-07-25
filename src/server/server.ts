@@ -12,7 +12,7 @@ const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
 
 const port = 3002; // browsersync currently on 3001
-export const FRONT_END_HOST = 'http://localhost:3000';
+export const FRONT_END_HOST = 'https://local.cord.com:3000';
 
 function main() {
   const app = express();
