@@ -1,10 +1,15 @@
-import { CordProvider, ThreadedComments } from '@cord-sdk/react';
+import {
+  CordProvider,
+  ThreadedComments,
+  PresenceObserver,
+} from '@cord-sdk/react';
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
 import { Channels } from './channels';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { Topbar as TopbarDefault } from './topbar';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<{ userID: string; token: string }>('/token');
@@ -17,15 +22,17 @@ function App() {
 
   return (
     <CordProvider clientAuthToken={cordToken}>
-      <Layout>
-        <Topbar />
-        <Sidebar>
-          <Channels setCurrentChannel={setCurrentChannel} />
-        </Sidebar>
-        <Content>
-          <ThreadedComments location={{ channel: currentChannel }} />
-        </Content>
-      </Layout>
+      <PresenceObserver>
+        <Layout>
+          <Topbar />
+          <Sidebar>
+            <Channels setCurrentChannel={setCurrentChannel} />
+          </Sidebar>
+          <Content>
+            <ThreadedComments location={{ channel: currentChannel }} />
+          </Content>
+        </Layout>
+      </PresenceObserver>
     </CordProvider>
   );
 }
@@ -53,7 +60,7 @@ const Content = styled.div({
   background: 'white',
 });
 
-const Topbar = styled.div({
+const Topbar = styled(TopbarDefault)({
   gridArea: 'topbar',
   background: Colors.purple_dark,
 });
