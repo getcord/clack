@@ -7,7 +7,8 @@ import fs from 'fs';
 import * as dotenv from 'dotenv';
 import { getClientAuthToken } from '@cord-sdk/server';
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+const REPO_ROOT = path.join(__dirname, '..', '..');
+dotenv.config({ path: path.join(REPO_ROOT, '.env') });
 
 export const CORD_APP_ID = process.env.CORD_APP_ID!;
 export const CORD_SIGNING_SECRET = process.env.CORD_SIGNING_SECRET!;
@@ -108,12 +109,8 @@ function main() {
   // to generate these files
   const server = https.createServer(
     {
-      key: fs.readFileSync(
-        path.join(__dirname, '..', 'localhost', 'localhost.key'),
-      ),
-      cert: fs.readFileSync(
-        path.join(__dirname, '..', 'localhost', 'localhost.crt'),
-      ),
+      key: fs.readFileSync(path.join(REPO_ROOT, 'localhost', 'localhost.key')),
+      cert: fs.readFileSync(path.join(REPO_ROOT, 'localhost', 'localhost.crt')),
     },
     app,
   );

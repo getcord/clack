@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
 import { Channels } from './channels';
-import { useAPIFetch } from 'src/hooks/useAPIFetch';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<{ userID: string; token: string }>('/token');

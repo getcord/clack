@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Colors } from 'src/client/Colors';
-import { useAPIFetch } from 'src/hooks/useAPIFetch';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { styled } from 'styled-components';
 
 export function Channels({
