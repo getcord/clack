@@ -6,15 +6,18 @@
   "scripts": {
     "build": "npx esbuild src/app.tsx --bundle --watch --outdir=dist --sourcemap --minify",
     "server": "npx lite-server",
-    "dev": "npm run server & npm run build"
+    "dev": "tsc --watch --preserveWatchOutput & npm run server & npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@cord-sdk/react": "^1.1.0",
+    "@types/react": "^18.2.16",
+    "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "esbuild": "^0.18.16",

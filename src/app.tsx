@@ -17,5 +17,5 @@ function App() {
 
 const Panel = () => <h2>I'm a Panel</h2>;
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(<App />);
