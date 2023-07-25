@@ -17,7 +17,7 @@ if (!CORD_APP_ID || !CORD_SIGNING_SECRET) {
 }
 
 const port = 3002; // browsersync currently on 3001
-export const FRONT_END_HOST = 'https://localhost:3000';
+export const FRONT_END_HOST = 'http://localhost:3000';
 
 function main() {
   const app = express();
@@ -62,7 +62,7 @@ function main() {
   const ORG_NAME = 'Cord Internal';
 
   // Supply client token for front-end Cord UI
-  app.get('/userToken', (_, res) => {
+  app.get('/token', (_, res) => {
     const userID = Object.keys(users)[loginAsUserIndex];
     loginAsUserIndex =
       loginAsUserIndex + 1 >= Object.keys(users).length
@@ -82,7 +82,7 @@ function main() {
       },
     });
 
-    res.send(token);
+    res.send({ token, userID });
   });
 
   // Catch errors and log them
