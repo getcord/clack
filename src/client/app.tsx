@@ -17,14 +17,14 @@ function useCordToken(): [string | undefined, string | undefined] {
 }
 
 function App() {
-  const [cordToken] = useCordToken();
+  const [cordToken, cordUserID] = useCordToken();
   const [currentChannel, setCurrentChannel] = React.useState('general');
 
   return (
     <CordProvider clientAuthToken={cordToken}>
       <PresenceObserver>
         <Layout>
-          <Topbar />
+          <Topbar userID={cordUserID} />
           <Sidebar>
             <Channels setCurrentChannel={setCurrentChannel} />
           </Sidebar>

@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar } from '@cord-sdk/react';
 import { styled } from 'styled-components';
-import { useCordToken } from 'src/hooks/useCordToken';
 
-export const Topbar = ({ className }: { className?: string }) => {
-  const [_, userID] = useCordToken();
+export const Topbar = ({
+  userID,
+  className,
+}: {
+  userID: string | undefined;
+  className?: string;
+}) => {
+  if (!userID) {
+    return null;
+  }
 
   return (
     <Container className={className}>
-      <Avatar userId={userID!} />
+      <Avatar userId={userID} />
     </Container>
   );
 };
