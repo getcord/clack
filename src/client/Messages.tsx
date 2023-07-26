@@ -32,7 +32,7 @@ const StyledMessage = styled(Message)`
     grid-template-columns: auto auto auto auto 1fr auto;
     transition: background-color 0.2s;
     &:hover {
-      background-color: ${Colors.light_gray};
+      background-color: ${Colors.gray_highlight};
     }
   }
   .cord-thread {
@@ -51,15 +51,17 @@ const StyledMessage = styled(Message)`
   .cord-message-options-buttons {
     flex-direction: row;
     background-color: white;
-    border: 1px solid ${Colors.light_gray};
+    box-shadow: inset 0 0 0 1.15px ${Colors.light_gray};
+    border-radius: 8px;
     gap: 0;
     padding: 4px;
     color: ${Colors.dark_gray};
+    margin-top: -50%;
   }
   .cord-message-options-buttons > .cord-button {
     background-color: white;
     &:hover {
-      background-color: ${Colors.light_gray};
+      background-color: ${Colors.gray_highlight};
     }
   }
   .cord-pill,
