@@ -7,7 +7,7 @@ interface MessagesProps {
   channel: string;
 }
 
-export function Messages({ channel }: MessagesProps) {
+export function Threads({ channel }: MessagesProps) {
   const { threads } = thread.useLocationData(
     { channel },
     {

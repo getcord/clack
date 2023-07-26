@@ -2,7 +2,7 @@ import React from 'react';
 import { Composer, notification } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
-import { Messages } from './Messages';
+import { Threads } from './Threads';
 import { showNotification } from 'src/client/notifications';
 
 interface ChatProps {
@@ -40,7 +40,7 @@ export function Chat({ channel }: ChatProps) {
         <ChannelName># {channel}</ChannelName>
       </ChannelDetailsBar>
       <Toolbar> + Add a bookmark</Toolbar>
-      <StyledMessages channel={channel} />
+      <StylesThreads channel={channel} />
       <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
@@ -54,7 +54,7 @@ const Wrapper = styled.div({
   gridTemplateAreas: `
   "channel-details"
   "toolbar"
-  "messages"
+  "threads"
   "composer"`,
   padding: '0',
 });
@@ -78,8 +78,8 @@ const Toolbar = styled.div({
   padding: '10px 20px',
 });
 
-const StyledMessages = styled(Messages)`
-  grid-area: messages;
+const StylesThreads = styled(Threads)`
+  grid-area: threads;
 `;
 
 const StyledComposer = styled(Composer)`
