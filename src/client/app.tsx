@@ -9,6 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Chat } from './Chat';
 import { checkForNotificationsPermissions } from 'src/client/notifications';
 import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
+import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -29,6 +30,7 @@ export function App() {
   const [cordToken, cordUserID] = useCordToken();
   const [showNotifsRequestBanner, setShowNotifsRequestBanner] =
     React.useState(false);
+  const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
 
   const { channelID } = useParams();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export function App() {
   return (
     <CordProvider clientAuthToken={cordToken}>
       <PresenceObserver>
-        <Layout>
+        <Layout className={openThreadID ? 'openThread' : ''}>
           <Topbar userID={cordUserID} />
           <Sidebar>
             <SidebarHeader>Clack</SidebarHeader>
@@ -56,8 +58,12 @@ export function App() {
                 setShowBanner={setShowNotifsRequestBanner}
               />
             )}
-            <Chat channel={channelID || 'general'} />
+            <Chat
+              channel={channelID || 'general'}
+              onOpenThread={setOpenThreadID}
+            />
           </Content>
+          {openThreadID !== null && <ThreadDetails />}
         </Layout>
       </PresenceObserver>
     </CordProvider>
@@ -72,6 +78,13 @@ const Layout = styled.div({
     "sidebar content"`,
   gridTemplateColumns: '260px 1fr',
   gridTemplateRows: '44px 1fr',
+
+  '&.openThread': {
+    gridTemplateAreas: `
+      "topbar topbar topbar"
+      "sidebar content thread"`,
+    gridTemplateColumns: '260px 2fr 1fr',
+  },
 });
 
 const Sidebar = styled.div({
@@ -101,4 +114,8 @@ const Topbar = styled(TopbarDefault)({
   gridArea: 'topbar',
   background: Colors.purple_dark,
   color: 'white',
+});
+
+const ThreadDetails = styled(ThreadDetailsDefault)({
+  gridArea: 'thread',
 });

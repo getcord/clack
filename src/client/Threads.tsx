@@ -4,11 +4,12 @@ import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
 
-interface MessagesProps {
+type ThreadsProps = {
   channel: string;
-}
+  onOpenThread: (threadID: string) => void;
+};
 
-export function Threads({ channel }: MessagesProps) {
+export function Threads({ channel, onOpenThread }: ThreadsProps) {
   const { threads } = thread.useLocationData(
     { channel },
     {
@@ -24,14 +25,19 @@ export function Threads({ channel }: MessagesProps) {
             threadId={thread.id}
             messageId={thread.firstMessage?.id}
           />
-          <ThreadReplies summary={thread} />
+          <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
         </Thread>
       ))}
     </div>
   );
 }
 
-function ThreadReplies({ summary }: { summary: ThreadSummary }) {
+type ThreadRepliesProps = {
+  summary: ThreadSummary;
+  onOpenThread: (threadID: string) => void;
+};
+
+function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
   const numReplies = summary.total - 1;
   if (numReplies < 1) {
     return null;
@@ -39,7 +45,7 @@ function ThreadReplies({ summary }: { summary: ThreadSummary }) {
 
   const replyWord = numReplies === 1 ? 'reply' : 'replies';
   return (
-    <RepliesWrapper>
+    <RepliesWrapper onClick={(_e) => onOpenThread(summary.id)}>
       <Facepile users={summary.repliers} />{' '}
       <RepliesCount>
         {summary.total - 1} {replyWord}

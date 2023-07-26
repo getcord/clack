@@ -7,9 +7,10 @@ import { showNotification } from 'src/client/notifications';
 
 interface ChatProps {
   channel: string;
+  onOpenThread: (threadID: string) => void;
 }
 
-export function Chat({ channel }: ChatProps) {
+export function Chat({ channel, onOpenThread }: ChatProps) {
   // Maybe not the right place for this but when I had it up at the top it was
   // angry that it wasn't being used inside the CordProvider
   // Also doesn't work as expected I think because notifications are not marked as seen when
@@ -39,7 +40,7 @@ export function Chat({ channel }: ChatProps) {
         <ChannelName># {channel}</ChannelName>
       </ChannelDetailsBar>
       <Toolbar> + Add a bookmark</Toolbar>
-      <StylesThreads channel={channel} />
+      <StylesThreads channel={channel} onOpenThread={onOpenThread} />
       <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
