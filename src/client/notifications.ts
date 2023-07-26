@@ -1,4 +1,6 @@
-export async function requestNotificationPermission() {
+export function checkForNotificationsPermissions(
+  showNotifsRequestBanner: () => void,
+) {
   // Check if the browser supports notifications
   if (!('Notification' in window)) {
     console.log('This browser does not support desktop notifications.');
@@ -6,9 +8,15 @@ export async function requestNotificationPermission() {
   }
 
   // Request permission for notifications
-  const permission = await Notification.requestPermission();
+  if (Notification.permission !== 'granted') {
+    showNotifsRequestBanner();
+  }
 
-  console.log({ permission });
+  console.log({ permission: Notification.permission });
+}
+
+export async function requestNotificationsPermissions() {
+  return Notification.requestPermission();
 }
 
 export function showNotification() {

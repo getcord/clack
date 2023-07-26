@@ -7,7 +7,8 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chat } from './Chat';
-import { requestNotificationPermission } from 'src/client/notifications';
+import { checkForNotificationsPermissions } from 'src/client/notifications';
+import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -26,12 +27,16 @@ function useCordToken(): [string | undefined, string | undefined] {
 
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
+  const [showNotifsRequestBanner, setShowNotifsRequestBanner] =
+    React.useState(false);
 
   const { channelID } = useParams();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    void requestNotificationPermission();
+    void checkForNotificationsPermissions(() =>
+      setShowNotifsRequestBanner(true),
+    );
   }, []);
   return (
     <CordProvider clientAuthToken={cordToken}>
@@ -46,6 +51,11 @@ export function App() {
             />
           </Sidebar>
           <Content>
+            {showNotifsRequestBanner && (
+              <NotificationsRequestBanner
+                setShowBanner={setShowNotifsRequestBanner}
+              />
+            )}
             <Chat channel={channelID || 'general'} />
           </Content>
         </Layout>

@@ -22,10 +22,9 @@ export function Chat({ channel }: ChatProps) {
     // Hook has loaded data - initialise ref
     if (oldNotificationCount.current === null) {
       oldNotificationCount.current = summary.unread;
-      // The data says there are new notifications
-      if (summary.unread > 0) {
-        showNotification();
-      }
+      // Don't send notification for the first load, even if there are new messages?
+      // Reasoning is that you will already see them, since you actively just logged in
+      // and so a notification will be unnecessary/annoying
     }
 
     // Or compare to existing value to see if it's increased
