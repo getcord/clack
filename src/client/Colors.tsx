@@ -6,6 +6,8 @@ export const Colors = {
   text: '#ffffffb3',
   purple_hover: '#4D2A51',
   blue_active: '#1164A3',
-  lightGray: '#F7F7F7',
-  darkGray: '#626162',
+  light_gray: '#F7F7F7',
+  dark_gray: '#626162',
+  blue_selected_bg: '#E8F5FA',
+  blue_selected_border: '#1D9BD1',
 };

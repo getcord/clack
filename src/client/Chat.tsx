@@ -77,10 +77,10 @@ const ChannelName = styled.h1({
 });
 
 const Toolbar = styled.div({
-  borderBottom: `1px solid ${Colors.lightGray}`,
-  borderTop: `1px solid ${Colors.lightGray}`,
+  borderBottom: `1px solid ${Colors.light_gray}`,
+  borderTop: `1px solid ${Colors.light_gray}`,
   fontSize: '13px',
-  color: Colors.darkGray,
+  color: Colors.dark_gray,
   padding: '10px 20px',
 });
 
