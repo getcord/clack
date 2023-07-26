@@ -85,7 +85,7 @@ export async function handleGetSlackLogin(req: Request, res: Response) {
     code,
     client_id: SLACK_CLIENT_ID,
     client_secret: SLACK_CLIENT_SECRET,
-    redirect_uri: 'https://local.cord.com:3000/slackRedirect',
+    redirect_uri: makeRedirectUri(req),
   });
 
   if (!slackResponse.ok || !slackResponse.id_token) {
