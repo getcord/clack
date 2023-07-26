@@ -1,14 +1,41 @@
 import React from 'react';
-import { Composer } from '@cord-sdk/react';
+import { Composer, notification } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import { Messages } from './Messages';
+import { showNotification } from 'src/client/notifications';
 
 interface ChatProps {
   channel: string;
 }
 
 export function Chat({ channel }: ChatProps) {
+  // Maybe not the right place for this but when I had it up at the top it was
+  // angry that it wasn't being used inside the CordProvider
+  // Also doesn't work as expected I think because notifications are not marked as seen when
+  // their corresponding messages are marked as seen... todo...
+  const summary = notification.useSummary();
+
+  const oldNotificationCount = React.useRef(summary?.unread ?? null);
+
+  if (summary?.unread !== undefined) {
+    // Hook has loaded data - initialise ref
+    if (oldNotificationCount.current === null) {
+      oldNotificationCount.current = summary.unread;
+      // The data says there are new notifications
+      if (summary.unread > 0) {
+        showNotification();
+      }
+      return;
+    }
+
+    // Or compare to existing value to see if it's increased
+    if (summary.unread > oldNotificationCount.current) {
+      showNotification();
+      return;
+    }
+  }
+
   return (
     <Wrapper>
       <ChannelDetailsBar>

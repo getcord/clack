@@ -24,10 +24,15 @@ function useCordToken(): [string | undefined, string | undefined] {
 }
 
 import { Chat } from './Chat';
+import { requestNotificationPermission } from 'src/client/notifications';
 
 function App() {
   const [cordToken, cordUserID] = useCordToken();
   const [currentChannel, setCurrentChannel] = React.useState('general');
+
+  React.useEffect(() => {
+    void requestNotificationPermission();
+  }, []);
 
   return (
     <CordProvider clientAuthToken={cordToken}>
