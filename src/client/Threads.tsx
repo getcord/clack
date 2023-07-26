@@ -1,7 +1,8 @@
 import React from 'react';
-import { Message, thread } from '@cord-sdk/react';
+import { Message, Timestamp, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
+import type { ThreadSummary } from '@cord-sdk/types';
 
 interface MessagesProps {
   channel: string;
@@ -16,30 +17,59 @@ export function Threads({ channel }: MessagesProps) {
   );
 
   return (
-    <Root>
+    <div>
       {threads.map((thread) => (
-        <StyledMessage
-          key={thread.id}
-          threadId={thread.id}
-          messageId={thread.firstMessage?.id}
-        />
+        <Thread key={thread.id}>
+          <StyledMessage
+            threadId={thread.id}
+            messageId={thread.firstMessage?.id}
+          />
+          <ThreadReplies summary={thread} />
+        </Thread>
       ))}
-    </Root>
+    </div>
   );
 }
 
-const Root = styled.div({});
+function ThreadReplies({ summary }: { summary: ThreadSummary }) {
+  const numReplies = summary.total - 1;
+  if (numReplies < 1) {
+    return null;
+  }
+
+  const replyWord = numReplies === 1 ? 'reply' : 'replies';
+  return (
+    <RepliesWrapper>
+      {summary.total - 1} {replyWord}
+    </RepliesWrapper>
+  );
+}
+
+const Thread = styled.div({
+  padding: '8px 20px',
+  transition: 'background-color 0.2s',
+  '&:hover': {
+    backgroundColor: Colors.gray_highlight,
+  },
+});
+
+const RepliesWrapper = styled.div({
+  marginLeft: '36px',
+  marginTop: '4px',
+  paddingLeft: '8px',
+  paddingTop: '8px',
+  padding: '4px 8px',
+  '&:hover': {
+    backgroundColor: 'white',
+  },
+});
 
 const StyledMessage = styled(Message)`
   .cord-message {
-    padding: 8px 20px;
+    padding: 0;
     align-items: flex-start;
     background-color: inherit;
     grid-template-columns: auto auto auto auto 1fr auto;
-    transition: background-color 0.2s;
-    &:hover {
-      background-color: ${Colors.gray_highlight};
-    }
   }
   .cord-thread {
     border: none;
