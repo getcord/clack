@@ -19,7 +19,7 @@ export function Messages({ channel }: MessagesProps) {
     <Wrapper>
       {threads.map((thread) => (
         <MessageWrapper key={thread.id}>
-          <Message
+          <StyledMessage
             threadId={thread.id}
             messageId={thread.firstMessage?.id}
             onClick={(data) => console.log(data)}
@@ -30,25 +30,41 @@ export function Messages({ channel }: MessagesProps) {
   );
 }
 
+const StyledMessage = styled(Message)`
+  .cord-message {
+    align-items: flex-start;
+    background-color: inherit;
+    grid-template-columns: auto auto auto auto 1fr auto;
+  }
+  .cord-thread {
+    border: none;
+  }
+  .cord-thread-container {
+    height: auto;
+  }
+  .cord-collapsed-thread {
+    border: none;
+  }
+  .cord-avatar-container {
+    height: 36px;
+    width: 36px;
+  }
+`;
+
 const Wrapper = styled.div({
-  'cord-thread': {
-    border: 'none',
-  },
-  '.cord-thread-container': {
-    height: 'auto',
-  },
-  '.cord-collapsed-thread': {
-    border: 'none',
-  },
-  '.cord-avatar-container': {
-    height: '36px',
-    width: '36px',
-  },
-  '.cord-message': {
-    gridTemplateColumns: 'auto auto auto auto 1fr auto',
-    alignItems: 'baseline',
-    backgroundColor: 'inherit',
-  },
+  // 'cord-thread': {
+  //   border: 'none',
+  // },
+  // '.cord-thread-container': {
+  //   height: 'auto',
+  // },
+  // '.cord-collapsed-thread': {
+  //   border: 'none',
+  // },
+  // '.cord-avatar-container': {
+  //   height: '36px',
+  //   width: '36px',
+  // },
 });
 
 const MessageWrapper = styled.div({
