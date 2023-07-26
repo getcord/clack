@@ -77,7 +77,7 @@ const ChannelButtonStyled = styled.button<{
   cursor: pointer;
 
   color: ${({ $activePage, hasUnread }) =>
-    $activePage || hasUnread ? 'white' : `${Colors.text}`};
+    $activePage || hasUnread ? 'white' : `${Colors.inactive_channel}`};
   background: ${(props) =>
     props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
   &:hover {

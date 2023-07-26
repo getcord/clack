@@ -3,7 +3,7 @@ export const Colors = {
   purple_light: '#795679',
   purple_dark: '#350d36',
   purple_border: '#522653',
-  text: '#ffffffb3',
+  inactive_channel: '#ffffffb3',
   purple_hover: '#4D2A51',
   blue_active: '#1164A3',
   light_gray: '#E2E2E2',
