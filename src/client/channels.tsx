@@ -56,7 +56,7 @@ export function Channels({
 const ChannelsList = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px 0;
+  margin: 20px 8px;
 `;
 
 const ChannelButtonStyled = styled.button<{

@@ -86,16 +86,19 @@ const Layout = styled.div({
 const Sidebar = styled.div({
   gridArea: 'sidebar',
   background: Colors.purple,
-  padding: '0 8px',
 });
 
 const SidebarHeader = styled.div({
   display: 'flex',
   borderBottom: `1px solid ${Colors.purple_border}`,
+  borderTop: `1px solid ${Colors.purple_border}`,
   color: 'white',
   position: 'sticky',
   minHeight: '50px',
   alignItems: 'center',
+  padding: '0 16px',
+  fontSize: '18px',
+  fontWeight: 700,
 });
 
 const Content = styled.div({
