@@ -16,7 +16,6 @@ export function Messages({ channel }: MessagesProps) {
   );
 
   return (
-    <Wrapper>
       {threads.map((thread) => (
         <MessageWrapper key={thread.id}>
           <StyledMessage
@@ -26,7 +25,6 @@ export function Messages({ channel }: MessagesProps) {
           />
         </MessageWrapper>
       ))}
-    </Wrapper>
   );
 }
 
@@ -50,22 +48,6 @@ const StyledMessage = styled(Message)`
     width: 36px;
   }
 `;
-
-const Wrapper = styled.div({
-  // 'cord-thread': {
-  //   border: 'none',
-  // },
-  // '.cord-thread-container': {
-  //   height: 'auto',
-  // },
-  // '.cord-collapsed-thread': {
-  //   border: 'none',
-  // },
-  // '.cord-avatar-container': {
-  //   height: '36px',
-  //   width: '36px',
-  // },
-});
 
 const MessageWrapper = styled.div({
   padding: '8px 20px',
