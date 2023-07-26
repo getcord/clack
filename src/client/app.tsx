@@ -1,18 +1,13 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import ReactDOM from 'react-dom/client';
 import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
 import { Channels } from './channels';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
-import { API_HOST } from './consts';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useParams,
-  useNavigate,
-} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Chat } from './Chat';
+import { requestNotificationPermission } from 'src/client/notifications';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -29,10 +24,7 @@ function useCordToken(): [string | undefined, string | undefined] {
   }
 }
 
-import { Chat } from './Chat';
-import { requestNotificationPermission } from 'src/client/notifications';
-
-function App() {
+export function App() {
   const [cordToken, cordUserID] = useCordToken();
 
   const { channelID } = useParams();
@@ -60,35 +52,6 @@ function App() {
       </PresenceObserver>
     </CordProvider>
   );
-}
-
-if (window.location.pathname === '/slackRedirect') {
-  const incomingUrlParams = new URLSearchParams(window.location.search);
-  const outgoingUrlParams = new URLSearchParams({
-    code: incomingUrlParams.get('code') ?? '',
-    state: incomingUrlParams.get('state') ?? '',
-  });
-
-  fetch(`${API_HOST}/slackLogin?${outgoingUrlParams.toString()}`, {
-    credentials: 'include',
-  })
-    .then((res) => res.json())
-    .then((data) => (window.location.href = data.redirect))
-    .catch((error) => console.error('slackRedirect error', error));
-} else {
-  const root = ReactDOM.createRoot(document.getElementById('root')!);
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <App />,
-    },
-    {
-      path: '/:channelID/',
-      element: <App />,
-    },
-  ]);
-
-  root.render(<RouterProvider router={router} />);
 }
 
 const Layout = styled.div({
