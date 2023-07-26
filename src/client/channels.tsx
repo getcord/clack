@@ -39,7 +39,6 @@ export function Channels({
   currentChannel: string;
 }) {
   const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
-  console.log({ channelsOptions });
   return (
     <ChannelsList>
       {channelsOptions.map((option, index) => (
