@@ -1,9 +1,11 @@
 import React from 'react';
-import { Composer, notification } from '@cord-sdk/react';
+import { notification } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import { Threads } from './Threads';
 import { showNotification } from 'src/client/notifications';
+import { PageHeader } from './PageHeader';
+import { StyledComposer } from './StyledCord';
 
 interface ChatProps {
   channel: string;
@@ -37,7 +39,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
   return (
     <Wrapper>
       <ChannelDetailsBar>
-        <ChannelName># {channel}</ChannelName>
+        <PageHeader># {channel}</PageHeader>
       </ChannelDetailsBar>
       <Toolbar> + Add a bookmark</Toolbar>
       <StylesThreads channel={channel} onOpenThread={onOpenThread} />
@@ -61,13 +63,6 @@ const Wrapper = styled.div({
 
 const ChannelDetailsBar = styled.div({
   gridArea: 'channel-details',
-  padding: '0 16px 0 20px',
-});
-
-const ChannelName = styled.h1({
-  fontSize: '18px',
-  fontWeight: '900',
-  lineHeight: '1.33',
 });
 
 const Toolbar = styled.div({
@@ -80,9 +75,4 @@ const Toolbar = styled.div({
 
 const StylesThreads = styled(Threads)`
   grid-area: threads;
-`;
-
-const StyledComposer = styled(Composer)`
-  grid-area: composer;
-  padding: 0 20px 20px;
 `;

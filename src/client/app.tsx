@@ -10,6 +10,7 @@ import { Chat } from './Chat';
 import { checkForNotificationsPermissions } from 'src/client/notifications';
 import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
+import { PageHeader } from './PageHeader';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -32,7 +33,8 @@ export function App() {
     React.useState(false);
   const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
 
-  const { channelID } = useParams();
+  const { channelIDParam } = useParams();
+  const channelID = channelIDParam || 'general';
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -49,7 +51,7 @@ export function App() {
             <SidebarHeader>Clack</SidebarHeader>
             <Channels
               setCurrentChannel={(channel) => navigate(`/${channel}`)}
-              currentChannel={channelID || 'general'}
+              currentChannel={channelID}
             />
           </Sidebar>
           <Content>
@@ -58,12 +60,14 @@ export function App() {
                 setShowBanner={setShowNotifsRequestBanner}
               />
             )}
-            <Chat
-              channel={channelID || 'general'}
-              onOpenThread={setOpenThreadID}
-            />
+            <Chat channel={channelID} onOpenThread={setOpenThreadID} />
           </Content>
-          {openThreadID !== null && <ThreadDetails />}
+          {openThreadID !== null && (
+            <ThreadDetails
+              threadID={openThreadID}
+              onClose={() => setOpenThreadID(null)}
+            />
+          )}
         </Layout>
       </PresenceObserver>
     </CordProvider>
@@ -92,17 +96,13 @@ const Sidebar = styled.div({
   background: Colors.purple,
 });
 
-const SidebarHeader = styled.div({
+const SidebarHeader = styled(PageHeader)({
   display: 'flex',
   borderBottom: `1px solid ${Colors.purple_border}`,
   borderTop: `1px solid ${Colors.purple_border}`,
   color: 'white',
   position: 'sticky',
-  minHeight: '50px',
   alignItems: 'center',
-  padding: '0 16px',
-  fontSize: '18px',
-  fontWeight: 700,
 });
 
 const Content = styled.div({
@@ -116,6 +116,6 @@ const Topbar = styled(TopbarDefault)({
   color: 'white',
 });
 
-const ThreadDetails = styled(ThreadDetailsDefault)({
-  gridArea: 'thread',
-});
+const ThreadDetails = styled(ThreadDetailsDefault)`
+  grid-area: thread;
+`;
