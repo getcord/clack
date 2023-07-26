@@ -42,12 +42,8 @@ export function Chat({ channel }: ChatProps) {
         <ChannelName># {channel}</ChannelName>
       </ChannelDetailsBar>
       <Toolbar> + Add a bookmark</Toolbar>
-      <MessagesWrapper>
-        <Messages channel={channel} />
-      </MessagesWrapper>
-      <ComposerWrapper>
-        <Composer location={{ channel }} showExpanded />
-      </ComposerWrapper>
+      <StyledMessages channel={channel} />
+      <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
 }
@@ -84,11 +80,11 @@ const Toolbar = styled.div({
   padding: '10px 20px',
 });
 
-const MessagesWrapper = styled.div({
-  gridArea: 'messages',
-});
+const StyledMessages = styled(Messages)`
+  grid-area: messages;
+`;
 
-const ComposerWrapper = styled.div({
-  gridArea: 'composer',
-  padding: '0 20px 20px',
-});
+const StyledComposer = styled(Composer)`
+  grid-area: composer;
+  padding: 0 20px 20px;
+`;
