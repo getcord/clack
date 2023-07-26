@@ -77,6 +77,7 @@ export function App() {
 const Layout = styled.div({
   display: 'grid',
   height: '100vh',
+  maxHeight: '100vh',
   gridTemplateAreas: `
     "topbar topbar"
     "sidebar content"`,
@@ -108,6 +109,7 @@ const SidebarHeader = styled(PageHeader)({
 const Content = styled.div({
   gridArea: 'content',
   background: 'white',
+  overflow: 'hidden',
 });
 
 const Topbar = styled(TopbarDefault)({

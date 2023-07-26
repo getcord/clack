@@ -20,17 +20,18 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   );
 
   return (
-    <div>
+    <Root>
       {threads.map((thread) => (
         <MessageList key={thread.id}>
           <StyledMessage
+            key={thread.id}
             threadId={thread.id}
             messageId={thread.firstMessage?.id}
           />
           <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
         </MessageList>
       ))}
-    </div>
+    </Root>
   );
 }
 
@@ -56,6 +57,10 @@ function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     </RepliesWrapper>
   );
 }
+
+const Root = styled.div({
+  overflow: 'scroll',
+});
 
 const RepliesWrapper = styled.div({
   cursor: 'pointer',
