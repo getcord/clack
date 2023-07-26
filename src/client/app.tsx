@@ -33,7 +33,7 @@ export function App() {
     React.useState(false);
   const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
 
-  const { channelIDParam } = useParams();
+  const { channelID: channelIDParam } = useParams();
   const channelID = channelIDParam || 'general';
   const navigate = useNavigate();
 
