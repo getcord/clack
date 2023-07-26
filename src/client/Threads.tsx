@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, Timestamp, thread } from '@cord-sdk/react';
+import { Facepile, Message, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
@@ -40,7 +40,11 @@ function ThreadReplies({ summary }: { summary: ThreadSummary }) {
   const replyWord = numReplies === 1 ? 'reply' : 'replies';
   return (
     <RepliesWrapper>
-      {summary.total - 1} {replyWord}
+      <Facepile users={summary.repliers} />{' '}
+      <RepliesCount>
+        {summary.total - 1} {replyWord}
+      </RepliesCount>
+      <RepliesTimestamp>Last reply 999 days ago</RepliesTimestamp>
     </RepliesWrapper>
   );
 }
@@ -54,6 +58,10 @@ const Thread = styled.div({
 });
 
 const RepliesWrapper = styled.div({
+  cursor: 'pointer',
+  display: 'flex',
+  borderRadius: '6px',
+  gap: '8px',
   marginLeft: '36px',
   marginTop: '4px',
   paddingLeft: '8px',
@@ -62,6 +70,27 @@ const RepliesWrapper = styled.div({
   '&:hover': {
     backgroundColor: 'white',
   },
+  '.cord-facepile': {
+    display: 'inline-flex',
+    gap: '4px',
+  },
+  '.cord-avatar-container': {
+    cursor: 'pointer',
+    height: '24px',
+    width: '24px',
+    marginLeft: 0,
+    boxShadow: 'none',
+  },
+});
+
+const RepliesCount = styled.span({
+  alignSelf: 'center',
+  color: Colors.blue_active,
+});
+
+const RepliesTimestamp = styled.span({
+  alignSelf: 'center',
+  color: Colors.dark_gray,
 });
 
 const StyledMessage = styled(Message)`
