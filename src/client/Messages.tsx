@@ -15,17 +15,15 @@ export function Messages({ channel }: MessagesProps) {
     },
   );
 
-  return (
-      {threads.map((thread) => (
-        <MessageWrapper key={thread.id}>
-          <StyledMessage
-            threadId={thread.id}
-            messageId={thread.firstMessage?.id}
-            onClick={(data) => console.log(data)}
-          />
-        </MessageWrapper>
-      ))}
-  );
+  return threads.map((thread) => (
+    <MessageWrapper key={thread.id}>
+      <StyledMessage
+        threadId={thread.id}
+        messageId={thread.firstMessage?.id}
+        onClick={(data) => console.log(data)}
+      />
+    </MessageWrapper>
+  ));
 }
 
 const StyledMessage = styled(Message)`
