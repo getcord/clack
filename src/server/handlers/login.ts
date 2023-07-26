@@ -20,6 +20,16 @@ const LOGIN_TOKEN_COOKIE_NAME = 'login_token';
 
 const LOGIN_EXPIRES_IN = 60 * 60 * 24; // 1 day
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: true,
+
+  // We need some amount of cross-site on our cookies. Setting `lax` would be
+  // better but all the cookies are set and read due to ajax requests so we need
+  // to do this. We should probably be smarter to avoid this.
+  sameSite: 'none',
+} as const;
+
 if (
   !CORD_APP_ID ||
   !CORD_SIGNING_SECRET ||
@@ -126,10 +136,7 @@ export async function handleGetSlackLogin(req: Request, res: Response) {
       algorithm: 'HS512',
       expiresIn: LOGIN_EXPIRES_IN,
     }),
-    {
-      httpOnly: true,
-      secure: true,
-    },
+    COOKIE_OPTIONS,
   );
 
   res.send({ redirect: state });
@@ -160,6 +167,6 @@ function redirectToSlackLogin(req: Request, res: Response) {
     },
   });
 
-  res.cookie(NONCE_COOKIE_NAME, nonce, { httpOnly: true, secure: true });
+  res.cookie(NONCE_COOKIE_NAME, nonce, COOKIE_OPTIONS);
   res.send({ redirect });
 }
