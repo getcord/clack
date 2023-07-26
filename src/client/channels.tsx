@@ -24,7 +24,7 @@ function ChannelButton({
     <ChannelButtonStyled
       $activePage={isActive}
       onClick={onClick}
-      hasUnread={hasUnread}
+      $hasUnread={hasUnread}
     >
       <ChannelIcon /> <span> {option}</span>
     </ChannelButtonStyled>
@@ -61,7 +61,7 @@ const ChannelsList = styled.div`
 
 const ChannelButtonStyled = styled.button<{
   $activePage?: boolean;
-  hasUnread?: boolean;
+  $hasUnread?: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -70,14 +70,14 @@ const ChannelButtonStyled = styled.button<{
   font-size: 15px;
   line-height: 28px;
   min-heght: 28px;
-  font-weight: ${({ hasUnread }) => (hasUnread ? '900' : '400')};
+  font-weight: ${({ $hasUnread }) => ($hasUnread ? '900' : '400')};
 
   border: none;
   border-radius: 6px;
   cursor: pointer;
 
-  color: ${({ $activePage, hasUnread }) =>
-    $activePage || hasUnread ? 'white' : `${Colors.inactive_channel}`};
+  color: ${({ $activePage, $hasUnread }) =>
+    $activePage || $hasUnread ? 'white' : `${Colors.inactive_channel}`};
   background: ${(props) =>
     props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
   &:hover {
