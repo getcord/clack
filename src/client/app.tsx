@@ -6,10 +6,21 @@ import { styled } from 'styled-components';
 import { Channels } from './channels';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
+import { API_HOST } from './consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
-  const data = useAPIFetch<{ userID: string; token: string }>('/token');
-  return [data?.token, data?.userID];
+  const data = useAPIFetch<
+    { userID: string; token: string } | { redirect: string }
+  >('/token');
+
+  if (!data) {
+    return [undefined, undefined];
+  } else if ('redirect' in data) {
+    window.location.href = data.redirect;
+    return [undefined, undefined];
+  } else {
+    return [data.token, data.userID];
+  }
 }
 
 import { Chat } from './Chat';
@@ -39,8 +50,23 @@ function App() {
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(<App />);
+if (window.location.pathname === '/slackRedirect') {
+  const incomingUrlParams = new URLSearchParams(window.location.search);
+  const outgoingUrlParams = new URLSearchParams({
+    code: incomingUrlParams.get('code') ?? '',
+    state: incomingUrlParams.get('state') ?? '',
+  });
+
+  fetch(`${API_HOST}/slackLogin?${outgoingUrlParams.toString()}`, {
+    credentials: 'include',
+  })
+    .then((res) => res.json())
+    .then((data) => (window.location.href = data.redirect))
+    .catch((error) => console.error('slackRedirect error', error));
+} else {
+  const root = ReactDOM.createRoot(document.getElementById('root')!);
+  root.render(<App />);
+}
 
 const Layout = styled.div({
   display: 'grid',

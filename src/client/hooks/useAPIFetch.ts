@@ -6,12 +6,12 @@ export function useAPIFetch<T extends object = object>(
 ): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);
   useEffect(() => {
-    fetch(`${API_HOST}${path}`)
+    fetch(`${API_HOST}${path}`, { credentials: 'include' })
       .then((resp) => resp.json())
       .then((data) => {
         setData(data);
       })
-      .catch((error) => console.log('useAPIFetch error', error));
+      .catch((error) => console.error('useAPIFetch error', error));
   }, [path]);
 
   return data;
