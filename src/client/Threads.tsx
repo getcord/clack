@@ -106,6 +106,11 @@ const StyledMessage = styled(Message)`
     padding: 4px 6px;
     font-size: 11px;
     line-height: 16px;
+    background-color: #efefef;
+    &:hover {
+      background-color: white;
+      box-shadow: inset 0 0 0 1px ${Colors.dark_gray};
+    }
   }
   .cord-with-icon > svg {
     height: 20px;
@@ -114,14 +119,14 @@ const StyledMessage = styled(Message)`
   .cord-emoji {
     font-size: 16px;
   }
-  .cord-pill > .cord-from-viewer {
+  .cord-pill.cord-from-viewer {
     background-color: ${Colors.blue_selected_bg};
     box-shadow: inset 0 0 0 1.5px ${Colors.blue_selected_border};
     &:hover {
       background-color: ${Colors.blue_selected_bg};
     }
   }
-  .cord-pill > .cord-from-viewer > .cord-count {
+  .cord-pill.cord-from-viewer.cord-count {
     color: ${Colors.blue_active};
   }
 `;
