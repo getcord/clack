@@ -26,13 +26,11 @@ export function Chat({ channel }: ChatProps) {
       if (summary.unread > 0) {
         showNotification();
       }
-      return;
     }
 
     // Or compare to existing value to see if it's increased
     if (summary.unread > oldNotificationCount.current) {
       showNotification();
-      return;
     }
   }
 
