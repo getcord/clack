@@ -7,6 +7,12 @@ import { Channels } from './channels';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
 import { API_HOST } from './consts';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useParams,
+  useNavigate,
+} from 'react-router-dom';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -28,12 +34,13 @@ import { requestNotificationPermission } from 'src/client/notifications';
 
 function App() {
   const [cordToken, cordUserID] = useCordToken();
-  const [currentChannel, setCurrentChannel] = React.useState('general');
+
+  const { channelID } = useParams();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     void requestNotificationPermission();
   }, []);
-
   return (
     <CordProvider clientAuthToken={cordToken}>
       <PresenceObserver>
@@ -42,12 +49,12 @@ function App() {
           <Sidebar>
             <SidebarHeader>Clack</SidebarHeader>
             <Channels
-              setCurrentChannel={setCurrentChannel}
-              currentChannel={currentChannel}
+              setCurrentChannel={(channel) => navigate(`/${channel}`)}
+              currentChannel={channelID || 'general'}
             />
           </Sidebar>
           <Content>
-            <Chat channel={currentChannel} />
+            <Chat channel={channelID || 'general'} />
           </Content>
         </Layout>
       </PresenceObserver>
@@ -70,7 +77,18 @@ if (window.location.pathname === '/slackRedirect') {
     .catch((error) => console.error('slackRedirect error', error));
 } else {
   const root = ReactDOM.createRoot(document.getElementById('root')!);
-  root.render(<App />);
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <App />,
+    },
+    {
+      path: '/:channelID/',
+      element: <App />,
+    },
+  ]);
+
+  root.render(<RouterProvider router={router} />);
 }
 
 const Layout = styled.div({
