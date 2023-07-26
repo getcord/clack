@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-client": "esbuild src/client/app.tsx --outdir=dist/client --bundle --sourcemap --watch=forever --minify",
+    "build-client": "esbuild src/client/app.tsx --outdir=dist/client --bundle --sourcemap --watch=forever",
     "build-server": "esbuild src/server/server.ts --outdir=dist/server --bundle --sourcemap --watch=forever --platform=node",
     "run-server": "nodemon -r dotenv/config -w dist/server/server.js dist/server/server.js",
     "run-client": "lite-server",
