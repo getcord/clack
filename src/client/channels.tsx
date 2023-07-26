@@ -3,6 +3,33 @@ import { Colors } from 'src/client/Colors';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
+import { thread } from '@cord-sdk/react';
+
+function ChannelButton({
+  option,
+  onClick,
+  isActive,
+}: {
+  option: string;
+  onClick: () => void;
+  isActive: boolean;
+}) {
+  const summary = thread.useLocationSummary(
+    { channel: option },
+    { partialMatch: true },
+  );
+  const hasUnread = !!summary?.unread;
+
+  return (
+    <ChannelButtonStyled
+      $activePage={isActive}
+      onClick={onClick}
+      hasUnread={hasUnread}
+    >
+      <ChannelIcon /> <span> {option}</span>
+    </ChannelButtonStyled>
+  );
+}
 
 export function Channels({
   setCurrentChannel,
@@ -17,12 +44,11 @@ export function Channels({
     <ChannelsList>
       {channelsOptions.map((option, index) => (
         <ChannelButton
-          $activePage={currentChannel === option}
+          isActive={currentChannel === option}
           key={index}
           onClick={() => setCurrentChannel(option)}
-        >
-          <ChannelIcon /> <span> {option}</span>
-        </ChannelButton>
+          option={option}
+        />
       ))}
     </ChannelsList>
   );
@@ -34,7 +60,10 @@ const ChannelsList = styled.div`
   margin: 20px 0;
 `;
 
-const ChannelButton = styled.button<{ $activePage?: boolean }>`
+const ChannelButtonStyled = styled.button<{
+  $activePage?: boolean;
+  hasUnread?: boolean;
+}>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -42,12 +71,14 @@ const ChannelButton = styled.button<{ $activePage?: boolean }>`
   font-size: 15px;
   line-height: 28px;
   min-heght: 28px;
+  font-weight: ${({ hasUnread }) => (hasUnread ? '900' : '400')};
 
   border: none;
   border-radius: 6px;
   cursor: pointer;
 
-  color: ${(props) => (props.$activePage ? 'white' : `${Colors.text}`)};
+  color: ${({ $activePage, hasUnread }) =>
+    $activePage || hasUnread ? 'white' : `${Colors.text}`};
   background: ${(props) =>
     props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
   &:hover {
