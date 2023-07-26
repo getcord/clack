@@ -15,14 +15,20 @@ export function Messages({ channel }: MessagesProps) {
     },
   );
 
-  return threads.map((thread) => (
-    <StyledMessage
-      key={thread.id}
-      threadId={thread.id}
-      messageId={thread.firstMessage?.id}
-    />
-  ));
+  return (
+    <Root>
+      {threads.map((thread) => (
+        <StyledMessage
+          key={thread.id}
+          threadId={thread.id}
+          messageId={thread.firstMessage?.id}
+        />
+      ))}
+    </Root>
+  );
 }
+
+const Root = styled.div({});
 
 const StyledMessage = styled(Message)`
   .cord-message {
