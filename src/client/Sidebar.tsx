@@ -3,7 +3,7 @@ import { Colors } from './Colors';
 import { styled } from 'styled-components';
 import { PageHeader } from './PageHeader';
 import { useNavigate } from 'react-router-dom';
-import { Channels } from './channels';
+import { ChannelButton, Channels } from './channels';
 import { NotificationsRequestBanner } from './NotificationsRequestBanner';
 
 type SidebarProps = {
@@ -13,11 +13,15 @@ type SidebarProps = {
 
 export function Sidebar({ className, channelID }: SidebarProps) {
   const navigate = useNavigate();
+  const setCurrentChannel = React.useCallback(
+    (channel: string) => navigate(`/${channel}`),
+    [navigate],
+  );
   return (
     <SidebarWrap className={className}>
       <SidebarHeader>Clack</SidebarHeader>
       <Channels
-        setCurrentChannel={(channel) => navigate(`/${channel}`)}
+        setCurrentChannel={setCurrentChannel}
         currentChannel={channelID}
       />
       <NotificationsRequestBanner />

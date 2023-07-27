@@ -38,6 +38,9 @@ export const StyledMessage = styled(Message)`
       background-color: ${Colors.gray_highlight};
     }
   }
+  .cord-options-menu-trigger {
+    display: none;
+  }
   .cord-pill,
   .cord-add-reaction {
     border-radius: 99px;

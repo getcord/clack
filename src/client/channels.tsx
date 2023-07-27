@@ -6,7 +6,7 @@ import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
 import { UnreadBadge } from './UnreadBadge';
 
-function ChannelButton({
+export function ChannelButton({
   option,
   onClick,
   isActive,

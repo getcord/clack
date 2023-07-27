@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyledMessage } from 'src/client/StyledCord';
 import { ThreadReplies } from 'src/client/ThreadReplies';
-import { CopyLinkButton } from 'src/client/CopyLinkButton';
 import React from 'react';
+import { Options } from 'src/Options';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -71,7 +71,7 @@ export function MessageListItem({
         onMouseLeave={onMouseLeave}
       />
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-      <CopyLinkButton thread={thread} messageHovered={hovered} />
+      <Options thread={thread} hovered={hovered} onOpenThread={onOpenThread} />
     </MessageListItemStyled>
   );
 }
