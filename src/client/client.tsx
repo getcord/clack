@@ -6,14 +6,11 @@ import { SlackRedirect } from './SlackRedirect';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const router = createBrowserRouter([
+  { path: '/slackRedirect', element: <SlackRedirect /> },
   {
     path: '/',
     element: <App />,
     children: [
-      {
-        path: '/slackRedirect',
-        element: <SlackRedirect />,
-      },
       {
         path: '/:channelID/thread/:threadID/',
         element: <App />,
