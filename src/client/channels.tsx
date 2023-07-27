@@ -81,6 +81,7 @@ const ChannelButtonStyled = styled.button<{
   grid-template-columns: auto 1fr auto;
   grid-template-areas: 'hash channel-name unread-badge';
   grid-gap: 8px;
+  padding: 0 10px 0 16px;
 
   font-size: 15px;
   line-height: 28px;
