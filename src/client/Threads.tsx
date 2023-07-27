@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { StyledMessage } from './StyledCord';
-import { MessageList } from './MessageList';
+import { MessageListItem } from './MessageListItem';
 
 type ThreadsProps = {
   channel: string;
@@ -27,14 +27,14 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   return (
     <Root>
       {threads.map((thread) => (
-        <MessageList key={thread.id}>
+        <MessageListItem key={thread.id}>
           <StyledMessage
             key={thread.id}
             threadId={thread.id}
             messageId={thread.firstMessage?.id}
           />
           <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-        </MessageList>
+        </MessageListItem>
       ))}
     </Root>
   );

@@ -4,7 +4,7 @@ import { PageHeader } from './PageHeader';
 import { Colors } from './Colors';
 import { thread } from '@cord-sdk/react/';
 import { StyledComposer, StyledMessage } from './StyledCord';
-import { MessageList } from './MessageList';
+import { MessageListItem } from './MessageListItem';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 
 export type ThreadDetailsProps = {
@@ -21,7 +21,7 @@ export function ThreadDetails({
   const { messages, loading, hasMore, fetchMore } =
     thread.useThreadData(threadID);
 
-  // TEMPORARY HACK TO LOAD ALL THREADS
+  // TEMPORARY HACK TO LOAD ALL MESSAGES
   if (!loading && hasMore) {
     void fetchMore(100);
   }
@@ -34,15 +34,13 @@ export function ThreadDetails({
           <StyledXMarkIcon />
         </CloseButton>
       </ThreadDetailsHeader>
-      <StyledMessageList>
+      <MessageListWrapper>
         {messages.map((message) => (
-          <StyledMessage
-            key={message.id}
-            threadId={threadID}
-            messageId={message.id}
-          />
+          <MessageListItem key={message.id}>
+            <StyledMessage threadId={threadID} messageId={message.id} />
+          </MessageListItem>
         ))}
-      </StyledMessageList>
+      </MessageListWrapper>
       <StyledComposer threadId={threadID} showExpanded />
     </ThreadDetailsWrapper>
   );
@@ -73,6 +71,6 @@ const ThreadDetailsHeader = styled(PageHeader)({
   padding: '8px 8px 8px 16px',
 });
 
-const StyledMessageList = styled(MessageList)({
+const MessageListWrapper = styled.div({
   marginBottom: '12px',
 });
