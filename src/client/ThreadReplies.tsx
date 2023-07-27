@@ -85,5 +85,6 @@ const StyledTimestamp = styled(Timestamp)`
   .cord-timestamp {
     display: inline;
     color: ${Colors.gray_dark};
+    font-size: 13px;
   }
 `;
