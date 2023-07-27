@@ -56,14 +56,14 @@ const CloseButton = styled.div({
 });
 
 const ThreadDetailsWrapper = styled.div({
-  borderLeft: `1px solid ${Colors.light_gray}`,
+  borderLeft: `1px solid ${Colors.gray_light}`,
 });
 
 const ThreadDetailsHeader = styled(PageHeader)({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  borderBottom: `1px solid ${Colors.light_gray}`,
+  borderBottom: `1px solid ${Colors.gray_light}`,
   padding: '8px 8px 8px 16px',
 });
 

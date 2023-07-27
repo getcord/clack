@@ -25,11 +25,11 @@ export const StyledMessage = styled(Message)`
   .cord-message-options-buttons {
     flex-direction: row;
     background-color: white;
-    box-shadow: inset 0 0 0 1.15px ${Colors.light_gray};
+    box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
     border-radius: 8px;
     gap: 0;
     padding: 4px;
-    color: ${Colors.dark_gray};
+    color: ${Colors.gray_dark};
     margin-top: -50%;
   }
   .cord-message-options-buttons > .cord-button {
@@ -47,7 +47,7 @@ export const StyledMessage = styled(Message)`
     background-color: #efefef;
     &:hover {
       background-color: white;
-      box-shadow: inset 0 0 0 1px ${Colors.dark_gray};
+      box-shadow: inset 0 0 0 1px ${Colors.gray_dark};
     }
   }
   .cord-with-icon > svg {
@@ -69,8 +69,15 @@ export const StyledMessage = styled(Message)`
   }
 `;
 
-export const StyledComposer = styled(Composer)({
-  display: 'block',
-  gridArea: 'composer',
-  padding: '0 20px 20px',
-});
+export const StyledComposer = styled(Composer)`
+  display: block;
+  grid-area: composer;
+  padding: 0 20px 20px;
+  .cord-composer {
+    border-radius: 8px;
+  }
+  .cord-composer:focus-within {
+    box-shadow: none;
+    border: 1px solid ${Colors.gray_border};
+  }
+`;

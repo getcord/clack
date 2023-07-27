@@ -98,5 +98,5 @@ const RepliesCount = styled.span({
 
 const RepliesTimestamp = styled.span({
   alignSelf: 'center',
-  color: Colors.dark_gray,
+  color: Colors.gray_dark,
 });

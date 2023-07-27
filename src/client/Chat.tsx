@@ -69,10 +69,10 @@ const Toolbar = styled.div({
   zIndex: 1,
   backgroundColor: 'white',
   inset: '42px 0 auto',
-  borderBottom: `1px solid ${Colors.light_gray}`,
-  borderTop: `1px solid ${Colors.light_gray}`,
+  borderBottom: `1px solid ${Colors.gray_light}`,
+  borderTop: `1px solid ${Colors.gray_light}`,
   fontSize: '13px',
-  color: Colors.dark_gray,
+  color: Colors.gray_dark,
   padding: '10px 20px',
 });
 
