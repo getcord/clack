@@ -21,7 +21,7 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
 
   return (
     <Root>
-      {threads.reverse().map((thread) => (
+      {threads.map((thread) => (
         <MessageList key={thread.id}>
           <StyledMessage
             key={thread.id}
