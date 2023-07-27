@@ -48,6 +48,7 @@ const StyledXMarkIcon = styled(XMarkIcon)({
 });
 
 const CloseButton = styled.div({
+  lineHeight: 0,
   padding: '8px',
   '&:hover': {
     backgroundColor: Colors.gray_highlight,
