@@ -17,8 +17,7 @@ function useCordToken(): [string | undefined, string | undefined] {
   if (!data) {
     return [undefined, undefined];
   } else if ('redirect' in data) {
-    //window.location.href = data.redirect;
-    console.log('redirect to', data.redirect);
+    window.location.href = data.redirect;
     return [undefined, undefined];
   } else {
     return [data.token, data.userID];
