@@ -66,6 +66,7 @@ const buttonStyle = css`
   color: ${Colors.gray_dark};
   cursor: pointer;
   border-radius: 8px;
+  padding: 0;
 
   &:hover {
     background-color: ${Colors.gray_highlight};
