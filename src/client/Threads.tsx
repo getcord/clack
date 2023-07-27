@@ -15,13 +15,13 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   const { threads } = thread.useLocationData(
     { channel },
     {
-      sortDirection: 'ascending',
+      sortDirection: 'descending',
     },
   );
 
   return (
     <Root>
-      {threads.map((thread) => (
+      {threads.reverse().map((thread) => (
         <MessageList key={thread.id}>
           <StyledMessage
             key={thread.id}
