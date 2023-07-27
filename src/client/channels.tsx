@@ -4,6 +4,7 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
+import { UnreadBadge } from './UnreadBadge';
 
 function ChannelButton({
   option,
@@ -26,7 +27,10 @@ function ChannelButton({
       onClick={onClick}
       $hasUnread={hasUnread}
     >
-      <ChannelIcon /> <span> {option}</span>
+      <ChannelIcon /> <ChannelName>{option}</ChannelName>
+      {summary?.unreadSubscribed ? (
+        <StyledUnreadBadge count={summary?.unreadSubscribed} />
+      ) : null}
     </ChannelButtonStyled>
   );
 }
@@ -59,13 +63,24 @@ const ChannelsList = styled.div`
   margin: 20px 8px;
 `;
 
+const ChannelName = styled.span`
+  grid-area: channel-name;
+  text-align: left;
+`;
+
+const StyledUnreadBadge = styled(UnreadBadge)`
+  grid-area: unread-badge;
+`;
+
 const ChannelButtonStyled = styled.button<{
   $activePage?: boolean;
   $hasUnread?: boolean;
 }>`
-  display: flex;
+  display: grid;
   align-items: center;
-  gap: 8px;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'hash channel-name unread-badge';
+  grid-gap: 8px;
 
   font-size: 15px;
   line-height: 28px;
@@ -87,6 +102,7 @@ const ChannelButtonStyled = styled.button<{
 `;
 
 const ChannelIcon = styled(HashtagIcon)`
+  grid-area: hash;
   width: 16px;
   height: 16px;
 `;
