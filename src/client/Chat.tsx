@@ -59,7 +59,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 const Wrapper = styled.div({
   display: 'grid',
   height: '100%',
-  gridTemplateRows: 'auto auto 1fr auto',
+  gridTemplateRows: 'auto 1fr auto',
   gridTemplateAreas: `
   "channel-details"
   "threads"
