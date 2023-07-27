@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { notification } from '@cord-sdk/react';
 import { styled, keyframes } from 'styled-components';
 import { Colors } from './Colors';
 import { Threads } from './Threads';
-import { showNotification } from 'src/client/notifications';
 import { PageHeader } from './PageHeader';
 import { StyledComposer } from './StyledCord';
 
@@ -14,29 +12,6 @@ interface ChatProps {
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
   const [showToolbar, setShowToolbar] = useState(true);
-  // Maybe not the right place for this but when I had it up at the top it was
-  // angry that it wasn't being used inside the CordProvider
-  // Also doesn't work as expected I think because notifications are not marked as seen when
-  // their corresponding messages are marked as seen... todo...
-  const summary = notification.useSummary();
-
-  const oldNotificationCount = React.useRef(summary?.unread ?? null);
-
-  if (summary?.unread !== undefined) {
-    // Hook has loaded data - initialise ref
-    if (oldNotificationCount.current === null) {
-      oldNotificationCount.current = summary.unread;
-      // Don't send notification for the first load, even if there are new messages?
-      // Reasoning is that you will already see them, since you actively just logged in
-      // and so a notification will be unnecessary/annoying
-    }
-
-    // Or compare to existing value to see if it's increased
-    if (summary.unread > oldNotificationCount.current) {
-      showNotification();
-    }
-  }
-
   return (
     <Wrapper>
       <ChannelDetailsBar>

@@ -1,3 +1,5 @@
+import type { NotificationVariables } from '@cord-sdk/types';
+
 export function getBrowserNotificationPermission(): NotificationPermission {
   if (!('Notification' in window)) {
     // Really, unsupported, but same behaviour for us right now.
@@ -11,15 +13,28 @@ export async function requestNotificationsPermissions() {
   return Notification.requestPermission();
 }
 
-export function showNotification() {
+function notifHeaderString(header: NotificationVariables['header']) {
+  let result = '';
+  for (const node of header) {
+    if ('userID' in node) {
+      result += node.userID;
+    } else if ('text' in node) {
+      result += node.text;
+    }
+  }
+
+  return result;
+}
+
+export function showNotification(notif: NotificationVariables) {
   // Check if notifications are allowed
   if (getBrowserNotificationPermission() !== 'granted') {
     return;
   }
 
   // Create the notification
-  const notification = new Notification('New message!', {
-    body: 'You have a new message on Clack',
+  const notification = new Notification('Clack', {
+    body: notifHeaderString(notif.header),
     icon: './src/client/static/clack.png', // not working?
   });
 

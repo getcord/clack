@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { Chat } from './Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
+import { BrowserNotificationBridge } from './BrowserNotificationBridge';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -39,6 +40,7 @@ export function App() {
       enableTasks={false}
       enableAnnotations={false}
     >
+      <BrowserNotificationBridge />
       <PresenceObserver>
         <Layout className={openThreadID ? 'openThread' : ''}>
           <Topbar userID={cordUserID} />
