@@ -4,6 +4,8 @@ import { PageHeader } from './PageHeader';
 import { Colors } from './Colors';
 import { thread } from '@cord-sdk/react/';
 import { StyledComposer, StyledMessage } from './StyledCord';
+import { MessageList } from './MessageList';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 export type ThreadDetailsProps = {
   className?: string;
@@ -22,9 +24,11 @@ export function ThreadDetails({
     <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
         <span>Thread</span>
-        <span onClick={onClose}>X</span>
+        <CloseButton onClick={onClose}>
+          <StyledXMarkIcon />
+        </CloseButton>
       </ThreadDetailsHeader>
-      <div>
+      <StyledMessageList>
         {messages.map((message) => (
           <StyledMessage
             key={message.id}
@@ -32,11 +36,23 @@ export function ThreadDetails({
             messageId={message.id}
           />
         ))}
-      </div>
-      <StyledComposer threadId={threadID} />
+      </StyledMessageList>
+      <StyledComposer threadId={threadID} showExpanded />
     </ThreadDetailsWrapper>
   );
 }
+
+const StyledXMarkIcon = styled(XMarkIcon)({
+  width: '24px',
+  height: '24px',
+});
+
+const CloseButton = styled.div({
+  padding: '8px',
+  '&:hover': {
+    backgroundColor: Colors.gray_highlight,
+  },
+});
 
 const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.light_gray}`,
@@ -45,5 +61,11 @@ const ThreadDetailsWrapper = styled.div({
 const ThreadDetailsHeader = styled(PageHeader)({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
   borderBottom: `1px solid ${Colors.light_gray}`,
+  padding: '8px 8px 8px 16px',
+});
+
+const StyledMessageList = styled(MessageList)({
+  marginBottom: '12px',
 });

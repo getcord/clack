@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { StyledMessage } from './StyledCord';
+import { MessageList } from './MessageList';
 
 type ThreadsProps = {
   channel: string;
@@ -21,13 +22,13 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   return (
     <div>
       {threads.map((thread) => (
-        <Thread key={thread.id}>
+        <MessageList key={thread.id}>
           <StyledMessage
             threadId={thread.id}
             messageId={thread.firstMessage?.id}
           />
           <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-        </Thread>
+        </MessageList>
       ))}
     </div>
   );
@@ -55,14 +56,6 @@ function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     </RepliesWrapper>
   );
 }
-
-const Thread = styled.div({
-  padding: '8px 20px',
-  transition: 'background-color 0.2s',
-  '&:hover': {
-    backgroundColor: Colors.gray_highlight,
-  },
-});
 
 const RepliesWrapper = styled.div({
   cursor: 'pointer',

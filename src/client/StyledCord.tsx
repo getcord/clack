@@ -69,7 +69,8 @@ export const StyledMessage = styled(Message)`
   }
 `;
 
-export const StyledComposer = styled(Composer)`
-  grid-area: composer;
-  padding: 0 20px 20px;
-`;
+export const StyledComposer = styled(Composer)({
+  display: 'block',
+  gridArea: 'composer',
+  padding: '0 20px 20px',
+});
