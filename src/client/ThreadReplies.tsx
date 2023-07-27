@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facepile } from '@cord-sdk/react';
+import { Facepile, Timestamp } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { Colors } from './Colors';
@@ -37,11 +37,14 @@ const RepliesWrapper = styled.div({
 const RepliesCount = styled.span({
   alignSelf: 'center',
   color: Colors.blue_active,
+  fontSize: '13px',
+  fontWeight: 700,
 });
 
 const RepliesTimestamp = styled.span({
   alignSelf: 'center',
   color: Colors.gray_dark,
+  fontSize: '13px',
 });
 
 type ThreadRepliesProps = {
@@ -55,6 +58,15 @@ export function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     return null;
   }
 
+  // ignoring ts here as lastMessage hasn't been deployed to types packages yet! (27/07)
+  const lastReplyTime =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    summary.lastMessage.updatedTimestamp ??
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    summary.lastMessage.createdTimestamp;
+
   const replyWord = numReplies === 1 ? 'reply' : 'replies';
   return (
     <RepliesWrapper onClick={(_e) => onOpenThread(summary.id)}>
@@ -62,7 +74,16 @@ export function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
       <RepliesCount>
         {summary.total - 1} {replyWord}
       </RepliesCount>
-      <RepliesTimestamp>Last reply 999 days ago</RepliesTimestamp>
+      <RepliesTimestamp>
+        Last reply <StyledTimestamp value={lastReplyTime} />
+      </RepliesTimestamp>
     </RepliesWrapper>
   );
 }
+
+const StyledTimestamp = styled(Timestamp)`
+  .cord-timestamp {
+    display: inline;
+    color: ${Colors.gray_dark};
+  }
+`;
