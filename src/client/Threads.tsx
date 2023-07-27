@@ -69,7 +69,7 @@ export function Threads({
 }
 
 const Root = styled.div({
-  overflow: 'scroll',
+  overflowY: 'scroll',
   paddingBottom: '20px',
   display: 'flex',
   flexDirection: 'column-reverse',
