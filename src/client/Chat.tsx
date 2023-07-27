@@ -41,7 +41,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeader># {channel}</PageHeader>
-        <Toolbar showToolbar={showToolbar}> + Add a bookmark</Toolbar>
+        <Toolbar $showToolbar={showToolbar}> + Add a bookmark</Toolbar>
       </ChannelDetailsBar>
       <StyledThreads
         onScrollUp={() => {
@@ -93,13 +93,13 @@ const slideOut = keyframes`
   }
 `;
 
-const Toolbar = styled.div<{ showToolbar: boolean }>`
+const Toolbar = styled.div<{ $showToolbar: boolean }>`
   position: absolute;
   width: 100%;
   bottom: 0;
-  animation: ${({ showToolbar }) => (showToolbar ? slideIn : slideOut)} 0.5s
+  animation: ${({ $showToolbar }) => ($showToolbar ? slideIn : slideOut)} 0.5s
     ease;
-  translate: ${({ showToolbar }) => `0% ${showToolbar ? '100%' : '-100%'}`};
+  translate: ${({ $showToolbar }) => `0% ${$showToolbar ? '100%' : '-100%'}`};
   z-index: 1;
   background-color: white;
   border-top: 1px solid ${Colors.gray_light};

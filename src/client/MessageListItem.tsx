@@ -14,7 +14,7 @@ const backgroundFadeToNone = keyframes`
   to {background-color: none;}
 `;
 
-export const MessageListItemStyled = styled.div<{ isHighlighted?: boolean }>`
+export const MessageListItemStyled = styled.div<{ $isHighlighted?: boolean }>`
   padding: 8px 20px;
   position: relative;
   transition: background-color 0.2s;
@@ -24,8 +24,8 @@ export const MessageListItemStyled = styled.div<{ isHighlighted?: boolean }>`
   }
 
   position: relative;
-  ${({ isHighlighted }) =>
-    isHighlighted
+  ${({ $isHighlighted }) =>
+    $isHighlighted
       ? css`
           animation: ${backgroundFadeToNone} 4s;
         `
@@ -62,7 +62,7 @@ export function MessageListItem({
   return (
     <MessageListItemStyled
       ref={ref}
-      isHighlighted={thread.id === threadIDParam}
+      $isHighlighted={thread.id === threadIDParam}
     >
       <StyledMessage
         threadId={thread.id}
