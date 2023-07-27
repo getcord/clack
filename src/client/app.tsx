@@ -32,7 +32,13 @@ export function App() {
   const channelID = channelIDParam || 'general';
 
   return (
-    <CordProvider clientAuthToken={cordToken}>
+    <CordProvider
+      clientAuthToken={cordToken}
+      cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
+      enableSlack={false}
+      enableTasks={false}
+      enableAnnotations={false}
+    >
       <PresenceObserver>
         <Layout className={openThreadID ? 'openThread' : ''}>
           <Topbar userID={cordUserID} />
