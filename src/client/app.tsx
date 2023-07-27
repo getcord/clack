@@ -2,15 +2,14 @@ import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
 import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
-import { Channels } from './channels';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Chat } from './Chat';
 import { checkForNotificationsPermissions } from 'src/client/notifications';
 import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
-import { PageHeader } from './PageHeader';
+import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -35,7 +34,6 @@ export function App() {
 
   const { channelID: channelIDParam } = useParams();
   const channelID = channelIDParam || 'general';
-  const navigate = useNavigate();
 
   React.useEffect(() => {
     void checkForNotificationsPermissions(() =>
@@ -47,13 +45,7 @@ export function App() {
       <PresenceObserver>
         <Layout className={openThreadID ? 'openThread' : ''}>
           <Topbar userID={cordUserID} />
-          <Sidebar>
-            <SidebarHeader>Clack</SidebarHeader>
-            <Channels
-              setCurrentChannel={(channel) => navigate(`/${channel}`)}
-              currentChannel={channelID}
-            />
-          </Sidebar>
+          <Sidebar channelID={channelID} />
           <Content>
             {showNotifsRequestBanner && (
               <NotificationsRequestBanner
@@ -92,19 +84,9 @@ const Layout = styled.div({
   },
 });
 
-const Sidebar = styled.div({
-  gridArea: 'sidebar',
-  background: Colors.purple,
-});
-
-const SidebarHeader = styled(PageHeader)({
-  display: 'flex',
-  borderBottom: `1px solid ${Colors.purple_border}`,
-  borderTop: `1px solid ${Colors.purple_border}`,
-  color: 'white',
-  position: 'sticky',
-  alignItems: 'center',
-});
+const Sidebar = styled(DefaultSidebar)`
+  grid-area: sidebar;
+`;
 
 const Content = styled.div({
   gridArea: 'content',
