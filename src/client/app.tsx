@@ -6,8 +6,6 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
 import { useParams } from 'react-router-dom';
 import { Chat } from './Chat';
-import { checkForNotificationsPermissions } from 'src/client/notifications';
-import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 
@@ -28,18 +26,11 @@ function useCordToken(): [string | undefined, string | undefined] {
 
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
-  const [showNotifsRequestBanner, setShowNotifsRequestBanner] =
-    React.useState(false);
   const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
 
   const { channelID: channelIDParam } = useParams();
   const channelID = channelIDParam || 'general';
 
-  React.useEffect(() => {
-    void checkForNotificationsPermissions(() =>
-      setShowNotifsRequestBanner(true),
-    );
-  }, []);
   return (
     <CordProvider clientAuthToken={cordToken}>
       <PresenceObserver>
@@ -47,11 +38,6 @@ export function App() {
           <Topbar userID={cordUserID} />
           <Sidebar channelID={channelID} />
           <Content>
-            {showNotifsRequestBanner && (
-              <NotificationsRequestBanner
-                setShowBanner={setShowNotifsRequestBanner}
-              />
-            )}
             <Chat
               key={channelID}
               channel={channelID}

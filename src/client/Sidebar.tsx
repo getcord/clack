@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { PageHeader } from './PageHeader';
 import { useNavigate } from 'react-router-dom';
 import { Channels } from './channels';
+import { NotificationsRequestBanner } from './NotificationsRequestBanner';
 
 type SidebarProps = {
   className?: string;
@@ -19,11 +20,16 @@ export function Sidebar({ className, channelID }: SidebarProps) {
         setCurrentChannel={(channel) => navigate(`/${channel}`)}
         currentChannel={channelID}
       />
+      <NotificationsRequestBanner />
     </SidebarWrap>
   );
 }
 
-const SidebarWrap = styled.div({ background: Colors.purple });
+const SidebarWrap = styled.div({
+  background: Colors.purple,
+  display: 'flex',
+  flexDirection: 'column',
+});
 
 const SidebarHeader = styled(PageHeader)({
   display: 'flex',

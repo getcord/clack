@@ -1,39 +1,36 @@
 import * as React from 'react';
-import { requestNotificationsPermissions } from 'src/client/notifications';
+import {
+  getBrowserNotificationPermission,
+  requestNotificationsPermissions,
+} from 'src/client/notifications';
 import { styled } from 'styled-components';
 
-export const NotificationsRequestBanner = ({
-  setShowBanner,
-}: {
-  setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+export function NotificationsRequestBanner() {
+  const [showBanner, setShowBanner] = React.useState(
+    getBrowserNotificationPermission() === 'default',
+  );
+
+  if (!showBanner) {
+    return null;
+  }
+
   return (
     <Container
-      onClick={() =>
+      onClick={() => {
         requestNotificationsPermissions()
-          .then((permission) => {
-            if (permission === 'granted') {
-              console.log('Notifications permission granted');
-              setShowBanner(false);
-            } else {
-              console.log(
-                'Notifications permission denied - the browser may have done this automatically',
-              );
-              setShowBanner(false);
-            }
+          .then((_permission) => {
+            setShowBanner(false);
           })
-          .catch(console.error)
-      }
+          .catch(console.error);
+      }}
     >
-      <span>Click here to enable browser notifications from Clack</span>
+      Click here to enable browser notifications from Clack
     </Container>
   );
-};
+}
 
 const Container = styled.div({
-  position: 'fixed',
-  top: 0,
-  left: 0,
+  marginTop: 'auto',
   backgroundColor: 'yellow',
   padding: '4px',
   width: '100%',
