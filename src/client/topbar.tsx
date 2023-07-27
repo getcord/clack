@@ -15,7 +15,7 @@ export const Topbar = ({
 
   return (
     <Container className={className}>
-      <Avatar userId={userID} />
+      <Avatar userId={userID} enableTooltip />
     </Container>
   );
 };
