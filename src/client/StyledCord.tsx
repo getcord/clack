@@ -40,8 +40,9 @@ export const StyledMessage = styled(Message)`
   }
   .cord-pill,
   .cord-add-reaction {
-    border-radius: 12px;
-    padding: 4px 6px;
+    border-radius: 99px;
+    gap: 4px;
+    padding: 4px 8px;
     font-size: 11px;
     line-height: 16px;
     background-color: #efefef;
@@ -56,6 +57,9 @@ export const StyledMessage = styled(Message)`
   }
   .cord-emoji {
     font-size: 16px;
+  }
+  .cord-pill > .cord-count {
+    font-size: 11px;
   }
   .cord-pill.cord-from-viewer {
     background-color: ${Colors.blue_selected_bg};

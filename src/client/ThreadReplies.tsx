@@ -17,6 +17,10 @@ const RepliesWrapper = styled.div({
   '&:hover': {
     backgroundColor: 'white',
   },
+  'cord-facepile': {
+    display: 'flex',
+    alignItems: 'center',
+  },
   '.cord-facepile': {
     display: 'inline-flex',
     gap: '4px',
