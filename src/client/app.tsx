@@ -52,7 +52,11 @@ export function App() {
                 setShowBanner={setShowNotifsRequestBanner}
               />
             )}
-            <Chat channel={channelID} onOpenThread={setOpenThreadID} />
+            <Chat
+              key={channelID}
+              channel={channelID}
+              onOpenThread={setOpenThreadID}
+            />
           </Content>
           {openThreadID !== null && (
             <ThreadDetails
