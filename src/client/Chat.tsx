@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { notification } from '@cord-sdk/react';
-import { styled } from 'styled-components';
+import { styled, keyframes } from 'styled-components';
 import { Colors } from './Colors';
 import { Threads } from './Threads';
 import { showNotification } from 'src/client/notifications';
@@ -13,6 +13,7 @@ interface ChatProps {
 }
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
+  const [showToolbar, setShowToolbar] = useState(true);
   // Maybe not the right place for this but when I had it up at the top it was
   // angry that it wasn't being used inside the CordProvider
   // Also doesn't work as expected I think because notifications are not marked as seen when
@@ -40,9 +41,16 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeader># {channel}</PageHeader>
+        <Toolbar showToolbar={showToolbar}> + Add a bookmark</Toolbar>
       </ChannelDetailsBar>
-      <Toolbar> + Add a bookmark</Toolbar>
-      <StyledThreads channel={channel} onOpenThread={onOpenThread} />
+      <StyledThreads
+        onScrollUp={() => {
+          setShowToolbar(false);
+        }}
+        onScrollToBottom={() => setShowToolbar(true)}
+        channel={channel}
+        onOpenThread={onOpenThread}
+      />
       <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
@@ -54,7 +62,6 @@ const Wrapper = styled.div({
   gridTemplateRows: 'auto auto 1fr auto',
   gridTemplateAreas: `
   "channel-details"
-  "toolbar"
   "threads"
   "composer"`,
   padding: '0',
@@ -62,17 +69,46 @@ const Wrapper = styled.div({
 
 const ChannelDetailsBar = styled.div({
   gridArea: 'channel-details',
+  borderBottom: `1px solid ${Colors.gray_light}`,
+  position: 'relative',
+  backgroundColor: 'white',
+  zIndex: 2,
 });
 
-const Toolbar = styled.div({
-  gridArea: 'toolbar',
-  backgroundColor: 'white',
-  borderBottom: `1px solid ${Colors.gray_light}`,
-  borderTop: `1px solid ${Colors.gray_light}`,
-  fontSize: '13px',
-  color: Colors.gray_dark,
-  padding: '10px 20px',
-});
+const slideIn = keyframes`
+  0% {
+    translate: 0 -100%;
+  }
+  100% {
+    translate: 0% 100%;
+  }
+`;
+
+const slideOut = keyframes`
+  0% {
+    translate: 0% 100%;
+  }
+  100% {
+    translate: 0% -100%;
+  }
+`;
+
+const Toolbar = styled.div<{ showToolbar: boolean }>`
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  animation: ${({ showToolbar }) => (showToolbar ? slideIn : slideOut)} 0.5s
+    ease;
+  translate: ${({ showToolbar }) => `0% ${showToolbar ? '100%' : '-100%'}`};
+  z-index: 1;
+  background-color: white;
+  border-top: 1px solid ${Colors.gray_light};
+  border-bottom: 1px solid ${Colors.gray_light};
+  font-size: 13px;
+  color: ${Colors.gray_dark};
+  padding: 10px 20px;
+`;
+// position: absolute;
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;

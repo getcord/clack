@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Facepile, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
@@ -9,9 +9,16 @@ import { MessageListItem } from './MessageListItem';
 type ThreadsProps = {
   channel: string;
   onOpenThread: (threadID: string) => void;
+  onScrollUp: () => void;
+  onScrollToBottom: () => void;
 };
 
-export function Threads({ channel, onOpenThread }: ThreadsProps) {
+export function Threads({
+  channel,
+  onOpenThread,
+  onScrollUp,
+  onScrollToBottom,
+}: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
     {
@@ -23,9 +30,36 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   if (!loading && hasMore) {
     void fetchMore(100);
   }
+  const threadListRef = useRef<HTMLDivElement>(null);
+
+  const isAtBottom = () => {
+    if (!threadListRef.current) {
+      return false;
+    }
+    return threadListRef.current.scrollTop >= 0;
+  };
+
+  const scrollUpHandler = useCallback(() => {
+    if (!isAtBottom()) {
+      onScrollUp();
+      return;
+    }
+    if (isAtBottom()) {
+      setTimeout(() => isAtBottom() && onScrollToBottom(), 100);
+    }
+  }, [onScrollUp, onScrollToBottom]);
+
+  useEffect(() => {
+    const el = threadListRef.current;
+    if (!el) {
+      return;
+    }
+    el.addEventListener('scroll', scrollUpHandler);
+    return () => el.removeEventListener('scroll', scrollUpHandler);
+  }, [scrollUpHandler]);
 
   return (
-    <Root>
+    <Root ref={threadListRef}>
       {threads.map((thread) => (
         <MessageListItem key={thread.id}>
           <StyledMessage
