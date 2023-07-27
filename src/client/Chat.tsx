@@ -49,12 +49,12 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 }
 
 const Wrapper = styled.div({
-  position: 'relative',
   display: 'grid',
   height: '100%',
-  gridTemplateRows: '42px 1fr auto',
+  gridTemplateRows: 'auto auto 1fr auto',
   gridTemplateAreas: `
   "channel-details"
+  "toolbar"
   "threads"
   "composer"`,
   padding: '0',
@@ -65,10 +65,8 @@ const ChannelDetailsBar = styled.div({
 });
 
 const Toolbar = styled.div({
-  position: 'absolute',
-  zIndex: 1,
+  gridArea: 'toolbar',
   backgroundColor: 'white',
-  inset: '42px 0 auto',
   borderBottom: `1px solid ${Colors.gray_light}`,
   borderTop: `1px solid ${Colors.gray_light}`,
   fontSize: '13px',
