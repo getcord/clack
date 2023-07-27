@@ -6,6 +6,7 @@ import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { useCallback, useState } from 'react';
 import React from 'react';
+import { Tooltip } from 'react-tooltip';
 
 export const OPTIONS_ICON_HEIGHT = 20;
 export const OPTIONS_ICON_WIDTH = 20;
@@ -30,8 +31,21 @@ export function Options({ thread, hovered, onOpenThread }: OptionsProps) {
     (hovered || optionsHovered) && (
       <OptionsStyled onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <CopyLinkButton thread={thread} />
-        <Reactions threadId={thread.id} messageId={thread.firstMessage?.id} />
-        <OptionsButton onClick={() => onOpenThread(thread.id)}>
+        <Tooltip id="reactions-button" />
+        <div
+          data-tooltip-id="reactions-button"
+          data-tooltip-content="Find another reaction"
+          data-tooltip-place="top"
+        >
+          <Reactions threadId={thread.id} messageId={thread.firstMessage?.id} />
+        </div>
+        <Tooltip id="options-button" />
+        <OptionsButton
+          onClick={() => onOpenThread(thread.id)}
+          data-tooltip-id="options-button"
+          data-tooltip-content="Reply in thread"
+          data-tooltip-place="top"
+        >
           <ChatBubbleOvalLeftEllipsisIcon
             height={OPTIONS_ICON_HEIGHT}
             width={OPTIONS_ICON_WIDTH}

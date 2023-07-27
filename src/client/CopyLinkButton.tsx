@@ -8,6 +8,7 @@ import {
   OPTIONS_ICON_WIDTH,
   OptionsButton,
 } from 'src/Options';
+import { Tooltip } from 'react-tooltip';
 
 export function CopyLinkButton({ thread }: { thread: ThreadSummary }) {
   const onCopyButtonClick = useCallback(() => {
@@ -17,12 +18,19 @@ export function CopyLinkButton({ thread }: { thread: ThreadSummary }) {
   }, [thread]);
 
   return (
-    <OptionsButton>
-      <ClipboardDocumentIcon
-        onClick={onCopyButtonClick}
-        width={OPTIONS_ICON_WIDTH}
-        height={OPTIONS_ICON_HEIGHT}
-      />
-    </OptionsButton>
+    <>
+      <Tooltip id="copy-button" />
+      <OptionsButton
+        data-tooltip-id="copy-button"
+        data-tooltip-content="Copy link"
+        data-tooltip-place="top"
+      >
+        <ClipboardDocumentIcon
+          onClick={onCopyButtonClick}
+          width={OPTIONS_ICON_WIDTH}
+          height={OPTIONS_ICON_HEIGHT}
+        />
+      </OptionsButton>
+    </>
   );
 }
