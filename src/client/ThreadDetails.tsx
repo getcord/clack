@@ -18,7 +18,13 @@ export function ThreadDetails({
   threadID,
   onClose,
 }: ThreadDetailsProps) {
-  const { messages } = thread.useThreadData(threadID);
+  const { messages, loading, hasMore, fetchMore } =
+    thread.useThreadData(threadID);
+
+  // TEMPORARY HACK TO LOAD ALL THREADS
+  if (!loading && hasMore) {
+    void fetchMore(100);
+  }
 
   return (
     <ThreadDetailsWrapper className={className}>

@@ -12,12 +12,17 @@ type ThreadsProps = {
 };
 
 export function Threads({ channel, onOpenThread }: ThreadsProps) {
-  const { threads } = thread.useLocationData(
+  const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
     {
       sortDirection: 'descending',
     },
   );
+
+  // TEMPORARY HACK TO LOAD ALL THREADS
+  if (!loading && hasMore) {
+    void fetchMore(100);
+  }
 
   return (
     <Root>
