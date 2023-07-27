@@ -9,14 +9,20 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-  },
-  {
-    path: '/slackRedirect',
-    element: <SlackRedirect />,
-  },
-  {
-    path: '/:channelID/',
-    element: <App />,
+    children: [
+      {
+        path: '/slackRedirect',
+        element: <SlackRedirect />,
+      },
+      {
+        path: '/:channelID/thread/:threadID/',
+        element: <App />,
+      },
+      {
+        path: '/:channelID/',
+        element: <App />,
+      },
+    ],
   },
 ]);
 

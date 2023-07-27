@@ -4,7 +4,7 @@ import { PageHeader } from './PageHeader';
 import { Colors } from './Colors';
 import { thread } from '@cord-sdk/react/';
 import { StyledComposer, StyledMessage } from './StyledCord';
-import { MessageListItem } from './MessageListItem';
+import { MessageListItemStyled } from './MessageListItem';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 
 export type ThreadDetailsProps = {
@@ -36,9 +36,9 @@ export function ThreadDetails({
       </ThreadDetailsHeader>
       <MessageListWrapper>
         {messages.map((message) => (
-          <MessageListItem key={message.id}>
+          <MessageListItemStyled key={message.id}>
             <StyledMessage threadId={threadID} messageId={message.id} />
-          </MessageListItem>
+          </MessageListItemStyled>
         ))}
       </MessageListWrapper>
       <StyledComposer threadId={threadID} showExpanded />
