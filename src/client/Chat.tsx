@@ -42,7 +42,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         <PageHeader># {channel}</PageHeader>
       </ChannelDetailsBar>
       <Toolbar> + Add a bookmark</Toolbar>
-      <StylesThreads channel={channel} onOpenThread={onOpenThread} />
+      <StyledThreads channel={channel} onOpenThread={onOpenThread} />
       <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
@@ -76,6 +76,6 @@ const Toolbar = styled.div({
   padding: '10px 20px',
 });
 
-const StylesThreads = styled(Threads)`
+const StyledThreads = styled(Threads)`
   grid-area: threads;
 `;

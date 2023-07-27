@@ -60,6 +60,9 @@ function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
 
 const Root = styled.div({
   overflow: 'scroll',
+  paddingBottom: '20px',
+  display: 'flex',
+  flexDirection: 'column-reverse',
 });
 
 const RepliesWrapper = styled.div({
