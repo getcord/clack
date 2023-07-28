@@ -8,12 +8,12 @@ import * as dotenv from 'dotenv';
 import { handleGetSlackLogin, handleGetToken } from './handlers/login';
 import { handleGetChannels } from './handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
+import { FRONT_END_HOST } from 'src/server/consts';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
 
 const port = 3002; // browsersync currently on 3001
-export const FRONT_END_HOST = 'https://local.cord.com:3000';
 
 function logAndSendError(error: unknown, res: Response) {
   console.error('😢 An error occurred', error);

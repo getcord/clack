@@ -5,11 +5,15 @@ import { nanoid } from 'nanoid';
 import * as url from 'url';
 import * as Slack from '@slack/web-api';
 import * as jwt from 'jsonwebtoken';
+import {
+  CORD_APP_ID,
+  CORD_SIGNING_SECRET,
+  ORG_ID,
+  ORG_NAME,
+} from 'src/server/consts';
 
 const slackClient = new Slack.WebClient();
 
-const CORD_APP_ID = process.env.CORD_APP_ID!;
-const CORD_SIGNING_SECRET = process.env.CORD_SIGNING_SECRET!;
 const LOGIN_SIGNING_SECRET = CORD_SIGNING_SECRET; // TODO: should this be a different key?
 const SLACK_CLIENT_ID = process.env.SLACK_CLIENT_ID!;
 const SLACK_TEAM = process.env.SLACK_TEAM!;
@@ -46,9 +50,6 @@ type LoginTokenData = {
   email: string;
   picture: string;
 };
-
-const ORG_ID = 'clack_all';
-const ORG_NAME = 'All Clack Users';
 
 export function handleGetToken(req: Request, res: Response) {
   const loginToken = getCookie(req, LOGIN_TOKEN_COOKIE_NAME);
