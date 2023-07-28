@@ -10,6 +10,7 @@ import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails'
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 import { BrowserNotificationBridge } from './BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/ThreadsList';
+import { Helmet } from 'react-helmet';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -35,42 +36,49 @@ export function App() {
   const channelID = !openPanel ? channelIDParam || 'general' : '';
 
   return (
-    <CordProvider
-      clientAuthToken={cordToken}
-      cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
-      enableSlack={false}
-      enableTasks={false}
-      enableAnnotations={false}
-    >
-      <BrowserNotificationBridge />
-      <PresenceObserver>
-        <Layout className={openThreadID ? 'openThread' : ''}>
-          <Topbar userID={cordUserID} />
-          <Sidebar
-            channelID={channelID}
-            setOpenPanel={setOpenPanel}
-            openPanel={openPanel}
-          />
-          <Content>
-            {!openPanel && (
-              <Chat
-                key={channelID}
-                channel={channelID}
-                onOpenThread={setOpenThreadID}
+    <>
+      <Helmet>
+        <title>#{channelID} - Clack</title>
+      </Helmet>
+      <CordProvider
+        clientAuthToken={cordToken}
+        cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
+        enableSlack={false}
+        enableTasks={false}
+        enableAnnotations={false}
+      >
+        <BrowserNotificationBridge />
+        <PresenceObserver>
+          <Layout className={openThreadID ? 'openThread' : ''}>
+            <Topbar userID={cordUserID} />
+            <Sidebar
+              channelID={channelID}
+              setOpenPanel={setOpenPanel}
+              openPanel={openPanel}
+            />
+            <Content>
+              {!openPanel && (
+                <Chat
+                  key={channelID}
+                  channel={channelID}
+                  onOpenThread={setOpenThreadID}
+                />
+              )}
+
+              {openPanel === 'threads' && (
+                <ThreadsList cordUserID={cordUserID} />
+              )}
+            </Content>
+            {openThreadID !== null && (
+              <ThreadDetails
+                threadID={openThreadID}
+                onClose={() => setOpenThreadID(null)}
               />
             )}
-
-            {openPanel === 'threads' && <ThreadsList cordUserID={cordUserID} />}
-          </Content>
-          {openThreadID !== null && (
-            <ThreadDetails
-              threadID={openThreadID}
-              onClose={() => setOpenThreadID(null)}
-            />
-          )}
-        </Layout>
-      </PresenceObserver>
-    </CordProvider>
+          </Layout>
+        </PresenceObserver>
+      </CordProvider>
+    </>
   );
 }
 
