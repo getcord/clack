@@ -46,4 +46,17 @@ module.exports = {
       { allowAny: true, allowNumber: true },
     ],
   },
+  overrides: [
+    {
+      files: ['src/client/**'],
+      rules: {
+        'no-console': [
+          'error',
+          {
+            allow: ['warn', 'error'],
+          },
+        ],
+      },
+    },
+  ],
 };

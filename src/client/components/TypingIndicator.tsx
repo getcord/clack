@@ -14,7 +14,6 @@ export function TypingIndicator({ threadID }: { threadID: string }) {
   React.useEffect(() => {
     const getTyping = () => {
       const y = summary?.typing.map((id) => getUserName(id)) || [];
-      console.log(y);
       setTypingUsers(y);
     };
     // Set up the interval to fetch data every 3 seconds
