@@ -62,6 +62,12 @@ export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
                       borderRadius: '12px',
                     }}
                   />
+                  {thread.typing.length > 0 && (
+                    <TextingIndicator>
+                      {thread.typing.join(', ')}
+                      {thread.typing.length == 1 ? 'is' : 'are'} typing
+                    </TextingIndicator>
+                  )}{' '}
                 </ThreadWrapper>
               );
             })
@@ -126,6 +132,10 @@ const SubText = styled.span({
   color: '#616061',
   margin: '5px 4px',
 });
+
+const TextingIndicator = styled(SubText)`
+  margin-left: 16px;
+`;
 
 const ChannelName = styled.h1({
   fontSize: '18px',
