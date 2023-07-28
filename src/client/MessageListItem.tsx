@@ -65,9 +65,14 @@ export function MessageListItem({
   ) => {
     // For some reason typescript doesn't recognise that e.target has more than
     // event listeners 🤷‍♀️
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (e.target.className.includes('cord-avatar')) {
+    if (
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      e.target.className.includes('cord-avatar') ||
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      e.target.className.includes('cord-author-name')
+    ) {
       setShowProfileDetails(true);
     }
   };
@@ -81,7 +86,10 @@ export function MessageListItem({
         // event listeners 🤷‍♀️
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        !e.target.className.includes('cord-avatar' || 'profile-details-modal')
+        !e.target.className.includes('cord-avatar') ||
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        !e.target.className.includes('profile-details-modal')
       ) {
         setShowProfileDetails(false);
       }
