@@ -1,26 +1,13 @@
-import { getServerAuthToken } from '@cord-sdk/server';
 import type { ThreadVariables } from '@cord-sdk/api-types';
 import type { Request, Response } from 'express';
-import {
-  CORD_APP_ID,
-  CORD_SIGNING_SECRET,
-  CORD_API_URL,
-} from 'src/server/consts';
+import { ORG_ID } from 'src/server/consts';
+import { fetchCordRESTApi } from '../fetchCordRESTApi';
 
 export async function handleGetMyCordThreads(_: Request, res: Response) {
-  if (!CORD_APP_ID || !CORD_SIGNING_SECRET) {
-    res.sendStatus(400);
-    return;
-  }
-
-  const serverAuthToken = getServerAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET);
-  const response = await fetch(`${CORD_API_URL}threads/`, {
-    headers: { Authorization: `Bearer ${serverAuthToken}` },
-  });
-
-  const myThreads = (await response.json()).filter(
+  const allThreads = await fetchCordRESTApi<ThreadVariables[]>('threads');
+  const myThreads = allThreads.filter(
     //notes: would have been useful to filter this directly in the filters
-    (thread: ThreadVariables) => thread.organizationID === 'clack_all',
+    (thread: ThreadVariables) => thread.organizationID === ORG_ID,
   );
 
   res.send(myThreads);
