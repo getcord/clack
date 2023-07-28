@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
-import { Composer, Message } from '@cord-sdk/react';
+import { Composer, Message, Thread } from '@cord-sdk/react';
 
 export const StyledMessage = styled(Message)`
   .cord-message {
@@ -86,5 +86,27 @@ export const StyledComposer = styled(Composer)`
   .cord-composer:focus-within {
     box-shadow: none;
     border: 1px solid ${Colors.gray_border};
+  }
+`;
+
+export const StyledThread = styled(Thread)`
+  .cord-message {
+    padding: 0;
+    align-items: flex-start;
+    background-color: inherit;
+    grid-template-columns: auto auto auto auto 1fr auto;
+  }
+  .cord-inline-thread {
+    height: auto;
+    border: 1px solid #dddddd;
+    padding: 12px;
+    border-radius: 12px;
+    .cord-composer {
+      border-radius: 12px;
+    }
+  }
+  .cord-avatar-container {
+    height: 36px;
+    width: 36px;
   }
 `;

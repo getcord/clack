@@ -10,10 +10,12 @@ export function ChannelButton({
   option,
   onClick,
   isActive,
+  icon,
 }: {
   option: string;
   onClick: () => void;
   isActive: boolean;
+  icon: React.ReactNode;
 }) {
   const summary = thread.useLocationSummary(
     { channel: option },
@@ -27,7 +29,8 @@ export function ChannelButton({
       onClick={onClick}
       $hasUnread={hasUnread}
     >
-      <ChannelIcon /> <ChannelName>{option}</ChannelName>
+      {icon}
+      <ChannelName>{option}</ChannelName>
       {summary?.unreadSubscribed ? (
         <StyledUnreadBadge count={summary?.unreadSubscribed} />
       ) : null}
@@ -51,6 +54,7 @@ export function Channels({
           key={index}
           onClick={() => setCurrentChannel(option)}
           option={option}
+          icon={<ChannelIcon />}
         />
       ))}
     </ChannelsList>
@@ -85,7 +89,7 @@ const ChannelButtonStyled = styled.button<{
 
   font-size: 15px;
   line-height: 28px;
-  min-heght: 28px;
+  min-height: 28px;
   font-weight: ${({ $hasUnread }) => ($hasUnread ? '900' : '400')};
 
   border: none;
@@ -102,7 +106,7 @@ const ChannelButtonStyled = styled.button<{
   }
 `;
 
-const ChannelIcon = styled(HashtagIcon)`
+export const ChannelIcon = styled(HashtagIcon)`
   grid-area: hash;
   width: 16px;
   height: 16px;

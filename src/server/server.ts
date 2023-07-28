@@ -7,6 +7,7 @@ import fs from 'fs';
 import * as dotenv from 'dotenv';
 import { handleGetSlackLogin, handleGetToken } from './handlers/login';
 import { handleGetChannels } from './handlers/getChannels';
+import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -47,6 +48,7 @@ function main() {
 
   app.get('/token', handleGetToken);
   app.get('/channels', handleGetChannels);
+  app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
   app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
 
   // Catch errors and log them

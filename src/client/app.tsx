@@ -9,6 +9,7 @@ import { Chat } from './Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 import { BrowserNotificationBridge } from './BrowserNotificationBridge';
+import { ThreadsList } from 'src/client/ThreadsList';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -28,9 +29,10 @@ function useCordToken(): [string | undefined, string | undefined] {
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
   const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
+  const [openPanel, setOpenPanel] = React.useState<string | null>(null);
 
   const { channelID: channelIDParam } = useParams();
-  const channelID = channelIDParam || 'general';
+  const channelID = !openPanel ? channelIDParam || 'general' : '';
 
   return (
     <CordProvider
@@ -44,13 +46,21 @@ export function App() {
       <PresenceObserver>
         <Layout className={openThreadID ? 'openThread' : ''}>
           <Topbar userID={cordUserID} />
-          <Sidebar channelID={channelID} />
+          <Sidebar
+            channelID={channelID}
+            setOpenPanel={setOpenPanel}
+            openPanel={openPanel}
+          />
           <Content>
-            <Chat
-              key={channelID}
-              channel={channelID}
-              onOpenThread={setOpenThreadID}
-            />
+            {!openPanel && (
+              <Chat
+                key={channelID}
+                channel={channelID}
+                onOpenThread={setOpenThreadID}
+              />
+            )}
+
+            {openPanel === 'threads' && <ThreadsList cordUserID={cordUserID} />}
           </Content>
           {openThreadID !== null && (
             <ThreadDetails
