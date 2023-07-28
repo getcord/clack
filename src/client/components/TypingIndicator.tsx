@@ -1,18 +1,23 @@
-import { thread } from '@cord-sdk/react';
+import { thread, user } from '@cord-sdk/react';
 import React from 'react';
 import { styled } from 'styled-components';
 
 export function TypingIndicator({ threadID }: { threadID: string }) {
   const [typingUsers, setTypingUsers] = React.useState<string[] | undefined>();
   const summary = thread.useThreadSummary(threadID);
+
+  const getUserName = (u: string) => {
+    const data = user.useUserData(u);
+    return data?.name ?? '';
+  };
+
   React.useEffect(() => {
     const getTyping = () => {
-      // this is currently userID and not user name
-      // it'd probably be easier to have access to the usernames
-      // as now we'll have to make a request to get the username
-      setTypingUsers(summary?.typing);
+      const y = summary?.typing.map((id) => getUserName(id)) || [];
+      console.log(y);
+      setTypingUsers(y);
     };
-    // Set up the interval to fetch data every 3000 milliseconds
+    // Set up the interval to fetch data every 3 seconds
     const intervalId = setInterval(getTyping, 3000);
 
     return () => {
