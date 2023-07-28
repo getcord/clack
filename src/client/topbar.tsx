@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
+import { Avatar as DefaultAvatar } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Colors } from './Colors';
 
@@ -17,7 +17,7 @@ export const Topbar = ({
   return (
     <Container className={className}>
       <Avatar userId={userID} enableTooltip />
-      <ActiveBadge isActive={true} />
+      <ActiveBadge $isActive={true} />
     </Container>
   );
 };
@@ -38,7 +38,7 @@ const Avatar = styled(DefaultAvatar)`
   }
 `;
 
-const ActiveBadge = styled.div<{ isActive: boolean }>(({ isActive }) => ({
+const ActiveBadge = styled.div<{ $isActive: boolean }>(({ $isActive }) => ({
   position: 'absolute',
   backgroundColor: 'inherit',
   padding: '3px',
@@ -51,7 +51,7 @@ const ActiveBadge = styled.div<{ isActive: boolean }>(({ isActive }) => ({
     borderRadius: '99px',
     height: '9px',
     width: '9px',
-    backgroundColor: isActive ? Colors.green_active : 'inherit',
-    boxShadow: isActive ? 'none' : 'inset 0 0 0 1.5px white',
+    backgroundColor: $isActive ? Colors.green_active : 'inherit',
+    boxShadow: $isActive ? 'none' : 'inset 0 0 0 1.5px white',
   },
 }));

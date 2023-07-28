@@ -131,7 +131,7 @@ function ProfilDetailsModal({
 }) {
   return (
     <Modal
-      shouldShow={shouldShow}
+      $shouldShow={shouldShow}
       className="profile-details-modal"
       onMouseLeave={onMouseLeave}
     >
@@ -140,10 +140,10 @@ function ProfilDetailsModal({
   );
 }
 
-const Modal = styled.div<{ shouldShow: boolean }>`
+const Modal = styled.div<{ $shouldShow: boolean }>`
   position: absolute;
   top: 0;
   translate: 0 -100%;
   z-index: 1;
-  visibility: ${({ shouldShow }) => (shouldShow ? 'visible' : 'hidden')};
+  visibility: ${({ $shouldShow }) => ($shouldShow ? 'visible' : 'hidden')};
 `;
