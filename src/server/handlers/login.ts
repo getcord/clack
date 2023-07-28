@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { getClientAuthToken } from '@cord-sdk/server';
 import * as cookie from 'cookie';
 import { nanoid } from 'nanoid';
@@ -51,21 +51,38 @@ type LoginTokenData = {
   picture: string;
 };
 
-export function handleGetToken(req: Request, res: Response) {
+function getAndVerifyLoginTokenCookie(req: Request): LoginTokenData | null {
   const loginToken = getCookie(req, LOGIN_TOKEN_COOKIE_NAME);
   if (!loginToken) {
-    return redirectToSlackLogin(req, res);
+    return null;
   }
 
-  let user_id, name, email, picture;
   try {
-    ({ user_id, name, email, picture } = jwt.verify(
-      loginToken,
-      LOGIN_SIGNING_SECRET,
-    ) as LoginTokenData);
+    return jwt.verify(loginToken, LOGIN_SIGNING_SECRET) as LoginTokenData;
   } catch (e) {
+    return null;
+  }
+}
+
+export function enforceLoginMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const loginTokenData = getAndVerifyLoginTokenCookie(req);
+  if (loginTokenData) {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+}
+
+export function handleGetToken(req: Request, res: Response) {
+  const loginTokenData = getAndVerifyLoginTokenCookie(req);
+  if (!loginTokenData) {
     return redirectToSlackLogin(req, res);
   }
+  const { user_id, name, email, picture } = loginTokenData;
 
   const token = getClientAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET, {
     user_id,

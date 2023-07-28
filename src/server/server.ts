@@ -5,7 +5,11 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
-import { handleGetSlackLogin, handleGetToken } from './handlers/login';
+import {
+  enforceLoginMiddleware,
+  handleGetSlackLogin,
+  handleGetToken,
+} from './handlers/login';
 import { handleGetChannels } from './handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
 import { FRONT_END_HOST } from 'src/server/consts';
@@ -46,10 +50,14 @@ function main() {
     return next();
   });
 
+  // ----- Routes which DO NOT require login ----
   app.get('/token', handleGetToken);
+  app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
+
+  // Routes which DO require login --
+  app.use(enforceLoginMiddleware);
   app.get('/channels', handleGetChannels);
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
-  app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
 
   // Catch errors and log them
   app.use(
