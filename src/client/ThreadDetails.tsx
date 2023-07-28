@@ -61,6 +61,7 @@ const CloseButton = styled.div({
 
 const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.gray_light}`,
+  overflow: 'scroll',
 });
 
 const ThreadDetailsHeader = styled(PageHeader)({

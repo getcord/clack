@@ -110,4 +110,5 @@ const Topbar = styled(TopbarDefault)({
 
 const ThreadDetails = styled(ThreadDetailsDefault)`
   grid-area: thread;
+  overflow: 'hidden';
 `;
