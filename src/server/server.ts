@@ -54,7 +54,7 @@ function main() {
   app.get('/token', handleGetToken);
   app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
 
-  // Routes which DO require login --
+  // ----- Routes which DO require login -----
   app.use(enforceLoginMiddleware);
   app.get('/channels', handleGetChannels);
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
