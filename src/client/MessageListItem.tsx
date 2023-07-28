@@ -7,6 +7,7 @@ import { StyledMessage } from 'src/client/StyledCord';
 import { ThreadReplies } from 'src/client/ThreadReplies';
 import React from 'react';
 import { Options } from 'src/Options';
+import { ProfileDetails } from './ProfileDetails';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -23,7 +24,6 @@ export const MessageListItemStyled = styled.div<{ $isHighlighted?: boolean }>`
     background-color: ${Colors.gray_highlight};
   }
 
-  position: relative;
   ${({ $isHighlighted }) =>
     $isHighlighted
       ? css`
@@ -50,6 +50,7 @@ export function MessageListItem({
   }, []);
 
   const [hovered, setHovered] = useState(false);
+  const [showProfileDetails, setShowProfileDetails] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const onMouseEnter = useCallback(() => {
@@ -59,10 +60,40 @@ export function MessageListItem({
     setHovered(false);
   }, []);
 
+  const onMouseOverAvatar = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    // For some reason typescript doesn't recognise that e.target has more than
+    // event listeners 🤷‍♀️
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (e.target.className.includes('cord-avatar')) {
+      setShowProfileDetails(true);
+    }
+  };
+
+  const onMouseLeaveAvatar = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    setTimeout(() => {
+      if (
+        // For some reason typescript doesn't recognise that e.target has more than
+        // event listeners 🤷‍♀️
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        !e.target.className.includes('cord-avatar' || 'profile-details-modal')
+      ) {
+        setShowProfileDetails(false);
+      }
+    }, 500);
+  };
+
   return (
     <MessageListItemStyled
       ref={ref}
       $isHighlighted={thread.id === threadIDParam}
+      onMouseOver={onMouseOverAvatar}
+      onMouseLeave={onMouseLeaveAvatar}
     >
       <StyledMessage
         threadId={thread.id}
@@ -70,8 +101,41 @@ export function MessageListItem({
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       />
+      <ProfilDetailsModal
+        shouldShow={showProfileDetails}
+        userID={thread.firstMessage?.authorID || ''}
+        onMouseLeave={onMouseLeaveAvatar}
+      />
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
       <Options thread={thread} hovered={hovered} onOpenThread={onOpenThread} />
     </MessageListItemStyled>
   );
 }
+
+function ProfilDetailsModal({
+  shouldShow,
+  userID,
+  onMouseLeave,
+}: {
+  onMouseLeave: React.MouseEventHandler<HTMLDivElement>;
+  shouldShow: boolean;
+  userID: string;
+}) {
+  return (
+    <Modal
+      shouldShow={shouldShow}
+      className="profile-details-modal"
+      onMouseLeave={onMouseLeave}
+    >
+      <ProfileDetails userID={userID} />
+    </Modal>
+  );
+}
+
+const Modal = styled.div<{ shouldShow: boolean }>`
+  position: absolute;
+  top: 0;
+  translate: 0 -100%;
+  z-index: 1;
+  visibility: ${({ shouldShow }) => (shouldShow ? 'visible' : 'hidden')};
+`;

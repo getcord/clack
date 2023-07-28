@@ -55,6 +55,11 @@ export function Threads({
     return () => el.removeEventListener('scroll', scrollUpHandler);
   }, [scrollUpHandler]);
 
+  if (!threads) {
+    // TODO: show empty channel page
+    return null;
+  }
+
   return (
     <Root ref={threadListRef}>
       {threads.map((thread) => (

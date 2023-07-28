@@ -22,6 +22,7 @@ export const StyledMessage = styled(Message)`
     height: 36px;
     width: 36px;
   }
+
   .cord-message-options-buttons {
     flex-direction: row;
     background-color: white;
