@@ -4,16 +4,21 @@ import { styled } from 'styled-components';
 
 export function TypingIndicator({ threadID }: { threadID: string }) {
   const [typingUsers, setTypingUsers] = React.useState<string[] | undefined>();
-  const typing = thread.useThreadSummary(threadID)?.typing;
+  const summary = thread.useThreadSummary(threadID);
   React.useEffect(() => {
     const getTyping = () => {
-      setTypingUsers(typing);
+      // this is currently userID and not user name
+      // it'd probably be easier to have access to the usernames
+      // as now we'll have to make a request to get the username
+      setTypingUsers(summary?.typing);
     };
-    const intervalId = setInterval(getTyping, 5000);
+    // Set up the interval to fetch data every 3000 milliseconds
+    const intervalId = setInterval(getTyping, 3000);
+
     return () => {
       clearInterval(intervalId);
     };
-  }, [typing]);
+  }, [summary]);
 
   return (
     <>
