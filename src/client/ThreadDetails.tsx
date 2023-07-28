@@ -63,9 +63,13 @@ export function ThreadDetails({
   if (!loading && hasMore) {
     void fetchMore(100);
   }
+
   if (!threadSummary || messages.length === 0) {
     return <div>Loading messages...</div>;
   }
+
+  const numReplies = threadSummary.total - 1;
+  const replyWord = numReplies === 1 ? 'reply' : 'replies';
 
   return (
     <ThreadDetailsWrapper className={className}>
@@ -81,7 +85,12 @@ export function ThreadDetails({
           message={messages[0]}
           thread={threadSummary}
         />
-        <p>{messages.length - 1} replies</p>
+        <SeparatorWrap>
+          <SeparatorText>
+            {numReplies} {replyWord}
+          </SeparatorText>
+          <SeparatorLine />
+        </SeparatorWrap>
         {messages.slice(1).map((message) => (
           <Message key={message.id} message={message} thread={threadSummary} />
         ))}
@@ -120,4 +129,22 @@ const ThreadDetailsHeader = styled(PageHeader)({
 
 const MessageListWrapper = styled.div({
   marginBottom: '12px',
+});
+
+const SeparatorWrap = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  padding: '0 20px',
+});
+
+const SeparatorText = styled.span({
+  fontSize: '13px',
+  color: Colors.gray_dark,
+});
+
+const SeparatorLine = styled.hr({
+  flex: 1,
+  border: 'none',
+  borderTop: `1px solid ${Colors.gray_light}`,
 });
