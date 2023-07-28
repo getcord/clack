@@ -56,7 +56,7 @@ function main() {
 
   // ----- Routes which DO require login -----
   app.use(enforceLoginMiddleware);
-  app.get('/channels', handleGetChannels);
+  app.get('/channels', wrapAsyncHandler(handleGetChannels));
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
 
   // Catch errors and log them

@@ -4,7 +4,6 @@ import {
   CORD_SIGNING_SECRET,
   CORD_API_URL,
 } from 'src/server/consts';
-import type { blah } from '@cord-sdk/api-types';
 
 export async function fetchCordRESTApi<T>(endpoint: string): Promise<T> {
   const serverAuthToken = getServerAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET);
