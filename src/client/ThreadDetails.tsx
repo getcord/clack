@@ -6,6 +6,8 @@ import { thread } from '@cord-sdk/react/';
 import { StyledComposer, StyledMessage } from './StyledCord';
 import { MessageListItemStyled } from './MessageListItem';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import { TypingIndicator } from 'src/client/components/TypingIndicator';
+
 import type { MessageData } from '@cord-sdk/types';
 import { Options } from 'src/Options';
 import type { ThreadSummary } from '@cord-sdk/types';
@@ -85,6 +87,7 @@ export function ThreadDetails({
         ))}
       </MessageListWrapper>
       <StyledComposer threadId={threadID} showExpanded />
+      <TypingIndicator threadID={threadID} />
     </ThreadDetailsWrapper>
   );
 }

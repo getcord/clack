@@ -5,6 +5,7 @@ import type { ThreadVariables } from '@cord-sdk/api-types';
 import { ChannelIcon } from 'src/client/channels';
 import { StyledThread } from './StyledCord';
 import { FRONT_END_HOST } from 'src/client/consts';
+import { TypingIndicator } from 'src/client/components/TypingIndicator';
 
 export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
   const [myThreads, setMyThreads] = React.useState<
@@ -59,15 +60,11 @@ export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
                     threadId={thread.id}
                     composerExpanded={true}
                     style={{
+                      // for some reason, .cord-thread doesn't work
                       borderRadius: '12px',
                     }}
                   />
-                  {thread.typing.length > 0 && (
-                    <TextingIndicator>
-                      {thread.typing.join(', ')}
-                      {thread.typing.length == 1 ? 'is' : 'are'} typing
-                    </TextingIndicator>
-                  )}{' '}
+                  <TypingIndicator threadID={thread.id} />
                 </ThreadWrapper>
               );
             })
@@ -132,10 +129,6 @@ const SubText = styled.span({
   color: '#616061',
   margin: '5px 4px',
 });
-
-const TextingIndicator = styled(SubText)`
-  margin-left: 16px;
-`;
 
 const ChannelName = styled.h1({
   fontSize: '18px',
