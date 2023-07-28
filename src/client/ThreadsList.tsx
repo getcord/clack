@@ -4,6 +4,7 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import type { ThreadVariables } from '@cord-sdk/api-types';
 import { ChannelIcon } from 'src/client/channels';
 import { StyledThread } from './StyledCord';
+import { FRONT_END_HOST } from 'src/client/consts';
 
 export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
   const [myThreads, setMyThreads] = React.useState<
@@ -45,13 +46,13 @@ export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
               return (
                 <ThreadWrapper key={index}>
                   <Participants>
-                    <ThreadLocationWrapper>
+                    <ThreadLocationWrapper
+                      href={`${FRONT_END_HOST}/${thread.location.channel}/thread/${thread.id}`}
+                    >
                       <ChannelIcon />
                       <ThreadLocation>{thread.location.channel}</ThreadLocation>
                     </ThreadLocationWrapper>
-                    <ThreadParticipants>
-                      Dave Miller and Flooey
-                    </ThreadParticipants>
+                    <SubText>Dave Miller and Flooey</SubText>
                   </Participants>
                   {/* tried to use threads here to see how far we can get with customising */}
                   <StyledThread
@@ -103,22 +104,27 @@ const Participants = styled.div({
   margin: '16px 28px 12px 12px',
 });
 
-const ThreadLocationWrapper = styled.div({
+const ThreadLocationWrapper = styled.a({
   display: 'flex',
   alignItems: 'center',
+  color: '#1d1c1d',
+  width: 'max-content',
+  textDecoration: 'none',
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 });
 
-//should link to channel
 const ThreadLocation = styled.span({
   fontSize: '15px',
   fontWeight: 700,
 });
 
-const ThreadParticipants = styled.span({
+const SubText = styled.span({
   display: 'block',
   fontSize: '12px',
-  marginLeft: '4px',
   color: '#616061',
+  margin: '5px 4px',
 });
 
 const ChannelName = styled.h1({
