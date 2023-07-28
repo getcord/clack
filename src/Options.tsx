@@ -14,10 +14,16 @@ export const OPTIONS_ICON_WIDTH = 20;
 interface OptionsProps {
   thread: ThreadSummary;
   hovered: boolean;
-  onOpenThread: (threadID: string) => void;
+  onOpenThread?: (threadID: string) => void;
+  messageID?: string;
 }
 
-export function Options({ thread, hovered, onOpenThread }: OptionsProps) {
+export function Options({
+  thread,
+  hovered,
+  onOpenThread,
+  messageID,
+}: OptionsProps) {
   const [optionsHovered, setOptionsHovered] = useState(false);
 
   const onMouseEnter = useCallback(() => {
@@ -37,20 +43,25 @@ export function Options({ thread, hovered, onOpenThread }: OptionsProps) {
           data-tooltip-content="Find another reaction"
           data-tooltip-place="top"
         >
-          <Reactions threadId={thread.id} messageId={thread.firstMessage?.id} />
+          <Reactions
+            threadId={thread.id}
+            messageId={messageID ?? thread.firstMessage?.id}
+          />
         </div>
         <Tooltip id="options-button" />
-        <OptionsButton
-          onClick={() => onOpenThread(thread.id)}
-          data-tooltip-id="options-button"
-          data-tooltip-content="Reply in thread"
-          data-tooltip-place="top"
-        >
-          <ChatBubbleOvalLeftEllipsisIcon
-            height={OPTIONS_ICON_HEIGHT}
-            width={OPTIONS_ICON_WIDTH}
-          />
-        </OptionsButton>
+        {onOpenThread && (
+          <OptionsButton
+            onClick={() => onOpenThread(thread.id)}
+            data-tooltip-id="options-button"
+            data-tooltip-content="Reply in thread"
+            data-tooltip-place="top"
+          >
+            <ChatBubbleOvalLeftEllipsisIcon
+              height={OPTIONS_ICON_HEIGHT}
+              width={OPTIONS_ICON_WIDTH}
+            />
+          </OptionsButton>
+        )}
       </OptionsStyled>
     )
   );
