@@ -48,12 +48,14 @@ export type ThreadDetailsProps = {
   className?: string;
   threadID: string;
   onClose: () => void;
+  channelID: string;
 };
 
 export function ThreadDetails({
   className,
   threadID,
   onClose,
+  channelID,
 }: ThreadDetailsProps) {
   const { messages, loading, hasMore, fetchMore } =
     thread.useThreadData(threadID);
@@ -70,7 +72,8 @@ export function ThreadDetails({
   return (
     <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
-        <span>Thread</span>
+        <span style={{ gridArea: 'thread' }}>Thread</span>
+        <ChannelName># {channelID}</ChannelName>
         <CloseButton onClick={onClose}>
           <StyledXMarkIcon />
         </CloseButton>
@@ -106,14 +109,25 @@ export function ThreadDetails({
   );
 }
 
+const ChannelName = styled.span({
+  gridArea: 'channel-name',
+  fontSize: '13px',
+  fontWeight: 400,
+  overflowWrap: 'break-word',
+  whiteSpace: 'pre-wrap',
+  color: Colors.gray_dark,
+});
+
 const StyledXMarkIcon = styled(XMarkIcon)({
   width: '24px',
   height: '24px',
 });
 
 const CloseButton = styled.div({
+  gridArea: 'close-button',
   lineHeight: 0,
   padding: '8px',
+  borderRadius: '4px',
   '&:hover': {
     backgroundColor: Colors.gray_highlight,
   },
@@ -125,8 +139,11 @@ const ThreadDetailsWrapper = styled.div({
 });
 
 const ThreadDetailsHeader = styled(PageHeader)({
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridGap: '12px',
+  gridTemplateColumns: 'auto 1fr auto',
+  gridTemplateAreas: `
+  "thread channel-name close-button"`,
   alignItems: 'center',
   borderBottom: `1px solid ${Colors.gray_light}`,
   padding: '8px 8px 8px 16px',

@@ -71,6 +71,7 @@ export function App() {
             </Content>
             {openThreadID !== null && (
               <ThreadDetails
+                channelID={channelID}
                 threadID={openThreadID}
                 onClose={() => setOpenThreadID(null)}
               />
