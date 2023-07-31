@@ -103,7 +103,7 @@ export function ThreadDetails({
           <Message key={message.id} message={message} thread={threadSummary} />
         ))}
       </MessageListWrapper>
-      <StyledComposer threadId={threadID} showExpanded />
+      <StyledComposer autofocus threadId={threadID} showExpanded />
       <TypingIndicator threadID={threadID} />
     </ThreadDetailsWrapper>
   );
