@@ -1,5 +1,5 @@
 export const FRONT_END_HOST =
-  process.env.NODE_ENV === 'development'
+  process.env.CLACK_ENV === 'development'
     ? 'https://local.cord.com:7307'
     : 'https://clack.cord.com';
 export const CORD_API_URL = 'https://api.cord.com/v1/';

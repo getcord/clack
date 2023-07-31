@@ -11,7 +11,9 @@ npm run build-client &
 cp -r ./src/client/static ./dist/client/static & 
 cp -r ./src/client/index.html ./dist/client/index.html & 
 
-npm run run-server 
-# client served on nginx
+sudo cp -r /home/ec2-user/clack/dist/client /var/www/clack &
+
+npm run run-server &
+sudo systemctl reload nginx
 
 wait

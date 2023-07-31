@@ -75,7 +75,7 @@ function main() {
   // Fetch certificate to run https locally.  Run ./scripts/generate-localhost-cert.sh
   // to generate these files
   const server =
-    process.env.NODE_ENV === 'development'
+    process.env.CLACK_ENV === 'development'
       ? https.createServer(
           {
             key: fs.readFileSync(
