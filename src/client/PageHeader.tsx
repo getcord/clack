@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 
 export const PageHeader = styled.h1({
-  position: 'relative',
   fontSize: '18px',
   fontWeight: 900,
   lineHeight: 1.33,

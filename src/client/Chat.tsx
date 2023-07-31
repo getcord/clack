@@ -4,6 +4,8 @@ import { Colors } from './Colors';
 import { Threads } from './Threads';
 import { PageHeader } from './PageHeader';
 import { StyledComposer } from './StyledCord';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { PageUsersLabel } from 'src/client/PageUsersLabel';
 
 interface ChatProps {
   channel: string;
@@ -12,10 +14,15 @@ interface ChatProps {
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
   const [showToolbar, setShowToolbar] = useState(true);
+  const usersInChannel = useAPIFetch<(string | number)[]>('/users');
+
   return (
     <Wrapper>
       <ChannelDetailsBar>
-        <PageHeader># {channel}</PageHeader>
+        <PageHeaderWrapper>
+          <PageHeader># {channel}</PageHeader>
+          {usersInChannel && <PageUsersLabel users={usersInChannel} />}
+        </PageHeaderWrapper>
         <Toolbar $showToolbar={showToolbar}> + Add a bookmark</Toolbar>
       </ChannelDetailsBar>
       <StyledThreads
@@ -26,7 +33,11 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
-      <StyledComposer location={{ channel }} showExpanded />
+      <StyledComposer
+        location={{ channel }}
+        showExpanded
+        $placeholder={`Message # ${channel}`}
+      />
     </Wrapper>
   );
 }
@@ -40,6 +51,15 @@ const Wrapper = styled.div({
   "threads"
   "composer"`,
   padding: '0',
+});
+
+const PageHeaderWrapper = styled.div({
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'space-between',
+  backgroundColor: 'inherit',
+  zIndex: 2,
+  margin: 0,
 });
 
 const ChannelDetailsBar = styled.div({
@@ -83,7 +103,6 @@ const Toolbar = styled.div<{ $showToolbar: boolean }>`
   color: ${Colors.gray_dark};
   padding: 10px 20px;
 `;
-// position: absolute;
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;

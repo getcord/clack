@@ -12,6 +12,7 @@ import {
 } from './handlers/login';
 import { handleGetChannels } from './handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
+import { handleGetCordUsers } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
@@ -58,6 +59,7 @@ function main() {
   app.use(enforceLoginMiddleware);
   app.get('/channels', wrapAsyncHandler(handleGetChannels));
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
+  app.get('/users', wrapAsyncHandler(handleGetCordUsers));
 
   // Catch errors and log them
   app.use(
