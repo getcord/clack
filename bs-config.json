@@ -4,5 +4,6 @@
     "key": "localhost/localhost.key",
     "cert": "localhost/localhost.crt"
   },
-  "host": "local.cord.com"
+  "host": "local.cord.com",
+  "port": "7307"
 }

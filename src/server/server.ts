@@ -20,7 +20,7 @@ import { handleRoot } from 'src/server/handlers/root';
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
 
-const port = 3002; // browsersync currently on 3001
+const port = 7309;
 
 function logAndSendError(error: unknown, res: Response) {
   console.error('😢 An error occurred', error);
