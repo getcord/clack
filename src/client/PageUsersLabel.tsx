@@ -43,7 +43,7 @@ export function PageUsersLabel({ users }: { users: (string | number)[] }) {
 }
 export const UsersLabel = styled.div`
   display: flex;
-  margin: 11px;
+  margin: 10px;
   padding: 8px 12px;
   gap: 8px;
   font-size: 13px;
