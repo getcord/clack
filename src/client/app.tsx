@@ -48,7 +48,7 @@ export function App() {
         enableAnnotations={false}
       >
         <BrowserNotificationBridge />
-        <PresenceObserver>
+        <PresenceObserver location={{ page: 'clack', durable: true }}>
           <Layout className={openThreadID ? 'openThread' : ''}>
             <Topbar userID={cordUserID} />
             <Sidebar
