@@ -69,7 +69,7 @@ export function Threads({
         hasMore={hasMore}
         fetchMore={fetchMore}
       />
-      {!hasMore ? (
+      {!hasMore && !loading ? (
         <>
           {threads[0]?.firstMessage?.createdTimestamp && (
             <DateDivider
