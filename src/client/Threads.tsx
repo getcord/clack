@@ -3,6 +3,8 @@ import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { MessageListItem } from 'src/client/MessageListItem';
 import { PaginationTrigger } from './PaginationTrigger';
+import { EmptyChannel } from './EmptyChannel';
+import { DateDivider } from './DateDivider';
 
 type ThreadsProps = {
   channel: string;
@@ -52,11 +54,6 @@ export function Threads({
     return () => el.removeEventListener('scroll', scrollUpHandler);
   }, [scrollUpHandler]);
 
-  if (!threads) {
-    // TODO: show empty channel page
-    return null;
-  }
-
   return (
     <Root ref={threadListRef}>
       {threads.map((thread) => (
@@ -72,6 +69,16 @@ export function Threads({
         hasMore={hasMore}
         fetchMore={fetchMore}
       />
+      {!hasMore ? (
+        <>
+          {threads[0]?.firstMessage?.createdTimestamp && (
+            <DateDivider
+              timestamp={threads[0]?.firstMessage?.createdTimestamp}
+            />
+          )}
+          <EmptyChannel channelID={channel} />
+        </>
+      ) : null}
     </Root>
   );
 }
