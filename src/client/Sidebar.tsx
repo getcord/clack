@@ -56,7 +56,7 @@ const SidebarWrap = styled.div({
   background: Colors.purple,
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'scroll',
+  overflow: 'auto',
 });
 
 const SidebarHeader = styled(PageHeader)({
