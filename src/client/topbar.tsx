@@ -35,5 +35,17 @@ const Avatar = styled(DefaultAvatar)`
   .cord-avatar-container {
     width: 26px;
     height: 26px;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    &:hover {
+      &:after {
+        background-color: white;
+        opacity: 0.3;
+      }
+    }
   }
 `;
