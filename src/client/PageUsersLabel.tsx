@@ -7,9 +7,9 @@ import { Colors } from 'src/client/Colors';
 export function PageUsersLabel({ users }: { users: (string | number)[] }) {
   return (
     <>
-      <Tooltip id="copy-button" />
+      <Tooltip id="page-users-label" />
       <UsersLabel
-        data-tooltip-id="copy-button"
+        data-tooltip-id="page-users-label"
         data-tooltip-content="View all members of this channel"
         data-tooltip-place="bottom"
       >
