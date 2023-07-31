@@ -68,10 +68,11 @@ export function MessageListItem({
     if (
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      e.target.className.includes('cord-avatar') ||
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      e.target.className.includes('cord-author-name')
+      [...e.target.classList].some(
+        (className: string) =>
+          className.includes('cord-avatar') ||
+          className.includes('cord-author-name'),
+      )
     ) {
       setShowProfileDetails(true);
     }
