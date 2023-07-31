@@ -82,10 +82,14 @@ export function ThreadDetails({
           thread={threadSummary}
         />
         <SeparatorWrap>
-          <SeparatorText>
-            {numReplies} {replyWord}
-          </SeparatorText>
-          <SeparatorLine />
+          {numReplies > 0 ? (
+            <>
+              <SeparatorText>
+                {numReplies} {replyWord}
+              </SeparatorText>
+              <SeparatorLine />
+            </>
+          ) : null}
         </SeparatorWrap>
         <PaginationTrigger
           loading={loading}
