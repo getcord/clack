@@ -11,6 +11,7 @@ import { TypingIndicator } from 'src/client/components/TypingIndicator';
 import type { MessageData } from '@cord-sdk/types';
 import { Options } from 'src/Options';
 import type { ThreadSummary } from '@cord-sdk/types';
+import { PaginationTrigger } from './PaginationTrigger';
 
 interface MessageProps {
   message: MessageData;
@@ -59,11 +60,6 @@ export function ThreadDetails({
 
   const threadSummary = thread.useThreadSummary(threadID);
 
-  // TEMPORARY HACK TO LOAD ALL MESSAGES
-  if (!loading && hasMore) {
-    void fetchMore(100);
-  }
-
   if (!threadSummary || messages.length === 0) {
     return <div>Loading messages...</div>;
   }
@@ -81,8 +77,8 @@ export function ThreadDetails({
       </ThreadDetailsHeader>
       <MessageListWrapper>
         <Message
-          key={messages[0].id}
-          message={messages[0]}
+          key={threadSummary.firstMessage!.id}
+          message={threadSummary.firstMessage!}
           thread={threadSummary}
         />
         <SeparatorWrap>
@@ -91,6 +87,11 @@ export function ThreadDetails({
           </SeparatorText>
           <SeparatorLine />
         </SeparatorWrap>
+        <PaginationTrigger
+          loading={loading}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
         {messages.slice(1).map((message) => (
           <Message key={message.id} message={message} thread={threadSummary} />
         ))}

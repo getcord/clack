@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { MessageListItem } from 'src/client/MessageListItem';
+import { PaginationTrigger } from './PaginationTrigger';
 
 type ThreadsProps = {
   channel: string;
@@ -23,10 +24,6 @@ export function Threads({
     },
   );
 
-  // TEMPORARY HACK TO LOAD ALL THREADS
-  if (!loading && hasMore) {
-    void fetchMore(100);
-  }
   const threadListRef = useRef<HTMLDivElement>(null);
 
   const isAtBottom = () => {
@@ -69,6 +66,12 @@ export function Threads({
           onOpenThread={onOpenThread}
         />
       ))}
+      {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}
+      <PaginationTrigger
+        loading={loading}
+        hasMore={hasMore}
+        fetchMore={fetchMore}
+      />
     </Root>
   );
 }
