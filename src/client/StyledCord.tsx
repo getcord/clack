@@ -23,6 +23,14 @@ export const StyledMessage = styled(Message)`
     width: 36px;
   }
 
+  .linkified {
+    color: ${Colors.blue_link};
+    font-weight: 400;
+    &:hover {
+      color: ${Colors.blue_link};
+    }
+  }
+
   .cord-message-options-buttons {
     flex-direction: row;
     background-color: white;
