@@ -14,4 +14,5 @@ export const Colors = {
   blue_selected_border: '#1D9BD1',
   blue_link: '#1264A3',
   green_active: '#2AAC76',
+  green: '#117A5A',
 };

@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { presence } from '@cord-sdk/react';
 import { Colors } from './Colors';
+import { SetToActiveModal } from './SetToActiveModal';
 
 interface StatusBadgeProps {
   userID: string;
@@ -16,10 +17,13 @@ export function StatusBadge({ userID }: StatusBadgeProps) {
     { page: 'clack' },
     { exclude_durable: false, partial_match: true },
   );
-  const [shouldAlert, setShouldAlert] = useState(true);
+  const [shouldShowActiveModal, setShouldShowActiveModal] = useState(true);
   const [isActive, setIsActive] = useState(() =>
     window.localStorage.getItem(localStorageKey) === 'active' ? true : false,
   );
+
+  const activeModalPreference =
+    window.localStorage.getItem('dont-ask-again') === 'true' ? true : false;
 
   const isPresent = useMemo(
     () => !!present?.find((user) => user.id === userID),
@@ -54,26 +58,31 @@ export function StatusBadge({ userID }: StatusBadgeProps) {
     [isActive],
   );
 
-  useEffect(() => {
-    if (isPresent && !isActive && shouldAlert) {
-      const shouldChangeStatus = confirm(
-        'You are set to away, would you like to switch to appear active?',
-      );
-      if (shouldChangeStatus) {
-        updateStatusTo('active');
-      } else {
-        updateStatusTo('away');
-      }
-      setShouldAlert(false);
-    }
-  }, [isPresent, updateStatusTo, isActive, shouldAlert]);
-
-  const onClick = () => {
-    setShouldAlert(false);
+  const onBadgeClick = () => {
+    setShouldShowActiveModal(false);
     updateStatusTo(isActive ? 'away' : 'active');
   };
 
-  return <ActiveBadge onClick={onClick} $isActive={isActive} />;
+  const onCancel = () => {
+    setShouldShowActiveModal(false);
+    updateStatusTo('away');
+  };
+
+  return (
+    <>
+      <ActiveBadge onClick={onBadgeClick} $isActive={isActive} />
+      {isPresent &&
+      !isActive &&
+      shouldShowActiveModal &&
+      !activeModalPreference ? (
+        <SetToActiveModal
+          onClose={onCancel}
+          onCancel={onCancel}
+          onSetToActive={() => updateStatusTo('active')}
+        />
+      ) : null}
+    </>
+  );
 }
 
 export const ActiveBadge = styled.div<{ $isActive: boolean }>(
