@@ -33,11 +33,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
-      <StyledComposer
-        location={{ channel }}
-        showExpanded
-        $placeholder={`Message # ${channel}`}
-      />
+      <StyledComposer location={{ channel }} showExpanded />
     </Wrapper>
   );
 }
