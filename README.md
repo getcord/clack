@@ -1,6 +1,7 @@
 Create a .env like
 
 ```
+NODE_ENV=development
 CORD_SIGNING_SECRET=<SECRET>
 CORD_APP_ID=<APP_ID>
 SLACK_CLIENT_ID=<ID>

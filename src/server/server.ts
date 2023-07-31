@@ -1,6 +1,7 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import https from 'https';
+import http from 'http';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
@@ -73,13 +74,20 @@ function main() {
 
   // Fetch certificate to run https locally.  Run ./scripts/generate-localhost-cert.sh
   // to generate these files
-  const server = https.createServer(
-    {
-      key: fs.readFileSync(path.join(REPO_ROOT, 'localhost', 'localhost.key')),
-      cert: fs.readFileSync(path.join(REPO_ROOT, 'localhost', 'localhost.crt')),
-    },
-    app,
-  );
+  const server =
+    process.env.NODE_ENV === 'development'
+      ? https.createServer(
+          {
+            key: fs.readFileSync(
+              path.join(REPO_ROOT, 'localhost', 'localhost.key'),
+            ),
+            cert: fs.readFileSync(
+              path.join(REPO_ROOT, 'localhost', 'localhost.crt'),
+            ),
+          },
+          app,
+        )
+      : http.createServer(app);
 
   server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
