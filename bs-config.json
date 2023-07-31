@@ -5,5 +5,9 @@
     "cert": "localhost/localhost.crt"
   },
   "host": "local.cord.com",
-  "port": "7307"
+  "port": "7307",
+  "startPath": "index.html",
+  "server": {
+    "baseDir": "dist/client"
+  }
 }
