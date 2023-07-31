@@ -54,15 +54,42 @@ export function Threads({
     return () => el.removeEventListener('scroll', scrollUpHandler);
   }, [scrollUpHandler]);
 
-  return (
-    <Root ref={threadListRef}>
-      {threads.map((thread) => (
+  const firstMessageTimestamp =
+    threads[threads.length - 1]?.firstMessage?.createdTimestamp;
+
+  const renderThreads = threads.map((thread, index) => {
+    if (index < 1) {
+      return (
         <MessageListItem
           key={thread.id}
           thread={thread}
           onOpenThread={onOpenThread}
         />
-      ))}
+      );
+    }
+    const lastMessageTimestamp = threads[index - 1].firstMessage
+      ?.createdTimestamp
+      ? threads[index - 1].firstMessage?.createdTimestamp
+      : null;
+
+    const isDifferentDay =
+      lastMessageTimestamp &&
+      thread.firstMessage?.createdTimestamp.getDate() !==
+        lastMessageTimestamp.getDate();
+
+    return (
+      <React.Fragment key={thread.id}>
+        {lastMessageTimestamp && isDifferentDay ? (
+          <DateDivider timestamp={lastMessageTimestamp} />
+        ) : null}
+        <MessageListItem thread={thread} onOpenThread={onOpenThread} />
+      </React.Fragment>
+    );
+  });
+
+  return (
+    <Root ref={threadListRef}>
+      {renderThreads}
       {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}
       <PaginationTrigger
         loading={loading}
@@ -71,10 +98,8 @@ export function Threads({
       />
       {!hasMore && !loading ? (
         <>
-          {threads[0]?.firstMessage?.createdTimestamp && (
-            <DateDivider
-              timestamp={threads[0]?.firstMessage?.createdTimestamp}
-            />
+          {firstMessageTimestamp && (
+            <DateDivider timestamp={firstMessageTimestamp} />
           )}
           <EmptyChannel channelID={channel} />
         </>

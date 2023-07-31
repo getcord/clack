@@ -6,7 +6,13 @@ export function DateDivider({ timestamp }: { timestamp: Date }) {
   return (
     <Root>
       <Line />
-      <Pill>{timestamp.toDateString()}</Pill>
+      <Pill>
+        {timestamp.toLocaleDateString('en-GB', {
+          weekday: 'short',
+          month: 'long',
+          day: 'numeric',
+        })}
+      </Pill>
     </Root>
   );
 }
