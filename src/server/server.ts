@@ -14,6 +14,7 @@ import { handleGetChannels } from './handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
 import { handleGetCordUsers } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
+import { handleRoot } from 'src/server/handlers/root';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -52,6 +53,7 @@ function main() {
   });
 
   // ----- Routes which DO NOT require login ----
+  app.get('/', handleRoot);
   app.get('/token', handleGetToken);
   app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
 
