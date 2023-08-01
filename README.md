@@ -1,3 +1,12 @@
+## Clack
+
+Welcome to Clack!  This is where Cord's internal communication happens.  You 
+can find it at https://clack.cord.com
+
+### Things to note
+Clack connects to the STAGING deployment of Cord, so changes landed to monorepo 
+throughout the day will be instantly available
+
 ### Local setup
 
 Create a .env like
@@ -29,11 +38,10 @@ To SSH in:
 - Save it somewhere on your computer, this assumes you put in on your desktop
 - Run `ssh -v -i ~/Desktop/ai-bot-ssh-key.pem ec2-user@35.93.64.39
 - Run `tmux list-sessions` to see the running sessions 
-- Run `tmux attach -t clack` to attach to the Clack tmux session (which is running both client and server)
+- Run `tmux attach -t clack` to attach to the Clack tmux session which is running the server
 - To exit the session without killing it, press Ctrl + b together, let go, then d
 
 - To update:
-  - Kill the current process
   - Git pull, npm i, whatever
   - `npm run prod` to rebuild and restart
 
