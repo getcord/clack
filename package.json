@@ -8,6 +8,8 @@
     "build-server": "esbuild src/server/server.ts --outdir=dist/server --bundle --sourcemap --watch=forever --platform=node",
     "run-server": "nodemon --experimental-fetch -r dotenv/config -w dist/server/server.js dist/server/server.js",
     "run-client": "lite-server",
+    "lint": "eslint .",
+    "tsc-once": "tsc",
     "dev": "./scripts/dev.sh",
     "prod": "./scripts/prod.sh"
   },
