@@ -6,8 +6,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyledMessage } from 'src/client/StyledCord';
 import { ThreadReplies } from 'src/client/ThreadReplies';
 import React from 'react';
-import { Options } from 'src/Options';
+import { Options } from 'src/client/Options';
 import { ProfileDetails } from './ProfileDetails';
+import { Modal } from 'src/client/Modal';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -140,11 +141,3 @@ function ProfilDetailsModal({
     </Modal>
   );
 }
-
-const Modal = styled.div<{ $shouldShow: boolean }>`
-  position: absolute;
-  top: 0;
-  translate: 0 -100%;
-  z-index: 1;
-  visibility: ${({ $shouldShow }) => ($shouldShow ? 'visible' : 'hidden')};
-`;
