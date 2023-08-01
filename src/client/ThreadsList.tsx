@@ -48,7 +48,7 @@ export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
                 <ThreadWrapper key={index}>
                   <Participants>
                     <ThreadLocationWrapper
-                      href={`${FRONT_END_HOST}/${thread.location.channel}/thread/${thread.id}`}
+                      href={`${FRONT_END_HOST}/channel/${thread.location.channel}/thread/${thread.id}`}
                     >
                       <ChannelIcon />
                       <ThreadLocation>{thread.location.channel}</ThreadLocation>
