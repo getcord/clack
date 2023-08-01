@@ -1,16 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { presence } from '@cord-sdk/react';
 import { Colors } from './Colors';
 import { SetToActiveModal } from './SetToActiveModal';
+import { useUserStatus } from './hooks/useUserStatus';
 
 interface StatusBadgeProps {
   userID: string;
 }
-
-const localStorageKey = 'status';
-
-type Status = 'active' | 'away';
 
 export function StatusBadge({ userID }: StatusBadgeProps) {
   const present = presence.useLocationData(
@@ -18,9 +15,7 @@ export function StatusBadge({ userID }: StatusBadgeProps) {
     { exclude_durable: false, partial_match: true },
   );
   const [shouldShowActiveModal, setShouldShowActiveModal] = useState(true);
-  const [isActive, setIsActive] = useState(() =>
-    window.localStorage.getItem(localStorageKey) === 'active' ? true : false,
-  );
+  const [status, setStatus] = useUserStatus();
 
   const activeModalPreference =
     window.localStorage.getItem('dont-ask-again') === 'true' ? true : false;
@@ -30,55 +25,32 @@ export function StatusBadge({ userID }: StatusBadgeProps) {
     [present, userID],
   );
 
-  const updateStatusTo = useCallback(
-    (status: Status) => {
-      if (status === 'active') {
-        setIsActive(true);
-        window.CordSDK?.presence.setPresent(
-          {
-            page: 'clack',
-          },
-          {
-            absent: isActive,
-          },
-        );
-      } else if (status === 'away') {
-        setIsActive(false);
-        window.CordSDK?.presence.setPresent(
-          {
-            page: 'clack',
-          },
-          {
-            absent: true,
-          },
-        );
-      }
-      window.localStorage.setItem(localStorageKey, status);
-    },
-    [isActive],
-  );
-
   const onBadgeClick = () => {
     setShouldShowActiveModal(false);
-    updateStatusTo(isActive ? 'away' : 'active');
+    setStatus(status === 'active' ? 'away' : 'active');
   };
 
   const onCancel = () => {
     setShouldShowActiveModal(false);
-    updateStatusTo('away');
+    setStatus('away');
+  };
+
+  const onSetToActive = () => {
+    setStatus('active');
+    setShouldShowActiveModal(false);
   };
 
   return (
     <>
-      <ActiveBadge onClick={onBadgeClick} $isActive={isActive} />
+      <ActiveBadge onClick={onBadgeClick} $isActive={status === 'active'} />
       {isPresent &&
-      !isActive &&
+      status !== 'active' &&
       shouldShowActiveModal &&
       !activeModalPreference ? (
         <SetToActiveModal
           onClose={onCancel}
           onCancel={onCancel}
-          onSetToActive={() => updateStatusTo('active')}
+          onSetToActive={onSetToActive}
         />
       ) : null}
     </>
