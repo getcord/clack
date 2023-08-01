@@ -1,12 +1,12 @@
 import { Colors } from 'src/client/Colors';
 import { styled, css } from 'styled-components';
-import { CopyLinkButton } from 'src/client/CopyLinkButton';
 import { Reactions } from '@cord-sdk/react';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { useCallback, useState } from 'react';
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
+import { MoreActionsButton } from 'src/client/MoreActionsButton2';
 
 export const OPTIONS_ICON_HEIGHT = 20;
 export const OPTIONS_ICON_WIDTH = 20;
@@ -25,6 +25,7 @@ export function Options({
   messageID,
 }: OptionsProps) {
   const [optionsHovered, setOptionsHovered] = useState(false);
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
 
   const onMouseEnter = useCallback(() => {
     setOptionsHovered(true);
@@ -34,9 +35,8 @@ export function Options({
   }, []);
 
   return (
-    (hovered || optionsHovered) && (
+    (hovered || optionsHovered || showOptionsModal) && (
       <OptionsStyled onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        <CopyLinkButton thread={thread} />
         <Tooltip id="reactions-button" />
         <div
           data-tooltip-id="reactions-button"
@@ -62,6 +62,11 @@ export function Options({
             />
           </OptionsButton>
         )}
+        <MoreActionsButton
+          thread={thread}
+          showOptionsModal={showOptionsModal}
+          setShowOptionsModal={setShowOptionsModal}
+        />
       </OptionsStyled>
     )
   );
