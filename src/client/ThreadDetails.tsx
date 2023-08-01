@@ -135,7 +135,7 @@ const CloseButton = styled.div({
 
 const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.gray_light}`,
-  overflowY: 'scroll',
+  overflowY: 'auto',
   backgroundColor: 'white',
 });
 
@@ -155,7 +155,6 @@ const ThreadDetailsHeader = styled(PageHeader)({
 
 const MessageListWrapper = styled.div({
   marginBottom: '12px',
-  overflow: 'scroll',
 });
 
 const SeparatorWrap = styled.div({
