@@ -52,11 +52,12 @@ const SidebarWrap = styled.div({
 });
 
 const SidebarHeader = styled(PageHeader)({
+  position: 'sticky',
+  top: 0,
   display: 'flex',
   borderBottom: `1px solid ${Colors.purple_border}`,
   borderTop: `1px solid ${Colors.purple_border}`,
   color: 'white',
-  position: 'sticky',
   alignItems: 'center',
 });
 
