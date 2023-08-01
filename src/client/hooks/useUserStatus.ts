@@ -17,7 +17,7 @@ export function useUserStatus(): [
   }, []);
 
   const setLocalStorageStatus = (newStatus: Status) => {
-    window.CordSDK?.presence.setPresent(
+    void window.CordSDK?.presence.setPresent(
       {
         page: 'clack',
       },
