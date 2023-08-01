@@ -39,6 +39,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 }
 
 const Wrapper = styled.div({
+  position: 'relative',
   display: 'grid',
   height: '100%',
   gridTemplateRows: 'auto 1fr auto',

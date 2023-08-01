@@ -1,10 +1,13 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
+import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { MessageListItem } from 'src/client/MessageListItem';
 import { PaginationTrigger } from './PaginationTrigger';
 import { EmptyChannel } from './EmptyChannel';
 import { DateDivider } from './DateDivider';
+import { Colors } from './Colors';
+import type { ThreadSummary } from '@cord-sdk/types';
 
 type ThreadsProps = {
   channel: string;
@@ -25,8 +28,16 @@ export function Threads({
       sortDirection: 'descending',
     },
   );
+  const [unseenMessages, setUnseenMessages] = useState<ThreadSummary[]>([]);
+
+  useEffect(() => {
+    if (!isAtBottom()) {
+      setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
+    }
+  }, [threads]);
 
   const threadListRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   const isAtBottom = () => {
     if (!threadListRef.current) {
@@ -44,6 +55,12 @@ export function Threads({
       setTimeout(() => isAtBottom() && onScrollToBottom(), 100);
     }
   }, [onScrollUp, onScrollToBottom]);
+
+  const scrollToBottom = () => {
+    if (anchorRef.current) {
+      anchorRef.current.scrollIntoView();
+    }
+  };
 
   useEffect(() => {
     const el = threadListRef.current;
@@ -89,6 +106,7 @@ export function Threads({
 
   return (
     <Root ref={threadListRef}>
+      <div ref={anchorRef} />
       {renderThreads}
       {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}
       <PaginationTrigger
@@ -104,6 +122,16 @@ export function Threads({
           <EmptyChannel channelID={channel} />
         </>
       ) : null}
+      {unseenMessages.length && !isAtBottom() ? (
+        <NewMessagePill
+          count={unseenMessages.length}
+          onClick={() => {
+            scrollToBottom();
+            setUnseenMessages([]);
+          }}
+          onClose={() => setUnseenMessages([])}
+        />
+      ) : null}
     </Root>
   );
 }
@@ -113,4 +141,63 @@ const Root = styled.div({
   paddingBottom: '20px',
   display: 'flex',
   flexDirection: 'column-reverse',
+});
+
+function NewMessagePill({
+  count,
+  onClick,
+  onClose,
+}: {
+  count: number;
+  onClick: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <Pill onClick={onClick}>
+      <ArrowIcon />
+      {count} new {count === 1 ? 'message' : 'messages'}
+      <CloseButton
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      >
+        <XIcon />
+      </CloseButton>
+    </Pill>
+  );
+}
+
+const Pill = styled.div({
+  position: 'absolute',
+  top: '64px', // height of header (56px) + 8px
+  left: '50%',
+  translate: '-50% 0',
+  zIndex: 5,
+
+  display: 'flex',
+  alignItems: 'center',
+  gap: '6px',
+  borderRadius: '999px',
+  backgroundColor: Colors.blue_active,
+  color: 'white',
+  padding: '8px 16px',
+  cursor: 'pointer',
+});
+
+const ArrowIcon = styled(ArrowDownIcon)({
+  height: '14px',
+  width: '14px',
+});
+
+const CloseButton = styled.button({
+  all: 'unset',
+  paddingLeft: '8px',
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const XIcon = styled(XMarkIcon)({
+  width: '16px',
+  height: '16px',
 });
