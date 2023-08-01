@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Colors } from './Colors';
 import { styled } from 'styled-components';
 import { PageHeader } from './PageHeader';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ChannelButton, Channels } from './channels';
 import { NotificationsRequestBanner } from './NotificationsRequestBanner';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
@@ -15,6 +15,12 @@ type SidebarProps = {
 
 export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const changeChannel = (newChannelID: string) => {
+    const newURL = location.pathname.replace(channelID, newChannelID);
+    navigate(newURL);
+  };
   return (
     <SidebarWrap className={className}>
       <SidebarHeader>Clack</SidebarHeader>
@@ -33,12 +39,7 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
         />
       </Panel>
       <Divider />
-      <Channels
-        setCurrentChannel={(channel) => {
-          navigate(`/channel/${channel}`);
-        }}
-        currentChannel={channelID}
-      />
+      <Channels setCurrentChannel={changeChannel} currentChannel={channelID} />
       <NotificationsRequestBanner />
     </SidebarWrap>
   );
