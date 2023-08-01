@@ -4,7 +4,7 @@ import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from './topbar';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Chat } from './Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
@@ -29,11 +29,16 @@ function useCordToken(): [string | undefined, string | undefined] {
 
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
-  const [openThreadID, setOpenThreadID] = React.useState<string | null>(null);
-  const [openPanel, setOpenPanel] = React.useState<string | null>(null);
+  const { channelID: channelIDParam, threadID } = useParams();
 
-  const { channelID: channelIDParam } = useParams();
-  const channelID = !openPanel ? channelIDParam || 'general' : '';
+  const navigate = useNavigate();
+  const location = useLocation();
+  const openPanel = location.pathname.split('/')[1];
+  const channelID = openPanel === 'channel' ? channelIDParam || 'general' : '';
+
+  const onOpenThread = (threadID: string) => {
+    navigate(`/channel/${channelID}/thread/${threadID}`);
+  };
 
   return (
     <>
@@ -49,19 +54,15 @@ export function App() {
       >
         <BrowserNotificationBridge />
         <PresenceObserver location={{ page: 'clack', durable: true }}>
-          <Layout className={openThreadID ? 'openThread' : ''}>
+          <Layout className={threadID ? 'openThread' : ''}>
             <Topbar userID={cordUserID} />
-            <Sidebar
-              channelID={channelID}
-              setOpenPanel={setOpenPanel}
-              openPanel={openPanel}
-            />
+            <Sidebar channelID={channelID} openPanel={openPanel} />
             <Content>
-              {!openPanel && (
+              {openPanel === 'channel' && (
                 <Chat
                   key={channelID}
                   channel={channelID}
-                  onOpenThread={setOpenThreadID}
+                  onOpenThread={onOpenThread}
                 />
               )}
 
@@ -69,11 +70,11 @@ export function App() {
                 <ThreadsList cordUserID={cordUserID} />
               )}
             </Content>
-            {openThreadID !== null && (
+            {threadID && (
               <ThreadDetails
                 channelID={channelID}
-                threadID={openThreadID}
-                onClose={() => setOpenThreadID(null)}
+                threadID={threadID}
+                onClose={() => navigate(`/channel/${channelID}`)}
               />
             )}
           </Layout>

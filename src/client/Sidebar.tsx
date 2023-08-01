@@ -10,16 +10,10 @@ import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 type SidebarProps = {
   className?: string;
   channelID: string;
-  setOpenPanel: (panel: string | null) => void;
   openPanel: string | null;
 };
 
-export function Sidebar({
-  className,
-  channelID,
-  setOpenPanel,
-  openPanel,
-}: SidebarProps) {
+export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
   const navigate = useNavigate();
   return (
     <SidebarWrap className={className}>
@@ -28,8 +22,7 @@ export function Sidebar({
         <SidebarNavButton
           option={'Threads'}
           onClick={() => {
-            navigate('');
-            setOpenPanel('threads');
+            navigate('/threads/');
           }}
           icon={
             <ChatBubbleOvalLeftEllipsisIcon
@@ -42,8 +35,7 @@ export function Sidebar({
       <Divider />
       <Channels
         setCurrentChannel={(channel) => {
-          setOpenPanel(null);
-          navigate(`/${channel}`);
+          navigate(`/channel/${channel}`);
         }}
         currentChannel={channelID}
       />
