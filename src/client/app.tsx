@@ -12,7 +12,8 @@ import { BrowserNotificationBridge } from './BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/ThreadsList';
 import { Helmet } from 'react-helmet';
 
-function useCordToken(): [string | undefined, string | undefined] {
+//TODO: move to own file
+export function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
     { userID: string; token: string } | { redirect: string }
   >('/token');

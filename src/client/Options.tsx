@@ -2,11 +2,11 @@ import { Colors } from 'src/client/Colors';
 import { styled, css } from 'styled-components';
 import { Reactions } from '@cord-sdk/react';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
-import type { ThreadSummary } from '@cord-sdk/types';
+import type { MessageData, ThreadSummary } from '@cord-sdk/types';
 import { useCallback, useState } from 'react';
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
-import { MoreActionsButton } from 'src/client/MoreActionsButton2';
+import { MoreActionsButton } from 'src/client/MoreActionsButton';
 
 export const OPTIONS_ICON_HEIGHT = 20;
 export const OPTIONS_ICON_WIDTH = 20;
@@ -15,17 +15,17 @@ interface OptionsProps {
   thread: ThreadSummary;
   hovered: boolean;
   onOpenThread?: (threadID: string) => void;
-  messageID?: string;
+  message?: MessageData;
 }
 
 export function Options({
   thread,
   hovered,
   onOpenThread,
-  messageID,
+  message,
 }: OptionsProps) {
   const [optionsHovered, setOptionsHovered] = useState(false);
-  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [showOptionsDialog, setShowOptionsDialog] = useState(false);
 
   const onMouseEnter = useCallback(() => {
     setOptionsHovered(true);
@@ -35,7 +35,7 @@ export function Options({
   }, []);
 
   return (
-    (hovered || optionsHovered || showOptionsModal) && (
+    (hovered || optionsHovered || showOptionsDialog) && (
       <OptionsStyled onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <Tooltip id="reactions-button" />
         <div
@@ -45,7 +45,7 @@ export function Options({
         >
           <Reactions
             threadId={thread.id}
-            messageId={messageID ?? thread.firstMessage?.id}
+            messageId={message?.id ?? thread.firstMessage?.id}
           />
         </div>
         <Tooltip id="options-button" />
@@ -64,8 +64,9 @@ export function Options({
         )}
         <MoreActionsButton
           thread={thread}
-          showOptionsModal={showOptionsModal}
-          setShowOptionsModal={setShowOptionsModal}
+          message={message}
+          showOptionsDialog={showOptionsDialog}
+          setShowOptionsDialog={setShowOptionsDialog}
         />
       </OptionsStyled>
     )

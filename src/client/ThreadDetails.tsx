@@ -38,7 +38,7 @@ function Message({ message, thread }: MessageProps) {
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         />
-        <Options thread={thread} hovered={hovered} messageID={message.id} />
+        <Options thread={thread} hovered={hovered} message={message} />
       </div>
     </MessageListItemStyled>
   );

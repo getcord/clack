@@ -15,4 +15,5 @@ export const Colors = {
   blue_link: '#1264A3',
   green_active: '#2AAC76',
   green: '#117A5A',
+  red: '#e01e5a',
 };
