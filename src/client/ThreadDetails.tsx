@@ -6,10 +6,10 @@ import { thread } from '@cord-sdk/react/';
 import { StyledComposer, StyledMessage } from './StyledCord';
 import { MessageListItemStyled } from './MessageListItem';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { TypingIndicator } from 'src/client/components/TypingIndicator';
+import { TypingIndicator } from 'src/client/TypingIndicator';
 
 import type { MessageData } from '@cord-sdk/types';
-import { Options } from 'src/Options';
+import { Options } from 'src/client/Options';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { PaginationTrigger } from './PaginationTrigger';
 

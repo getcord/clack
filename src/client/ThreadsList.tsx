@@ -5,7 +5,7 @@ import type { ThreadVariables } from '@cord-sdk/api-types';
 import { ChannelIcon } from 'src/client/channels';
 import { StyledThread } from './StyledCord';
 import { FRONT_END_HOST } from 'src/client/consts';
-import { TypingIndicator } from 'src/client/components/TypingIndicator';
+import { TypingIndicator } from 'src/client/TypingIndicator';
 
 export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
   const [myThreads, setMyThreads] = React.useState<

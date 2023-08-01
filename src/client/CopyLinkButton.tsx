@@ -7,7 +7,7 @@ import {
   OPTIONS_ICON_HEIGHT,
   OPTIONS_ICON_WIDTH,
   OptionsButton,
-} from 'src/Options';
+} from 'src/client/Options';
 import { Tooltip } from 'react-tooltip';
 
 export function CopyLinkButton({ thread }: { thread: ThreadSummary }) {
