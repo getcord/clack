@@ -1,13 +1,12 @@
 import { styled, keyframes, css } from 'styled-components';
-import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { useParams } from 'react-router-dom';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyledMessage } from 'src/client/StyledCord';
 import { ThreadReplies } from 'src/client/ThreadReplies';
-import React from 'react';
+import { Colors } from 'src/client/Colors';
 import { Options } from 'src/client/Options';
-import { ProfileDetails } from './ProfileDetails';
+import { ProfileDetails } from 'src/client/ProfileDetails';
 import { Modal } from 'src/client/Modal';
 
 const backgroundFadeToNone = keyframes`

@@ -1,11 +1,10 @@
-import { Colors } from 'src/client/Colors';
 import { styled, css } from 'styled-components';
 import { Reactions } from '@cord-sdk/react';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import type { MessageData, ThreadSummary } from '@cord-sdk/types';
-import { useCallback, useState } from 'react';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
+import { Colors } from 'src/client/Colors';
 import { MoreActionsButton } from 'src/client/MoreActionsButton';
 
 export const OPTIONS_ICON_HEIGHT = 20;

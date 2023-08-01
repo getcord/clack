@@ -1,5 +1,5 @@
 import React from 'react';
-import { API_HOST } from './consts';
+import { API_HOST } from 'src/client/consts';
 
 export function SlackRedirect() {
   React.useEffect(() => {

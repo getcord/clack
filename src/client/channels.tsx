@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Colors } from 'src/client/Colors';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
-import { UnreadBadge } from './UnreadBadge';
+import { UnreadBadge } from 'src/client/UnreadBadge';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { Colors } from 'src/client/Colors';
 
 export function ChannelButton({
   option,

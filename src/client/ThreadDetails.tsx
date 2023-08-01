@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { styled } from 'styled-components';
-import { PageHeader } from './PageHeader';
-import { Colors } from './Colors';
 import { thread } from '@cord-sdk/react/';
-import { StyledComposer, StyledMessage } from './StyledCord';
-import { MessageListItemStyled } from './MessageListItem';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import type { MessageData, ThreadSummary } from '@cord-sdk/types';
+import { PageHeader } from 'src/client/PageHeader';
+import { Colors } from 'src/client/Colors';
+import { StyledComposer, StyledMessage } from 'src/client/StyledCord';
+import { MessageListItemStyled } from 'src/client/MessageListItem';
+import { PaginationTrigger } from 'src/client/PaginationTrigger';
 import { TypingIndicator } from 'src/client/TypingIndicator';
 
-import type { MessageData } from '@cord-sdk/types';
 import { Options } from 'src/client/Options';
-import type { ThreadSummary } from '@cord-sdk/types';
-import { PaginationTrigger } from './PaginationTrigger';
 
 interface MessageProps {
   message: MessageData;

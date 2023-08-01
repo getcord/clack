@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { styled } from 'styled-components';
 import {
   getBrowserNotificationPermission,
   requestNotificationsPermissions,
 } from 'src/client/notifications';
-import { styled } from 'styled-components';
 
 export function NotificationsRequestBanner() {
   const [showBanner, setShowBanner] = React.useState(

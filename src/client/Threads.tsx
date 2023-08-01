@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { MessageListItem } from 'src/client/MessageListItem';
-import { PaginationTrigger } from './PaginationTrigger';
-import { EmptyChannel } from './EmptyChannel';
-import { DateDivider } from './DateDivider';
-import { Colors } from './Colors';
 import type { ThreadSummary } from '@cord-sdk/types';
+import { PaginationTrigger } from 'src/client/PaginationTrigger';
+import { MessageListItem } from 'src/client/MessageListItem';
+import { EmptyChannel } from 'src/client/EmptyChannel';
+import { DateDivider } from 'src/client/DateDivider';
+import { Colors } from 'src/client/Colors';
 
 type ThreadsProps = {
   channel: string;

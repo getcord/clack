@@ -2,8 +2,8 @@ import React from 'react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
-import { Colors } from 'src/client/Colors';
 import { Facepile, user } from '@cord-sdk/react';
+import { Colors } from 'src/client/Colors';
 
 export function PageUsersLabel({ users }: { users: (string | number)[] }) {
   // skip ernest the bot

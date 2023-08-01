@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Colors } from './Colors';
 import { styled } from 'styled-components';
-import { PageHeader } from './PageHeader';
 import { useNavigate } from 'react-router-dom';
-import { ChannelButton, Channels } from './channels';
-import { NotificationsRequestBanner } from './NotificationsRequestBanner';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
+import { Colors } from 'src/client/Colors';
+import { PageHeader } from 'src/client/PageHeader';
+import { ChannelButton, Channels } from 'src/client/channels';
+import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
 
 type SidebarProps = {
   className?: string;

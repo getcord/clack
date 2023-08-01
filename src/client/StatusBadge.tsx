@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { presence } from '@cord-sdk/react';
-import { Colors } from './Colors';
-import { SetToActiveModal } from './SetToActiveModal';
-import { useUserStatus } from './hooks/useUserStatus';
+import { Colors } from 'src/client/Colors';
+import { SetToActiveModal } from 'src/client/SetToActiveModal';
+import { useUserStatus } from 'src/client/hooks/useUserStatus';
 
 interface StatusBadgeProps {
   userID: string;

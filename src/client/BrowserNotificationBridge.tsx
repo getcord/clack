@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { notification } from '@cord-sdk/react';
-import { showNotification } from './notifications';
 import type { NotificationVariables } from '@cord-sdk/types';
+import { showNotification } from 'src/client/notifications';
 
 export function BrowserNotificationBridge() {
   const { notifications } = notification.useData();

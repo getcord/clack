@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar } from '@cord-sdk/react';
 import { styled } from 'styled-components';
-import { StatusBadge } from './StatusBadge';
+import { StatusBadge } from 'src/client/StatusBadge';
 
 export const Topbar = ({
   userID,

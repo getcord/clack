@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { Colors } from './Colors';
+import { Colors } from 'src/client/Colors';
 
 export function UnreadBadge({ count }: { count: number }) {
   return <Badge>{count}</Badge>;

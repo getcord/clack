@@ -2,7 +2,7 @@ import React from 'react';
 import { Facepile, Timestamp } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import type { ThreadSummary } from '@cord-sdk/types';
-import { Colors } from './Colors';
+import { Colors } from 'src/client/Colors';
 
 const RepliesWrapper = styled.div({
   cursor: 'pointer',

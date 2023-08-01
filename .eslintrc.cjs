@@ -4,7 +4,12 @@ module.exports = {
     node: true,
     es2021: true,
   },
-  plugins: ['@typescript-eslint', 'react-hooks'],
+  plugins: [
+    '@typescript-eslint',
+    'import',
+    'no-relative-import-paths',
+    'react-hooks',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -20,12 +25,26 @@ module.exports = {
     'plugin:prettier/recommended', // Must be last.
   ],
   settings: {
+    'import/resolver': 'typescript',
     react: {
       version: '18.2',
     },
   },
   rules: {
     curly: 'error',
+    'import/order': 'error',
+    'import/no-duplicates': 'error',
+    'import/no-restricted-paths': [
+      'error',
+      {
+        basePath: './',
+        zones: [
+          { target: './src/client', from: './src/server' },
+          { target: './src/server', from: './src/client' },
+        ],
+      },
+    ],
+    'no-relative-import-paths/no-relative-import-paths': 'error',
     'react/no-unescaped-entities': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',

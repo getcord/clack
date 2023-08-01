@@ -5,8 +5,8 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
-import { App } from './app';
-import { SlackRedirect } from './SlackRedirect';
+import { App } from 'src/client/app';
+import { SlackRedirect } from 'src/client/SlackRedirect';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const router = createBrowserRouter([

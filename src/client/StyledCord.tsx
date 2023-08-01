@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
-import { Colors } from './Colors';
 import { Composer, Message, Thread } from '@cord-sdk/react';
+import { Colors } from 'src/client/Colors';
 
 export const StyledMessage = styled(Message)`
   .cord-message {

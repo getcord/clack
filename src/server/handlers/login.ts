@@ -1,8 +1,8 @@
+import * as url from 'url';
 import type { Request, Response, NextFunction } from 'express';
 import { getClientAuthToken } from '@cord-sdk/server';
 import * as cookie from 'cookie';
 import { nanoid } from 'nanoid';
-import * as url from 'url';
 import * as Slack from '@slack/web-api';
 import * as jwt from 'jsonwebtoken';
 import {

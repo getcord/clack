@@ -1,9 +1,9 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { Colors } from './Colors';
-import { Threads } from './Threads';
-import { PageHeader } from './PageHeader';
-import { StyledComposer } from './StyledCord';
+import { Colors } from 'src/client/Colors';
+import { Threads } from 'src/client/Threads';
+import { PageHeader } from 'src/client/PageHeader';
+import { StyledComposer } from 'src/client/StyledCord';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { PageUsersLabel } from 'src/client/PageUsersLabel';
 

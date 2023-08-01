@@ -1,17 +1,17 @@
-import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
 import https from 'https';
 import http from 'http';
-import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import cors from 'cors';
+import type { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import * as dotenv from 'dotenv';
 import {
   enforceLoginMiddleware,
   handleGetSlackLogin,
   handleGetToken,
-} from './handlers/login';
-import { handleGetChannels } from './handlers/getChannels';
+} from 'src/server/handlers/login';
+import { handleGetChannels } from 'src/server/handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
 import { handleGetCordUsers } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';

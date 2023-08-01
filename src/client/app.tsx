@@ -1,16 +1,16 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { Colors } from 'src/client/Colors';
 import { styled } from 'styled-components';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { Topbar as TopbarDefault } from './topbar';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Chat } from './Chat';
+import { Helmet } from 'react-helmet';
+import { Colors } from 'src/client/Colors';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { Topbar as TopbarDefault } from 'src/client/topbar';
+import { Chat } from 'src/client/Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
-import { BrowserNotificationBridge } from './BrowserNotificationBridge';
+import { BrowserNotificationBridge } from 'src/client/BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/ThreadsList';
-import { Helmet } from 'react-helmet';
 
 //TODO: move to own file
 export function useCordToken(): [string | undefined, string | undefined] {

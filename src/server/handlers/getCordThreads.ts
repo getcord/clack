@@ -1,7 +1,7 @@
 import type { ThreadVariables } from '@cord-sdk/api-types';
 import type { Request, Response } from 'express';
+import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 import { ORG_ID } from 'src/server/consts';
-import { fetchCordRESTApi } from '../fetchCordRESTApi';
 
 export async function handleGetMyCordThreads(_: Request, res: Response) {
   const allThreads = await fetchCordRESTApi<ThreadVariables[]>('threads');

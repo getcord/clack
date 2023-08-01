@@ -1,9 +1,9 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import type { ThreadVariables } from '@cord-sdk/api-types';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { ChannelIcon } from 'src/client/channels';
-import { StyledThread } from './StyledCord';
+import { StyledThread } from 'src/client/StyledCord';
 import { FRONT_END_HOST } from 'src/client/consts';
 import { TypingIndicator } from 'src/client/TypingIndicator';
 

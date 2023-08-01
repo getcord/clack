@@ -1,14 +1,14 @@
 import React from 'react';
+import { Tooltip } from 'react-tooltip';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import { styled, css } from 'styled-components';
+import type { MessageData, ThreadSummary } from '@cord-sdk/types';
+import { Colors } from 'src/client/Colors';
 import {
   OPTIONS_ICON_HEIGHT,
   OPTIONS_ICON_WIDTH,
   OptionsButton,
 } from 'src/client/Options';
-import { Tooltip } from 'react-tooltip';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
-import { styled, css } from 'styled-components';
-import { Colors } from 'src/client/Colors';
-import type { MessageData, ThreadSummary } from '@cord-sdk/types';
 import { FRONT_END_HOST } from 'src/client/consts';
 import { useCordToken } from 'src/client/app';
 
