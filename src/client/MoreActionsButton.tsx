@@ -58,7 +58,7 @@ export function MoreActionsButton({
 
   const onCopyButtonClick = React.useCallback(() => {
     const channel = thread.location.channel;
-    const url = `${FRONT_END_HOST}/${channel}/thread/${thread.id}`;
+    const url = `${FRONT_END_HOST}/channel/${channel}/thread/${thread.id}`;
     void navigator.clipboard.writeText(url);
     setShowOptionsDialog(false);
   }, [setShowOptionsDialog, thread]);
