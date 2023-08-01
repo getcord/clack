@@ -24,7 +24,11 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         </PageHeaderWrapper>
       </ChannelDetailsBar>
       <StyledThreads channel={channel} onOpenThread={onOpenThread} />
-      <StyledComposer location={{ channel }} showExpanded />
+      <StyledComposer
+        location={{ channel }}
+        threadName={`#${channel}`}
+        showExpanded
+      />
     </Wrapper>
   );
 }
