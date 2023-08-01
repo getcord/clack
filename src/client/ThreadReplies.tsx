@@ -58,6 +58,13 @@ export function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     return null;
   }
 
+  let unreadNumber = summary.unread;
+  if (summary.firstMessage && !summary.firstMessage.seen) {
+    unreadNumber--;
+  }
+
+  const hasUnread = unreadNumber > 0;
+
   // ignoring ts here as lastMessage hasn't been deployed to types packages yet! (27/07)
   const lastReplyTime =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -72,7 +79,16 @@ export function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     <RepliesWrapper onClick={(_e) => onOpenThread(summary.id)}>
       <Facepile users={summary.repliers} />{' '}
       <RepliesCount>
-        {summary.total - 1} {replyWord}
+        {hasUnread ? (
+          <UnreadReply>
+            <BlueDot />
+            <span>
+              {unreadNumber} new {unreadNumber === 1 ? 'reply' : 'replies'}
+            </span>
+          </UnreadReply>
+        ) : (
+          `${summary.total - 1} ${replyWord}`
+        )}
       </RepliesCount>
       <RepliesTimestamp>
         Last reply <StyledTimestamp value={lastReplyTime} />
@@ -88,3 +104,17 @@ const StyledTimestamp = styled(Timestamp)`
     font-size: 13px;
   }
 `;
+
+const UnreadReply = styled.div({
+  display: 'flex',
+  wrap: 'nowrap',
+  alignItems: 'center',
+  gap: '6px',
+});
+
+const BlueDot = styled.div({
+  borderRadius: '999px',
+  backgroundColor: Colors.blue_unread,
+  height: '8px',
+  width: '8px',
+});
