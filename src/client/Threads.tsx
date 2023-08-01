@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -12,16 +12,9 @@ import type { ThreadSummary } from '@cord-sdk/types';
 type ThreadsProps = {
   channel: string;
   onOpenThread: (threadID: string) => void;
-  onScrollUp: () => void;
-  onScrollToBottom: () => void;
 };
 
-export function Threads({
-  channel,
-  onOpenThread,
-  onScrollUp,
-  onScrollToBottom,
-}: ThreadsProps) {
+export function Threads({ channel, onOpenThread }: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
     {
@@ -46,30 +39,11 @@ export function Threads({
     return threadListRef.current.scrollTop >= 0;
   };
 
-  const scrollUpHandler = useCallback(() => {
-    if (!isAtBottom()) {
-      onScrollUp();
-      return;
-    }
-    if (isAtBottom()) {
-      setTimeout(() => isAtBottom() && onScrollToBottom(), 100);
-    }
-  }, [onScrollUp, onScrollToBottom]);
-
   const scrollToBottom = () => {
     if (anchorRef.current) {
       anchorRef.current.scrollIntoView();
     }
   };
-
-  useEffect(() => {
-    const el = threadListRef.current;
-    if (!el) {
-      return;
-    }
-    el.addEventListener('scroll', scrollUpHandler);
-    return () => el.removeEventListener('scroll', scrollUpHandler);
-  }, [scrollUpHandler]);
 
   const firstMessageTimestamp =
     threads[threads.length - 1]?.firstMessage?.createdTimestamp;
@@ -105,7 +79,7 @@ export function Threads({
   });
 
   return (
-    <Root ref={threadListRef}>
+    <Root>
       <div ref={anchorRef} />
       {renderThreads}
       {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}
