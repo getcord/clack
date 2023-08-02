@@ -83,6 +83,13 @@ export const StyledMessage = styled(Message)`
   .cord-pill.cord-from-viewer.cord-count {
     color: ${Colors.blue_active};
   }
+  .cord-image-attachment {
+    max-height: 300px;
+  }
+  .cord-image {
+    max-height: 300px;
+    max-width: 300px;
+  }
 `;
 
 export const StyledComposer = styled(Composer)`
