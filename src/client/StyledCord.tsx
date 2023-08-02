@@ -90,6 +90,10 @@ export const StyledMessage = styled(Message)`
     max-height: 300px;
     max-width: 300px;
   }
+  .cord-sent-via-icon {
+    display: flex;
+    align-items: end;
+  }
 `;
 
 export const StyledComposer = styled(Composer)`
