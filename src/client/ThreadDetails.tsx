@@ -58,28 +58,8 @@ export function ThreadDetails({
 }: ThreadDetailsProps) {
   const { messages, loading, hasMore, fetchMore } =
     thread.useThreadData(threadID);
+
   const threadSummary = thread.useThreadSummary(threadID);
-
-  const [sectionWidth, setSectionWidth] = React.useState(0);
-  const resizeRef = React.useRef<HTMLDivElement>(null);
-
-  const onResize = React.useCallback(() => {
-    if (!resizeRef.current) {
-      return;
-    }
-    setSectionWidth(resizeRef.current.getBoundingClientRect().width);
-  }, [])
-
-  React.useLayoutEffect(() => {
-    onResize();
-  }, [resizeRef.current?.getBoundingClientRect().width])
-
-
-  React.useEffect(() => {
-    window.addEventListener('resize', onResize);
-
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
 
   if (!threadSummary || messages.length === 0) {
     return <div>Loading messages...</div>;
@@ -89,7 +69,7 @@ export function ThreadDetails({
   const replyWord = numReplies === 1 ? 'reply' : 'replies';
 
   return (
-    <ThreadDetailsWrapper ref={resizeRef} className={className}>
+    <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
         <span style={{ gridArea: 'thread' }}>Thread</span>
         <ChannelName># {channelID}</ChannelName>
@@ -97,8 +77,7 @@ export function ThreadDetails({
           <StyledXMarkIcon />
         </CloseButton>
       </ThreadDetailsHeader>
-        <AllowOverflowXBox>
-      <MessageListWrapper $width={sectionWidth}>
+      <MessageListWrapper>
         <Message
           key={threadSummary.firstMessage!.id}
           message={threadSummary.firstMessage!}
@@ -123,9 +102,8 @@ export function ThreadDetails({
           <Message key={message.id} message={message} thread={threadSummary} />
         ))}
       </MessageListWrapper>
-      <SizedComposer $width={sectionWidth} autofocus threadId={threadID} showExpanded />
+      <StyledComposer autofocus threadId={threadID} showExpanded />
       <TypingIndicator threadID={threadID} />
-        </AllowOverflowXBox>
     </ThreadDetailsWrapper>
   );
 }
@@ -156,7 +134,7 @@ const CloseButton = styled.div({
 
 const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.gray_light}`,
-  position: 'relative',
+  overflowY: 'auto',
   backgroundColor: 'white',
 });
 
@@ -174,23 +152,9 @@ const ThreadDetailsHeader = styled(PageHeader)({
   padding: '8px 8px 8px 16px',
 });
 
-// this is required to allow overflow-y to be scroll, while overflow-x visible 🙄
-const AllowOverflowXBox = styled.div({
-  position: "absolute",
-  width: '800px', 
-  top: '64px', 
-  right: 0, 
-  bottom: 0,
-  display: 'flex', 
-  flexDirection: 'column',
-  alignItems: 'end',
-  overflow: 'scroll'
-})
-
-const MessageListWrapper = styled.div<{ $width: number }>(({$width}) => ({
+const MessageListWrapper = styled.div({
   marginBottom: '12px',
-  width: `${$width}px`,
-}));
+});
 
 const SeparatorWrap = styled.div({
   display: 'flex',
@@ -209,8 +173,3 @@ const SeparatorLine = styled.hr({
   border: 'none',
   borderTop: `1px solid ${Colors.gray_light}`,
 });
-
-// -40 for the width comes from the 20px right and left on composer padding.
-const SizedComposer = styled(StyledComposer)<{ $width: number }>`
-  width: ${({ $width }) => $width - 40}px
-`
