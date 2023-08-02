@@ -122,5 +122,5 @@ const Topbar = styled(TopbarDefault)({
 
 const ThreadDetails = styled(ThreadDetailsDefault)`
   grid-area: thread;
-  z-index: 1
+  z-index: 1;
 `;

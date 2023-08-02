@@ -1,7 +1,7 @@
 import { styled, css } from 'styled-components';
 import { Reactions } from '@cord-sdk/react';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
-import type { MessageData, ThreadSummary } from '@cord-sdk/types';
+import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import React, { useCallback, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Colors } from 'src/client/Colors';
@@ -14,7 +14,7 @@ interface OptionsProps {
   thread: ThreadSummary;
   hovered: boolean;
   onOpenThread?: (threadID: string) => void;
-  message?: MessageData;
+  message?: CoreMessageData;
 }
 
 export function Options({

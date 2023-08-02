@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
-import type { PlatformUserVariables } from '@cord-sdk/api-types';
+import type { ServerUserData } from '@cord-sdk/types';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
 export async function handleGetChannels(_: Request, res: Response) {
-  const allChannelsHolder = await fetchCordRESTApi<PlatformUserVariables>(
+  const allChannelsHolder = await fetchCordRESTApi<ServerUserData>(
     'users/all_channels_holder',
   );
 
