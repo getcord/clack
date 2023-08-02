@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import type { MessageData, ThreadSummary } from '@cord-sdk/types';
+import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import { PageHeader } from 'src/client/PageHeader';
 import { Colors } from 'src/client/Colors';
 import { StyledComposer, StyledMessage } from 'src/client/StyledCord';
@@ -13,7 +13,7 @@ import { TypingIndicator } from 'src/client/TypingIndicator';
 import { Options } from 'src/client/Options';
 
 interface MessageProps {
-  message: MessageData;
+  message: CoreMessageData;
   thread: ThreadSummary;
 }
 

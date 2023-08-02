@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
-import type { MessageData, ThreadSummary } from '@cord-sdk/types';
+import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import { Colors } from 'src/client/Colors';
 import {
   OPTIONS_ICON_HEIGHT,
@@ -19,7 +19,7 @@ export function MoreActionsButton({
   setShowOptionsDialog,
 }: {
   thread: ThreadSummary;
-  message?: MessageData;
+  message?: CoreMessageData;
   showOptionsDialog: boolean;
   setShowOptionsDialog: (state: boolean) => void;
 }) {

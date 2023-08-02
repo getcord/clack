@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import type { ThreadVariables } from '@cord-sdk/api-types';
+import type { CoreThreadData } from '@cord-sdk/types';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { ChannelIcon } from 'src/client/channels';
 import { StyledThread } from 'src/client/StyledCord';
@@ -9,7 +9,7 @@ import { TypingIndicator } from 'src/client/TypingIndicator';
 
 export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
   const [myThreads, setMyThreads] = React.useState<
-    ThreadVariables[] | undefined
+    CoreThreadData[] | undefined
   >();
   const allThreads = useAPIFetch<any[]>('/threads');
   React.useEffect(() => {
