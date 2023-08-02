@@ -21,7 +21,8 @@ export function ChannelButton({
     { channel: option },
     { partialMatch: true },
   );
-  const hasUnread = !!summary?.unread;
+  // TODO: remove "as any" once SDK 1.3.0 ships with updated types.
+  const hasUnread = !!(summary as any)?.new;
 
   return (
     <ChannelButtonStyled
