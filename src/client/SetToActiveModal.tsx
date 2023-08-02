@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { Colors } from 'src/client/Colors';
 
 interface SetToActiveModalProps {
-  onClose: () => void;
-  onSetToActive: () => void;
-  onCancel: () => void;
+  onClose: React.MouseEventHandler<HTMLButtonElement>;
+  onSetToActive: React.MouseEventHandler<HTMLButtonElement>;
+  onCancel: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export function SetToActiveModal({
