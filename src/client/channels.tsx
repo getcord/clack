@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
-import { UnreadBadge } from 'src/client/UnreadBadge';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Colors } from 'src/client/Colors';
 
@@ -32,9 +31,6 @@ export function ChannelButton({
     >
       {icon}
       <ChannelName>{option}</ChannelName>
-      {summary?.unreadSubscribed ? (
-        <StyledUnreadBadge count={summary?.unreadSubscribed} />
-      ) : null}
     </ChannelButtonStyled>
   );
 }
@@ -73,10 +69,6 @@ const ChannelName = styled.span`
   text-align: left;
 `;
 
-const StyledUnreadBadge = styled(UnreadBadge)`
-  grid-area: unread-badge;
-`;
-
 const ChannelButtonStyled = styled.button<{
   $activePage?: boolean;
   $hasUnread?: boolean;
@@ -84,7 +76,7 @@ const ChannelButtonStyled = styled.button<{
   display: grid;
   align-items: center;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: 'hash channel-name unread-badge';
+  grid-template-areas: 'hash channel-name';
   grid-gap: 8px;
   padding: 0 10px 0 16px;
 
