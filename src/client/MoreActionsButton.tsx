@@ -3,6 +3,7 @@ import { Tooltip } from 'react-tooltip';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
+import { CordContext } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
 import {
   OPTIONS_ICON_HEIGHT,
@@ -10,7 +11,6 @@ import {
   OptionsButton,
 } from 'src/client/Options';
 import { FRONT_END_HOST } from 'src/client/consts';
-import { useCordToken } from 'src/client/app';
 
 export function MoreActionsButton({
   thread,
@@ -23,7 +23,7 @@ export function MoreActionsButton({
   showOptionsDialog: boolean;
   setShowOptionsDialog: (state: boolean) => void;
 }) {
-  const [_, cordUserID] = useCordToken();
+  const { userID: cordUserID } = React.useContext(CordContext);
   const messageData = message ?? thread.firstMessage;
 
   const subscribedToThread =

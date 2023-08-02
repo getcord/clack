@@ -12,8 +12,7 @@ import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 import { BrowserNotificationBridge } from 'src/client/BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/ThreadsList';
 
-//TODO: move to own file
-export function useCordToken(): [string | undefined, string | undefined] {
+function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
     { userID: string; token: string } | { redirect: string }
   >('/token');
