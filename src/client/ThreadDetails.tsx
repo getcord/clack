@@ -77,36 +77,53 @@ export function ThreadDetails({
           <StyledXMarkIcon />
         </CloseButton>
       </ThreadDetailsHeader>
-      <MessageListWrapper>
-        <Message
-          key={threadSummary.firstMessage!.id}
-          message={threadSummary.firstMessage!}
-          thread={threadSummary}
-        />
-        <SeparatorWrap>
-          {numReplies > 0 ? (
-            <>
-              <SeparatorText>
-                {numReplies} {replyWord}
-              </SeparatorText>
-              <SeparatorLine />
-            </>
-          ) : null}
-        </SeparatorWrap>
-        <PaginationTrigger
-          loading={loading}
-          hasMore={hasMore}
-          fetchMore={fetchMore}
-        />
-        {messages.slice(1).map((message) => (
-          <Message key={message.id} message={message} thread={threadSummary} />
-        ))}
-      </MessageListWrapper>
-      <StyledComposer autofocus threadId={threadID} showExpanded />
-      <TypingIndicator threadID={threadID} />
+      <ScrollableContainer>
+        <MessageListWrapper>
+          <Message
+            key={threadSummary.firstMessage!.id}
+            message={threadSummary.firstMessage!}
+            thread={threadSummary}
+          />
+          <SeparatorWrap>
+            {numReplies > 0 ? (
+              <>
+                <SeparatorText>
+                  {numReplies} {replyWord}
+                </SeparatorText>
+                <SeparatorLine />
+              </>
+            ) : null}
+          </SeparatorWrap>
+          <PaginationTrigger
+            loading={loading}
+            hasMore={hasMore}
+            fetchMore={fetchMore}
+          />
+          {messages.slice(1).map((message) => (
+            <Message
+              key={message.id}
+              message={message}
+              thread={threadSummary}
+            />
+          ))}
+        </MessageListWrapper>
+        <StyledComposer autofocus threadId={threadID} showExpanded />
+        <TypingIndicator threadID={threadID} />
+      </ScrollableContainer>
     </ThreadDetailsWrapper>
   );
 }
+
+const ThreadDetailsWrapper = styled.div({
+  borderLeft: `1px solid ${Colors.gray_light}`,
+  overflow: 'hidden',
+  backgroundColor: 'white',
+});
+
+const ScrollableContainer = styled.div({
+  overflow: 'auto',
+  height: '100%',
+});
 
 const ChannelName = styled.span({
   gridArea: 'channel-name',
@@ -132,15 +149,7 @@ const CloseButton = styled.div({
   },
 });
 
-const ThreadDetailsWrapper = styled.div({
-  borderLeft: `1px solid ${Colors.gray_light}`,
-  overflowY: 'auto',
-  backgroundColor: 'white',
-});
-
 const ThreadDetailsHeader = styled(PageHeader)({
-  position: 'sticky',
-  top: 0,
   backgroundColor: 'inherit',
   display: 'grid',
   gridGap: '12px',
