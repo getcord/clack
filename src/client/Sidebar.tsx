@@ -42,7 +42,7 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
           setCurrentChannel={(channel) => navigate(`/channel/${channel}`)}
           currentChannel={channelID}
         />
-        </ScrollableContent>
+      </ScrollableContent>
       <NotificationsRequestBanner />
     </SidebarWrap>
   );
@@ -57,12 +57,12 @@ const SidebarWrap = styled.div({
   "content"
   `,
   position: 'relative',
-  overflow: 'hidden'
+  overflow: 'hidden',
 });
 
 const ScrollableContent = styled.div({
-  overflow: 'scroll',
-})
+  overflow: 'auto',
+});
 
 const SidebarHeader = styled.div({
   gridArea: 'header',
