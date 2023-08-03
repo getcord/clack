@@ -133,7 +133,6 @@ const Content = styled.div({
   gridArea: 'content',
   background: 'white',
   overflow: 'hidden',
-  zIndex: 2,
 });
 
 const Topbar = styled(TopbarDefault)({
@@ -144,5 +143,4 @@ const Topbar = styled(TopbarDefault)({
 
 const ThreadDetails = styled(ThreadDetailsDefault)`
   grid-area: thread;
-  z-index: 1;
 `;
