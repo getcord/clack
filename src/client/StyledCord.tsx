@@ -58,9 +58,17 @@ export const StyledMessage = styled(Message)`
     font-size: 11px;
     line-height: 16px;
     background-color: #efefef;
+    svg {
+      stroke-width: 1.5;
+    }
     &:hover {
       background-color: white;
       box-shadow: inset 0 0 0 1px ${Colors.gray_dark};
+    }
+  }
+  .cord-add-reaction:hover {
+    svg {
+      fill: #f2c744;
     }
   }
   .cord-with-icon > svg {
