@@ -1,5 +1,6 @@
 {
   "open": false,
+  "notify": false,
   "https": {
     "key": "localhost/localhost.key",
     "cert": "localhost/localhost.crt"
