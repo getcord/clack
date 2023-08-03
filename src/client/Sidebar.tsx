@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
+import { NotificationListLauncher } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
 import { PageHeader } from 'src/client/PageHeader';
 import { ChannelButton, Channels } from 'src/client/channels';
@@ -17,7 +18,10 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
   const navigate = useNavigate();
   return (
     <SidebarWrap className={className}>
-      <SidebarHeader>Clack</SidebarHeader>
+      <SidebarHeader>
+        <PageHeader>Clack</PageHeader>
+        <StyledNotifLauncher />
+      </SidebarHeader>
       <Panel>
         <SidebarNavButton
           option={'Threads'}
@@ -49,14 +53,19 @@ const SidebarWrap = styled.div({
   overflow: 'auto',
 });
 
-const SidebarHeader = styled(PageHeader)({
+const SidebarHeader = styled.div({
   position: 'sticky',
   top: 0,
   display: 'flex',
+  justifyContent: 'space-between',
   borderBottom: `1px solid ${Colors.purple_border}`,
   borderTop: `1px solid ${Colors.purple_border}`,
   color: 'white',
   alignItems: 'center',
+});
+
+const StyledNotifLauncher = styled(NotificationListLauncher)({
+  padding: '0 16px',
 });
 
 const SidebarNavButton = styled(ChannelButton)`

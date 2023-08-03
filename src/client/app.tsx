@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import type { NavigateFn } from '@cord-sdk/types';
 import { Colors } from 'src/client/Colors';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/topbar';
@@ -41,6 +42,18 @@ export function App() {
     navigate(`/channel/${channelID}/thread/${threadID}`);
   };
 
+  const onCordNavigate: NavigateFn = React.useCallback(
+    (_url, location, { threadID }) => {
+      if (!(location && 'channel' in location)) {
+        return false;
+      }
+
+      navigate(`/channel/${location.channel}/thread/${threadID}`);
+      return true;
+    },
+    [navigate],
+  );
+
   const translations = useMemo(
     () => ({
       en: { composer: { add_a_comment: `Message #${channelID}` } },
@@ -59,6 +72,7 @@ export function App() {
         enableSlack={false}
         enableTasks={false}
         enableAnnotations={false}
+        navigate={onCordNavigate}
         translations={translations}
       >
         <BrowserNotificationBridge />
