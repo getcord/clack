@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
+import { useUserStatus } from 'src/client/hooks/useUserStatus';
+import { ActiveBadge as DefaultActiveBadge } from 'src/client/ActiveBadge';
+import { SetToActiveModal } from 'src/client/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/UserPreferenceDropdown';
-import { useUserStatus } from './hooks/useUserStatus';
-import { ActiveBadge as DefaultActiveBadge } from './ActiveBadge';
-import { SetToActiveModal } from './SetToActiveModal';
 
 export const Topbar = ({
   userID,

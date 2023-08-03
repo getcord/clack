@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Colors } from './Colors';
+import { Colors } from 'src/client/Colors';
 
 export const ActiveBadge = styled.div<{ $isActive: boolean }>(
   ({ $isActive }) => ({

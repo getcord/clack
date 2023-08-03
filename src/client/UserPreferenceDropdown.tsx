@@ -1,10 +1,11 @@
 import React from 'react';
 import { user, Avatar as DefaultAvatar } from '@cord-sdk/react';
 import styled from 'styled-components';
-import { ActiveBadge } from './ActiveBadge';
-import { Colors } from './Colors';
-import type { SetStatus, Status } from './hooks/useUserStatus';
-import { capitalize } from './utils';
+import { Status } from 'src/client/hooks/useUserStatus';
+import { ActiveBadge } from 'src/client/ActiveBadge';
+import { Colors } from 'src/client/Colors';
+import type { SetStatus } from 'src/client/hooks/useUserStatus';
+import { capitalize } from 'src/client/utils';
 
 interface UserPreferencesDropdownProps {
   status: Status;
