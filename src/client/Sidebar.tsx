@@ -22,25 +22,27 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
         <PageHeader>Clack</PageHeader>
         <StyledNotifLauncher />
       </SidebarHeader>
-      <Panel>
-        <SidebarNavButton
-          option={'Threads'}
-          onClick={() => {
-            navigate('/threads/');
-          }}
-          icon={
-            <ChatBubbleOvalLeftEllipsisIcon
-              style={{ width: '20px', height: '20px' }}
-            />
-          }
-          isActive={openPanel === 'threads'}
+      <ScrollableContent>
+        <Panel>
+          <SidebarNavButton
+            option={'Threads'}
+            onClick={() => {
+              navigate('/threads/');
+            }}
+            icon={
+              <ChatBubbleOvalLeftEllipsisIcon
+                style={{ width: '20px', height: '20px' }}
+              />
+            }
+            isActive={openPanel === 'threads'}
+          />
+        </Panel>
+        <Divider />
+        <Channels
+          setCurrentChannel={(channel) => navigate(`/channel/${channel}`)}
+          currentChannel={channelID}
         />
-      </Panel>
-      <Divider />
-      <Channels
-        setCurrentChannel={(channel) => navigate(`/channel/${channel}`)}
-        currentChannel={channelID}
-      />
+        </ScrollableContent>
       <NotificationsRequestBanner />
     </SidebarWrap>
   );
@@ -48,14 +50,22 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
 
 const SidebarWrap = styled.div({
   background: Colors.purple,
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'auto',
+  display: 'grid',
+  gridTemplateRows: 'auto 1fr',
+  gridTemplateAreas: `
+  "header" 
+  "content"
+  `,
+  position: 'relative',
+  overflow: 'hidden'
 });
 
+const ScrollableContent = styled.div({
+  overflow: 'scroll',
+})
+
 const SidebarHeader = styled.div({
-  position: 'sticky',
-  top: 0,
+  gridArea: 'header',
   display: 'flex',
   justifyContent: 'space-between',
   borderBottom: `1px solid ${Colors.purple_border}`,
@@ -76,7 +86,7 @@ const SidebarNavButton = styled(ChannelButton)`
 const Panel = styled.div({
   display: 'flex',
   flexDirection: 'column',
-  margin: ' 20px  8px 0 ',
+  margin: '20px 8px 0',
 });
 
 const Divider = styled.div({
