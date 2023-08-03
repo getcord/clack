@@ -1,5 +1,6 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
+import { useMemo } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -40,6 +41,13 @@ export function App() {
     navigate(`/channel/${channelID}/thread/${threadID}`);
   };
 
+  const translations = useMemo(
+    () => ({
+      en: { composer: { add_a_comment: `Message #${channelID}` } },
+    }),
+    [channelID],
+  );
+
   return (
     <>
       <Helmet>
@@ -51,6 +59,7 @@ export function App() {
         enableSlack={false}
         enableTasks={false}
         enableAnnotations={false}
+        translations={translations}
       >
         <BrowserNotificationBridge />
         <PresenceObserver location={{ page: 'clack', durable: true }}>
