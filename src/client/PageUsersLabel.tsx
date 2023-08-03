@@ -4,6 +4,7 @@ import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { Facepile, user } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
+import { combine } from 'src/client/utils';
 
 export function PageUsersLabel({ users }: { users: (string | number)[] }) {
   // skip ernest the bot
@@ -21,9 +22,10 @@ export function PageUsersLabel({ users }: { users: (string | number)[] }) {
       >
         <TooltipText>
           <span>View all members of this channel.</span>
-          <span>{`Includes ${userData
-            .map((user) => user?.name ?? '')
-            .join(', ')}`}</span>
+          <span>{`Includes ${combine(
+            'and',
+            userData.map((user) => user?.name ?? ''),
+          )}`}</span>
         </TooltipText>
       </Tooltip>
       <UsersLabel
