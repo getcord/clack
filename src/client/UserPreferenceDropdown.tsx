@@ -11,12 +11,14 @@ interface UserPreferencesDropdownProps {
   status: Status;
   setStatus: SetStatus;
   onClose: () => void;
+  className?: string;
 }
 
 export function UserPreferencesDropdown({
   onClose,
   status,
   setStatus,
+  className
 }: UserPreferencesDropdownProps) {
   const data = user.useViewerData();
 
@@ -28,7 +30,7 @@ export function UserPreferencesDropdown({
 
   return (
     data && (
-      <Box>
+      <Box className={className}>
         <UserInfo>
           <Avatar userId={data.id} />
           <UserName>{capitalize(data.name || '')}</UserName>

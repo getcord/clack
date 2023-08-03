@@ -5,6 +5,7 @@ import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { ActiveBadge as DefaultActiveBadge } from 'src/client/ActiveBadge';
 import { SetToActiveModal } from 'src/client/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/UserPreferenceDropdown';
+import { Modal } from './Modal';
 
 export const Topbar = ({
   userID,
@@ -55,13 +56,13 @@ export const Topbar = ({
         {userID && <Avatar userId={userID} enableTooltip />}
       </AvatarWrapper>
       <ActiveBadge className={className} $isActive={status === 'active'} />
-      {showDropdown && (
-        <UserPreferencesDropdown
+      <Modal isOpen={showDropdown} onClose={() => setShowDropdown(false)}>
+        <PreferencesDropdown
           status={status}
           setStatus={setStatus}
           onClose={() => setShowDropdown(false)}
         />
-      )}
+      </Modal>
       {isPresent &&
       status !== 'active' &&
       shouldShowActiveModal &&
@@ -110,4 +111,10 @@ const ActiveBadge = styled(DefaultActiveBadge)`
   position: absolute;
   bottom: 5px;
   right: 5px;
+`;
+
+const PreferencesDropdown = styled(UserPreferencesDropdown)`
+  pointer-events: auto;
+  top: 40px;
+  right: 10px;
 `;
