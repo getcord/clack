@@ -118,11 +118,13 @@ const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.gray_light}`,
   overflow: 'hidden',
   backgroundColor: 'white',
+  display: 'flex', 
+  flexDirection: 'column',
 });
 
 const ScrollableContainer = styled.div({
   overflow: 'auto',
-  height: '100%',
+  flex: 1,
 });
 
 const ChannelName = styled.span({
