@@ -76,46 +76,57 @@ export function MessageListItem({
   const showProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
   const hideProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
 
-  const queueHideProfileDetails = (timeoutID: NodeJS.Timeout | null) => {
-    if (timeoutID) {
-      clearTimeout(timeoutID);
-    }
-    hideProfileDetailsTimeoutID.current = setTimeout(() => {
-      if (avatarElement) {
-        setShowProfileDetails(false);
+  const queueHideProfileDetails = useCallback(
+    (timeoutID: NodeJS.Timeout | null) => {
+      if (timeoutID) {
+        clearTimeout(timeoutID);
       }
-    }, 500);
-  };
+      hideProfileDetailsTimeoutID.current = setTimeout(() => {
+        if (avatarElement) {
+          setShowProfileDetails(false);
+        }
+      }, 500);
+    },
+    [avatarElement],
+  );
 
-  const queueShowProfileDetails = (
-    timeoutID: NodeJS.Timeout | null,
-  ) => {
-    if (timeoutID) {
-      clearTimeout(timeoutID);
-    }
-    showProfileDetailsTimeoutID.current = setTimeout(() => {
-      if (avatarElement) {
-        setProfileDetailsPosition({
-          top: avatarElement.getBoundingClientRect().top,
-          left: avatarElement.getBoundingClientRect().left,
-        });
-        setShowProfileDetails(true);
+  const queueShowProfileDetails = useCallback(
+    (timeoutID: NodeJS.Timeout | null) => {
+      if (timeoutID) {
+        clearTimeout(timeoutID);
       }
-    }, 500);
-  };
+      showProfileDetailsTimeoutID.current = setTimeout(() => {
+        if (avatarElement) {
+          setProfileDetailsPosition({
+            top: avatarElement.getBoundingClientRect().top,
+            left: avatarElement.getBoundingClientRect().left,
+          });
+          setShowProfileDetails(true);
+        }
+      }, 500);
+    },
+    [avatarElement],
+  );
 
   useLayoutEffect(() => {
-    const onMouseEnter = () => queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
+    const onMouseEnter = () =>
+      queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
     avatarElement?.addEventListener('mouseenter', onMouseEnter);
 
-    const onMouseLeave = () => queueHideProfileDetails(showProfileDetailsTimeoutID.current);
+    const onMouseLeave = () =>
+      queueHideProfileDetails(showProfileDetailsTimeoutID.current);
     avatarElement?.addEventListener('mouseleave', onMouseLeave);
 
     return () => {
       avatarElement?.removeEventListener('mouseenter', onMouseEnter);
       avatarElement?.removeEventListener('mouseleave', onMouseLeave);
     };
-  }, [avatarElement, hoveredProfileDetails]);
+  }, [
+    avatarElement,
+    hoveredProfileDetails,
+    queueHideProfileDetails,
+    queueShowProfileDetails,
+  ]);
 
   return (
     <MessageListItemStyled
