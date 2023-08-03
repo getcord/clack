@@ -11,6 +11,7 @@ export const Colors = {
   gray_menu_bg: '#F8F8F8',
   gray_dark: '#626162',
   gray_border: '#BBBABB',
+  gray_text: '#4D4C4D',
   blue_selected_bg: '#E8F5FA',
   blue_selected_border: '#1D9BD1',
   blue_unread: '#0279FF',

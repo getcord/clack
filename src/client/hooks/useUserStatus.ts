@@ -1,35 +1,34 @@
+import { user } from '@cord-sdk/react';
 import { useEffect, useState } from 'react';
+import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 
-export const localStorageKey = 'status';
-
-export type Status = 'active' | 'away';
-export type SetStatus = (
-  status: Status | ((previousStatus: Status) => Status),
-) => void;
-
-export function useUserStatus(): [status: Status, setStatus: SetStatus] {
-  const [status, setStatus] = useState<Status>('away');
+export function useUserStatus(): [
+  status: string | null,
+  updateUserStatus: (newStatus: string) => Promise<any>,
+] {
+  const [status, setStatus] = useState<string | null>(null);
+  const viewer = user.useViewerData();
+  const viewerID = viewer?.id;
 
   useEffect(() => {
-    setStatus(
-      (window.localStorage.getItem(localStorageKey) as Status) ?? 'away',
-    );
-  }, []);
+    if (typeof viewer?.metadata.status === 'string') {
+      setStatus(viewer.metadata.status);
+    }
+  }, [viewer]);
 
-  const setLocalStorageStatus: SetStatus = (newStatus) => {
-    const newState =
-      typeof newStatus === 'function' ? newStatus(status) : newStatus;
-    void window.CordSDK?.presence.setPresent(
-      {
-        page: 'clack',
+  const updateUser = useAPIUpdateFetch();
+
+  const updateUserStatus = async (newStatus: string) => {
+    const body = {
+      metadata: {
+        status: newStatus,
       },
-      {
-        absent: newStatus !== 'active',
-      },
-    );
-    window.localStorage.setItem(localStorageKey, newState);
-    setStatus(newState);
+    };
+    return updateUser(`/users/${viewerID}`, 'PUT', body)
+      .then((res) => res)
+      .then((res) => res.json())
+      .catch((e) => e);
   };
 
-  return [status, setLocalStorageStatus];
+  return [status, updateUserStatus];
 }

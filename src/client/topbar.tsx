@@ -2,10 +2,14 @@ import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
+import { SetStatusMenu } from 'src/client/SetStatus';
+import { Modal } from 'src/client/Modal';
+import { useUserActivity } from 'src/client/hooks/useUserActivity';
 import { ActiveBadge as DefaultActiveBadge } from 'src/client/ActiveBadge';
 import { SetToActiveModal } from 'src/client/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/UserPreferenceDropdown';
-import { Modal } from './Modal';
+
+type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 
 export const Topbar = ({
   userID,
@@ -14,13 +18,15 @@ export const Topbar = ({
   userID?: string;
   className?: string;
 }) => {
-  const [status, setStatus] = useUserStatus();
+  const [isActive, setIsActive] = useUserActivity();
+  const [status, updateStatus] = useUserStatus();
   const present = presence.useLocationData(
     { page: 'clack' },
     { exclude_durable: false, partial_match: true },
   );
-
-  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [modalState, setModalState] = React.useState<ModalState>(null);
+  // this is not included in the modalState state as it's whether it *should* show,
+  // not whether it *is* showing
   const [shouldShowActiveModal, setShouldShowActiveModal] =
     React.useState(true);
 
@@ -35,18 +41,18 @@ export const Topbar = ({
   const onCancel: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     setShouldShowActiveModal(false);
-    setStatus('away');
+    setIsActive('away');
   };
 
   const onSetToActive: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    setStatus('active');
+    setIsActive('active');
     setShouldShowActiveModal(false);
   };
 
   const onAvatarClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
-    setShowDropdown((prev) => !prev);
+    setModalState((prev) => (prev === 'PREFERENCES' ? null : 'PREFERENCES'));
     setShouldShowActiveModal(false);
   };
 
@@ -55,16 +61,24 @@ export const Topbar = ({
       <AvatarWrapper onClick={onAvatarClick}>
         {userID && <Avatar userId={userID} enableTooltip />}
       </AvatarWrapper>
-      <ActiveBadge className={className} $isActive={status === 'active'} />
-      <Modal isOpen={showDropdown} onClose={() => setShowDropdown(false)}>
+      <ActiveBadge className={className} $isActive={isActive === 'active'} />
+      <Modal
+        isOpen={modalState === 'PREFERENCES'}
+        onClose={() => setModalState(null)}
+      >
         <PreferencesDropdown
+          openStatusModal={(e) => {
+            e.stopPropagation();
+            setModalState('SET_STATUS');
+          }}
           status={status}
-          setStatus={setStatus}
-          onClose={() => setShowDropdown(false)}
+          activity={isActive}
+          setActivity={setIsActive}
+          onClose={() => setModalState(null)}
         />
       </Modal>
       {isPresent &&
-      status !== 'active' &&
+      isActive !== 'active' &&
       shouldShowActiveModal &&
       !activeModalPreference ? (
         <SetToActiveModal
@@ -73,6 +87,17 @@ export const Topbar = ({
           onSetToActive={onSetToActive}
         />
       ) : null}
+      <DarkBGModal
+        isOpen={modalState === 'SET_STATUS'}
+        onClose={() => setModalState(null)}
+      >
+        <SetStatusMenu
+          status={status}
+          updateStatus={updateStatus}
+          onCancel={() => setModalState(null)}
+          onClose={() => setModalState(null)}
+        />
+      </DarkBGModal>
     </Container>
   );
 };
@@ -85,6 +110,13 @@ const Container = styled.div({
   alignItems: 'center',
   paddingInlineEnd: '12px',
 });
+
+const DarkBGModal = styled(Modal)`
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const AvatarWrapper = styled.div({});
 
