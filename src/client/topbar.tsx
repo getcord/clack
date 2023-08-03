@@ -43,14 +43,17 @@ export const Topbar = ({
     setShouldShowActiveModal(false);
   };
 
-  const onAvatarClick = () => {
+  const onAvatarClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
     setShowDropdown((prev) => !prev);
     setShouldShowActiveModal(false);
   };
 
   return (
-    <Container className={className} onClick={onAvatarClick}>
-      {userID && <Avatar userId={userID} enableTooltip />}
+    <Container className={className}>
+      <AvatarWrapper onClick={onAvatarClick}>
+        {userID && <Avatar userId={userID} enableTooltip />}
+      </AvatarWrapper>
       <ActiveBadge className={className} $isActive={status === 'active'} />
       {showDropdown && (
         <UserPreferencesDropdown
@@ -80,8 +83,9 @@ const Container = styled.div({
   justifyContent: 'flex-end',
   alignItems: 'center',
   paddingInlineEnd: '12px',
-  cursor: 'pointer',
 });
+
+const AvatarWrapper = styled.div({});
 
 const Avatar = styled(DefaultAvatar)`
   .cord-avatar-container {
