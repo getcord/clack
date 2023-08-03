@@ -161,11 +161,11 @@ export const Dialog = styled.div<{
   $top: number;
   $left: number;
 }>`
+  pointer-events: auto;
   position: absolute;
   top: ${({ $top }) => $top}px;
   left: ${({ $left }) => $left}px;
   translate: -110% -10%;
-  z-index: 3;
   visibility: ${({ $shouldShow }) => ($shouldShow ? 'visible' : 'hidden')};
   background-color: ${Colors.gray_menu_bg};
   min-width: 360px;
