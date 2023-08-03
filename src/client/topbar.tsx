@@ -13,9 +13,6 @@ export const Topbar = ({
   userID?: string;
   className?: string;
 }) => {
-  if (!userID) {
-    return null;
-  }
   const [status, setStatus] = useUserStatus();
   const present = presence.useLocationData(
     { page: 'clack' },
@@ -53,7 +50,7 @@ export const Topbar = ({
 
   return (
     <Container className={className} onClick={onAvatarClick}>
-      <Avatar userId={userID} enableTooltip />
+      {userID && <Avatar userId={userID} enableTooltip />}
       <ActiveBadge className={className} $isActive={status === 'active'} />
       {showDropdown && (
         <UserPreferencesDropdown
