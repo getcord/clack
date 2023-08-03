@@ -41,9 +41,18 @@ To SSH in:
 - Run `tmux attach -t clack` to attach to the Clack tmux session which is running the server
 - To exit the session without killing it, press Ctrl + b together, let go, then d
 
-- To update:
-  - Git pull, npm i, whatever
-  - `npm run prod` to rebuild and restart
+- To redeploy: 
+  - Option 1:
+    - Run the workflow! https://github.com/getcord/clack/actions/workflows/deploy.yml  
+  - Option 2:
+    - ssh into the machine
+    - Git pull, npm i, whatever
+    - Attach to the existing tmux clack session (`tmux attach -t clack`)
+      - kill the existing server process that's running there
+      - `npm run prod` to rebuild and restart both client and server
+  
 
 The client is being served by nginx from /var/www/clack.  The script run by `npm run prod`
 copies the files there and restarts nginx.
+
+Alternatively the github action curls another server running in the clack-update-server session, which runs ./ci/scripts/update.sh.  This also rebuilds and restarts everything, but additionally does a git pull/npm i, and restarts the server in the clack tmux session (yes this is all bonkers).
