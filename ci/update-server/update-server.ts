@@ -1,10 +1,9 @@
+import child_process from 'child_process';
+import http from 'http';
+import path from 'path';
+import * as dotenv from 'dotenv';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import http from 'http';
-import { verify } from 'jsonwebtoken';
-import * as dotenv from 'dotenv';
-import path from 'path';
-import child_process from 'child_process';
 
 const port = 7321;
 
