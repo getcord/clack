@@ -1,0 +1,27 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-master:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger rebuild and deploy on EC2
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.UPDATE_SECRET }}
+        run: |
+          curl \
+            -H "Authorization: Bearer $TOKEN" \
+            https://api.clack.cord.com/secret/update
+
+        run: |
+          response=$(curl -sS -w "%{http_code}" -o /dev/null https://api.clack.cord.com/secret/update -H "Authorization: Bearer $TOKEN")
+          echo "HTTP Response Code: $response"
+          
+          if [ "$response" -ne 200 ]; then
+            echo "Request failed with status $response"
+            exit 1
+          fi
