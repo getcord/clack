@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
@@ -11,6 +11,7 @@ import {
   OptionsButton,
 } from 'src/client/Options';
 import { FRONT_END_HOST } from 'src/client/consts';
+import { Modal as DefaultModal } from './Modal';
 
 export function MoreActionsButton({
   thread,
@@ -47,7 +48,20 @@ export function MoreActionsButton({
     setShowOptionsDialog(false);
   }, [setShowOptionsDialog, messageData]);
 
+  const moreOptionsButtonRef = useRef<HTMLDivElement>(null);
+  const [menuPopoutPosition, setMenuPopoutPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+
   const onMoreOptionsClick = React.useCallback(() => {
+    if (!moreOptionsButtonRef.current) {
+      return;
+    }
+    setMenuPopoutPosition({
+      top: moreOptionsButtonRef.current.getBoundingClientRect().top,
+      left: moreOptionsButtonRef.current.getBoundingClientRect().right,
+    });
     setShowOptionsDialog(true);
   }, [setShowOptionsDialog]);
 
@@ -68,6 +82,7 @@ export function MoreActionsButton({
       <div style={{ position: 'relative' }}>
         <Tooltip id="more-actions-button" />
         <OptionsButton
+          ref={moreOptionsButtonRef}
           data-tooltip-id="more-actions-button"
           data-tooltip-content="More actions"
           data-tooltip-place="top"
@@ -78,27 +93,36 @@ export function MoreActionsButton({
             height={OPTIONS_ICON_HEIGHT}
           />
         </OptionsButton>
-        <Dialog $shouldShow={showOptionsDialog}>
-          <StyledButton onClick={() => void onSubscribeOrUnsubscribe()}>
-            Turn {subscribedToThread ? 'off' : 'on'} notifications for reply
-          </StyledButton>
-          <Divider />
+        <Modal
+          id="options-menu-modal"
+          isOpen={showOptionsDialog}
+          onClose={() => setShowOptionsDialog(false)}
+        >
+          <Dialog
+            $top={menuPopoutPosition.top}
+            $left={menuPopoutPosition.left}
+            $shouldShow={showOptionsDialog}
+          >
+            <StyledButton onClick={() => void onSubscribeOrUnsubscribe()}>
+              Turn {subscribedToThread ? 'off' : 'on'} notifications for reply
+            </StyledButton>
+            <Divider />
+            <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
 
-          <StyledButton onClick={onCopyButtonClick}> Copy link</StyledButton>
-
-          {cordUserID === messageData?.authorID &&
-            messageData?.deletedTimestamp === null && (
-              <>
-                <Divider />
-                <StyledButton
-                  $type="alert"
-                  onClick={() => void onDeleteMessage()}
-                >
-                  Delete message
-                </StyledButton>
-              </>
-            )}
-        </Dialog>
+            {cordUserID === messageData?.authorID &&
+              messageData?.deletedTimestamp === null && (
+                <>
+                  <Divider />
+                  <StyledButton
+                    $type="alert"
+                    onClick={() => void onDeleteMessage()}
+                  >
+                    Delete message
+                  </StyledButton>
+                </>
+              )}
+          </Dialog>
+        </Modal>
       </div>
       <Overlay
         onClick={() => setShowOptionsDialog(false)}
@@ -107,6 +131,10 @@ export function MoreActionsButton({
     </>
   );
 }
+
+const Modal = styled(DefaultModal)`
+  pointer-events: none;
+`
 
 const StyledButton = styled.button<{ $type?: string }>`
   font-size: 15px;
@@ -128,16 +156,22 @@ const StyledButton = styled.button<{ $type?: string }>`
   }
 `;
 
-export const Dialog = styled.div<{ $shouldShow: boolean }>`
+export const Dialog = styled.div<{
+  $shouldShow: boolean;
+  $top: number;
+  $left: number;
+}>`
   position: absolute;
-  top: -25px;
-  translate: -100% 0;
+  top: ${({ $top }) => $top}px;
+  left: ${({ $left }) => $left}px;
+  translate: -110% -10%;
   z-index: 3;
   visibility: ${({ $shouldShow }) => ($shouldShow ? 'visible' : 'hidden')};
+  background-color: ${Colors.gray_menu_bg};
   min-width: 360px;
   min-height: 50px;
+  width: fit-content;
   border-radius: 6px;
-  background-color: white;
   box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
   padding: 20px 0;
 `;

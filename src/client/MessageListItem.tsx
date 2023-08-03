@@ -1,7 +1,13 @@
 import { styled, keyframes, css } from 'styled-components';
 import type { ThreadSummary } from '@cord-sdk/types';
 import { useParams } from 'react-router-dom';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { StyledMessage } from 'src/client/StyledCord';
 import { ThreadReplies } from 'src/client/ThreadReplies';
 import { Colors } from 'src/client/Colors';
@@ -51,6 +57,11 @@ export function MessageListItem({
 
   const [hovered, setHovered] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
+  const [hoveredProfileDetails, setHoveredProfileDetails] = useState(false);
+  const [profileDetailsPosition, setProfileDetailsPosition] = useState({
+    top: 0,
+    left: 0,
+  });
   const ref = useRef<HTMLDivElement>(null);
 
   const onMouseEnter = useCallback(() => {
@@ -60,83 +71,99 @@ export function MessageListItem({
     setHovered(false);
   }, []);
 
-  const onMouseOverAvatar = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    // For some reason typescript doesn't recognise that e.target has more than
-    // event listeners 🤷‍♀️
-    if (
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      [...e.target.classList].some(
-        (className: string) =>
-          className.includes('cord-avatar') ||
-          className.includes('cord-author-name'),
-      )
-    ) {
-      setShowProfileDetails(true);
-    }
-  };
+  const [avatarElement, setAvatarElement] = useState<Element | null>(null);
 
-  const onMouseLeaveAvatar = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    setTimeout(() => {
-      if (
-        // For some reason typescript doesn't recognise that e.target has more than
-        // event listeners 🤷‍♀️
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        !e.target.className.includes('cord-avatar') ||
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        !e.target.className.includes('profile-details-modal')
-      ) {
+  const showProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
+  const hideProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
+
+  const queueHideProfileDetails = (timeoutID: NodeJS.Timeout | null) => {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+    hideProfileDetailsTimeoutID.current = setTimeout(() => {
+      if (avatarElement) {
         setShowProfileDetails(false);
       }
     }, 500);
   };
 
+  const queueShowProfileDetails = (
+    timeoutID: NodeJS.Timeout | null,
+  ) => {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+    showProfileDetailsTimeoutID.current = setTimeout(() => {
+      if (avatarElement) {
+        setProfileDetailsPosition({
+          top: avatarElement.getBoundingClientRect().top,
+          left: avatarElement.getBoundingClientRect().left,
+        });
+        setShowProfileDetails(true);
+      }
+    }, 500);
+  };
+
+  useLayoutEffect(() => {
+    const onMouseEnter = () => queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
+    avatarElement?.addEventListener('mouseenter', onMouseEnter);
+
+    const onMouseLeave = () => queueHideProfileDetails(showProfileDetailsTimeoutID.current);
+    avatarElement?.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      avatarElement?.removeEventListener('mouseenter', onMouseEnter);
+      avatarElement?.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, [avatarElement, hoveredProfileDetails]);
+
   return (
     <MessageListItemStyled
       ref={ref}
       $isHighlighted={thread.id === threadIDParam}
-      onMouseOver={onMouseOverAvatar}
-      onMouseLeave={onMouseLeaveAvatar}
     >
       <StyledMessage
         threadId={thread.id}
         messageId={thread.firstMessage?.id}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onRender={() => {
+          setAvatarElement(
+            document.querySelector(
+              `[message-id="${thread.firstMessage?.id}"] .cord-avatar-container`,
+            ),
+          );
+        }}
       />
-      <ProfilDetailsModal
-        shouldShow={showProfileDetails}
-        userID={thread.firstMessage?.authorID || ''}
-        onMouseLeave={onMouseLeaveAvatar}
-      />
+      <Modal
+        isOpen={showProfileDetails}
+        onClose={() => setShowProfileDetails(false)}
+      >
+        <PositionedProfileDetails
+          onMouseLeave={() => {
+            queueHideProfileDetails(null);
+            setHoveredProfileDetails(false);
+          }}
+          onMouseEnter={() => {
+            queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
+          }}
+          $top={profileDetailsPosition.top}
+          $left={profileDetailsPosition.left}
+          userID={thread.firstMessage?.authorID || ''}
+        />
+      </Modal>
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
       <Options thread={thread} hovered={hovered} onOpenThread={onOpenThread} />
     </MessageListItemStyled>
   );
 }
 
-function ProfilDetailsModal({
-  shouldShow,
-  userID,
-  onMouseLeave,
-}: {
-  onMouseLeave: React.MouseEventHandler<HTMLDivElement>;
-  shouldShow: boolean;
-  userID: string;
-}) {
-  return (
-    <Modal
-      $shouldShow={shouldShow}
-      className="profile-details-modal"
-      onMouseLeave={onMouseLeave}
-    >
-      <ProfileDetails userID={userID} />
-    </Modal>
-  );
-}
+const PositionedProfileDetails = styled(ProfileDetails)<{
+  $top: number;
+  $left: number;
+}>`
+  position: absolute;
+  top: ${({ $top }) => $top}px;
+  left: ${({ $left }) => $left}px;
+  translate: 10% -110%;
+`;

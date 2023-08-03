@@ -1,9 +1,43 @@
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import { ReactPortal } from './ReactPortal';
 
-export const Modal = styled.div<{ $shouldShow: boolean }>`
-  position: absolute;
-  top: 0;
-  translate: 0 -100%;
-  z-index: 1;
-  visibility: ${({ $shouldShow }) => ($shouldShow ? 'visible' : 'hidden')};
-`;
+interface ModalProps extends PropsWithChildren {
+  id?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onOutsideClick?: () => void;
+  onMouseLeaveModal?: () => void;
+  className?: string;
+}
+
+export function Modal({
+  id,
+  onClose,
+  isOpen,
+  onOutsideClick,
+  onMouseLeaveModal,
+  children,
+  className,
+}: ModalProps) {
+  if (!isOpen) {
+    return null;
+  }
+  return (
+    <ReactPortal wrapperID={id}>
+      <Container
+        className={className}
+        onClick={onOutsideClick || onClose}
+        onMouseOver={onMouseLeaveModal}
+      >
+        {children}
+      </Container>
+    </ReactPortal>
+  );
+}
+
+const Container = styled.div({
+  position: 'relative',
+  height: '100%',
+  width: '100%',
+});

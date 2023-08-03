@@ -8,6 +8,7 @@ export const Colors = {
   blue_active: '#1164A3',
   gray_light: '#E2E2E2',
   gray_highlight: '#F5F5F5',
+  gray_menu_bg: '#F8F8F8',
   gray_dark: '#626162',
   gray_border: '#BBBABB',
   blue_selected_bg: '#E8F5FA',

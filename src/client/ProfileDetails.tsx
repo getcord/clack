@@ -7,16 +7,20 @@ import { capitalize } from 'src/client/utils';
 export function ProfileDetails({
   userID,
   className,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   userID: string;
   className?: string;
+  onMouseEnter: React.MouseEventHandler<HTMLDivElement>,
+  onMouseLeave: React.MouseEventHandler<HTMLDivElement>,
 }) {
   const data = user.useUserData(userID);
   if (!data) {
     return null;
   }
   return (
-    <Root className={className}>
+    <Root className={className} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Banner>
         <span>Workspace Admin</span>
       </Banner>
@@ -27,6 +31,7 @@ export function ProfileDetails({
 }
 
 const Root = styled.div({
+  pointerEvents: 'auto',
   display: 'grid',
   border: `1px solid ${Colors.gray_light}`,
   width: 'fit-content',
