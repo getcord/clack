@@ -50,4 +50,21 @@ export const GlobalStyle = createGlobalStyle`
     /* This is very hard to override, Cord bug? */
     font-size: inherit;
   }
+
+  .cord-component :is(.cord-message-content, .cord-editor) blockquote {
+    padding-inline-start: 16px;
+    position: relative;
+    border: none;
+  }
+  .cord-component :is(.cord-message-content, .cord-editor) blockquote::after {
+    background: rgb(221,221,221, 1);
+    border-radius: 8px;
+    bottom: 0;
+    content: "";
+    display: block;
+    inset-inline-start: 0;
+    position: absolute;
+    top: 0;
+    width: 4px;
+  }
 `;
