@@ -21,6 +21,7 @@ export function handleGetChannels(_: Request, res: Response) {
     'p',
     'pets-of-cord',
     'random',
+    'life-snaps',
     'sdk',
     'the-cordially-book-club',
     'what-the-quack',
