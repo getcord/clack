@@ -118,7 +118,7 @@ const ThreadDetailsWrapper = styled.div({
   borderLeft: `1px solid ${Colors.gray_light}`,
   overflow: 'hidden',
   backgroundColor: 'white',
-  display: 'flex', 
+  display: 'flex',
   flexDirection: 'column',
 });
 

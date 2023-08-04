@@ -18,7 +18,7 @@ export function UserPreferencesDropdown({
   onClose,
   status,
   setStatus,
-  className
+  className,
 }: UserPreferencesDropdownProps) {
   const data = user.useViewerData();
 

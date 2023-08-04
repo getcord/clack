@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
+import { Modal } from 'src/client/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { ActiveBadge as DefaultActiveBadge } from 'src/client/ActiveBadge';
 import { SetToActiveModal } from 'src/client/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/UserPreferenceDropdown';
-import { Modal } from './Modal';
 
 export const Topbar = ({
   userID,
@@ -36,14 +36,17 @@ export const Topbar = ({
     e.stopPropagation();
     setShouldShowActiveModal(false);
     setStatus('away');
-    window.CordSDK?.presence.setPresent({ page: 'clack' }, { absent: true });
+    void window.CordSDK?.presence.setPresent(
+      { page: 'clack' },
+      { absent: true },
+    );
   };
 
   const onSetToActive: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     setShouldShowActiveModal(false);
     setStatus('active');
-    window.CordSDK?.presence.setPresent({ page: 'clack' });
+    void window.CordSDK?.presence.setPresent({ page: 'clack' });
   };
 
   const onAvatarClick: React.MouseEventHandler<HTMLDivElement> = (e) => {

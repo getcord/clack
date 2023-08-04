@@ -4,6 +4,7 @@ import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import { CordContext } from '@cord-sdk/react';
+import { Modal as DefaultModal } from 'src/client/Modal';
 import { Colors } from 'src/client/Colors';
 import {
   OPTIONS_ICON_HEIGHT,
@@ -11,7 +12,6 @@ import {
   OptionsButton,
 } from 'src/client/Options';
 import { FRONT_END_HOST } from 'src/client/consts';
-import { Modal as DefaultModal } from './Modal';
 
 export function MoreActionsButton({
   thread,
@@ -134,7 +134,7 @@ export function MoreActionsButton({
 
 const Modal = styled(DefaultModal)`
   pointer-events: none;
-`
+`;
 
 const StyledButton = styled.button<{ $type?: string }>`
   font-size: 15px;

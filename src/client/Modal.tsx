@@ -1,6 +1,7 @@
-import React, { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ReactPortal } from './ReactPortal';
+import { ReactPortal } from 'src/client/ReactPortal';
 
 interface ModalProps extends PropsWithChildren {
   id?: string;

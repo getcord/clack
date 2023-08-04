@@ -1,4 +1,5 @@
-import { ReactNode, useLayoutEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 type ReactPortalProps = {
@@ -37,7 +38,9 @@ export function ReactPortal({
   }, [wrapperID]);
 
   // return null on initial render
-  if (wrapper === null) return null;
+  if (wrapper === null) {
+    return null;
+  }
 
   return createPortal(children, wrapper);
 }

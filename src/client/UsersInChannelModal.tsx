@@ -1,17 +1,12 @@
 import React from 'react';
-import { UserIcon } from '@heroicons/react/24/outline';
-import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import {
   CordContext,
   Avatar as DefaultAvatar,
-  Facepile,
   presence,
   user,
 } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
-import { combine } from 'src/client/utils';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { ActiveBadge } from 'src/client/ActiveBadge';
 import { Name } from 'src/client/Name';
 import { XIcon } from 'src/client/SetToActiveModal';
@@ -50,8 +45,9 @@ export function UsersInChannelModal({
               (presence) => presence.id === id,
             );
             const userData = user.useUserData(id);
-            if (!userData) return <></>;
-            console.log(cordUserID, id, userID);
+            if (!userData) {
+              return <></>;
+            }
             return (
               <UserDetails key={id}>
                 <Avatar userId={id} enableTooltip />
