@@ -13,6 +13,7 @@ import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails'
 import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
 import { BrowserNotificationBridge } from 'src/client/BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/ThreadsList';
+import { GlobalStyle } from 'src/client/GlobalStyle';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -63,6 +64,7 @@ export function App() {
 
   return (
     <>
+      <GlobalStyle />
       <Helmet>
         <title>#{channelID} - Clack</title>
       </Helmet>
