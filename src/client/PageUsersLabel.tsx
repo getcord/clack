@@ -6,7 +6,14 @@ import { Facepile, user } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
 import { combine } from 'src/client/utils';
 
-export function PageUsersLabel({ users }: { users: (string | number)[] }) {
+export function PageUsersLabel({
+  users,
+  channel,
+}: {
+  users: (string | number)[];
+  channel: string;
+}) {
+  const [showModal, setShowModal] = React.useState(false);
   // skip ernest the bot
   const previewUsers = users.slice(1, 4) as string[];
   const userData = previewUsers.map((id) => user.useUserData(id));
@@ -29,6 +36,7 @@ export function PageUsersLabel({ users }: { users: (string | number)[] }) {
         </TooltipText>
       </Tooltip>
       <UsersLabel
+        onClick={() => setShowModal(true)}
         data-tooltip-id="page-users-label"
         data-tooltip-place="bottom"
         aria-multiline={true}
