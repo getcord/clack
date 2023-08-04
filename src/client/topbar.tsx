@@ -36,12 +36,14 @@ export const Topbar = ({
     e.stopPropagation();
     setShouldShowActiveModal(false);
     setStatus('away');
+    window.CordSDK?.presence.setPresent({ page: 'clack' }, { absent: true });
   };
 
   const onSetToActive: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    setStatus('active');
     setShouldShowActiveModal(false);
+    setStatus('active');
+    window.CordSDK?.presence.setPresent({ page: 'clack' });
   };
 
   const onAvatarClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
