@@ -20,7 +20,9 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
       <ChannelDetailsBar>
         <PageHeaderWrapper>
           <PageHeader># {channel}</PageHeader>
-          {usersInChannel && <PageUsersLabel users={usersInChannel} />}
+          {usersInChannel && (
+            <PageUsersLabel users={usersInChannel} channel={channel} />
+          )}
         </PageHeaderWrapper>
       </ChannelDetailsBar>
       <StyledThreads channel={channel} onOpenThread={onOpenThread} />

@@ -112,7 +112,7 @@ const CloseButton = styled.button({
   },
 });
 
-const XIcon = styled(XMarkIcon)({
+export const XIcon = styled(XMarkIcon)({
   width: '24px',
   height: '24px',
 });

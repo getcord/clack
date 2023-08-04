@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Facepile, user } from '@cord-sdk/react';
 import { Colors } from 'src/client/Colors';
 import { combine } from 'src/client/utils';
+import { UsersInChannelModal } from 'src/client/UsersInChannelModal';
 
 export function PageUsersLabel({
   users,
@@ -48,6 +49,13 @@ export function PageUsersLabel({
         <StyledUserIcon width={18} height={18} />
         <UserCount>{users.length}</UserCount>
       </UsersLabel>
+      {showModal && (
+        <UsersInChannelModal
+          onClose={() => setShowModal(false)}
+          channel={channel}
+          users={users}
+        />
+      )}
     </>
   );
 }
