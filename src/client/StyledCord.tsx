@@ -102,9 +102,6 @@ export const StyledMessage = styled(Message)`
     display: flex;
     align-items: end;
   }
-  .cord-image-attachment:hover .cord-image {
-    opacity: 1;
-  }
 `;
 
 export const StyledComposer = styled(Composer)`

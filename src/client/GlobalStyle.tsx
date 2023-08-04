@@ -67,4 +67,8 @@ export const GlobalStyle = createGlobalStyle`
     top: 0;
     width: 4px;
   }
+
+  .cord-image-attachment:hover .cord-image {
+    opacity: 1;
+  }
 `;
