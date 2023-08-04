@@ -43,13 +43,16 @@ export function PageUsersLabel({ users }: { users: (string | number)[] }) {
     </>
   );
 }
-export const UsersLabel = styled.div`
+
+export const UsersLabel = styled.button`
   display: flex;
   margin: 10px;
   padding: 8px 12px;
   gap: 8px;
   font-size: 13px;
   border-radius: 4px;
+  border: none;
+  background: transparent;
   &:hover {
     background-color: ${Colors.gray_highlight};
   }
