@@ -6,6 +6,9 @@ export function capitalize(string: string): string {
 }
 
 export function combine(combiner: string, items: string[]): string {
+  if (!items) {
+    return '';
+  }
   if (items.length === 0) {
     return '';
   } else if (items.length === 1) {
