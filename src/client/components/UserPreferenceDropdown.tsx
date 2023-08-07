@@ -1,30 +1,34 @@
 import React from 'react';
 import { user, Avatar as DefaultAvatar } from '@cord-sdk/react';
 import styled from 'styled-components';
-import { Status } from 'src/client/hooks/useUserStatus';
+import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
+import type { SetActivity, Activity } from 'src/client/hooks/useUserActivity';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Colors } from 'src/client/consts/Colors';
-import type { SetStatus } from 'src/client/hooks/useUserStatus';
 import { capitalize } from 'src/client/utils';
 
 interface UserPreferencesDropdownProps {
-  status: Status;
-  setStatus: SetStatus;
+  activity: Activity;
+  setActivity: SetActivity;
+  status: string | null;
   onClose: () => void;
   className?: string;
+  openStatusModal: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export function UserPreferencesDropdown({
   onClose,
+  activity,
+  setActivity,
   status,
-  setStatus,
   className,
+  openStatusModal,
 }: UserPreferencesDropdownProps) {
   const data = user.useViewerData();
 
   const onSetToAway: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    setStatus((prev) => (prev === 'active' ? 'away' : 'active'));
+    setActivity((prev) => (prev === 'active' ? 'away' : 'active'));
     onClose();
   };
 
@@ -35,38 +39,26 @@ export function UserPreferencesDropdown({
           <Avatar userId={data.id} />
           <UserName>{capitalize(data.name || '')}</UserName>
           <StatusWrapper>
-            <ActiveBadge $isActive={status === 'active'} />
-            <Status>{capitalize(status)}</Status>
+            <ActiveBadge $isActive={activity === 'active'} />
+            <Status>{capitalize(activity)}</Status>
           </StatusWrapper>
+          <UpdateStatusButton onClick={openStatusModal}>
+            <StyledSmiley />
+            {status ?? 'Update your status'}
+          </UpdateStatusButton>
         </UserInfo>
         <Option onClick={onSetToAway}>
           Set yourself as{' '}
-          <strong>{status === 'active' ? 'away' : 'active'}</strong>
+          <strong>{activity === 'active' ? 'away' : 'active'}</strong>
         </Option>
       </Box>
     )
   );
 }
 
-const Option = styled.button({
-  all: 'unset',
-  cursor: 'pointer',
-  flex: 1,
-  lineHeight: '28px',
-  padding: '0 20px',
-  color: 'black',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  '&:hover': {
-    backgroundColor: Colors.blue_active,
-    color: 'white',
-  },
-});
-
 const Box = styled.div({
   position: 'absolute',
   top: '50px',
-  zIndex: 5,
   width: '300px',
   borderRadius: '8px',
   backgroundColor: Colors.gray_highlight,
@@ -77,14 +69,15 @@ const Box = styled.div({
 
 const UserInfo = styled.div({
   display: 'grid',
-  gridTemplateRows: 'auto auto',
+  gridTemplateRows: 'auto auto auto',
   gridTemplateColumns: 'auto 1fr',
   gridTemplateAreas: `
   "avatar username"
   "avatar status"
+  "update-status update-status"
   `,
   columnGap: '12px',
-  padding: '20px',
+  padding: '20px 20px 10px 20px',
 });
 
 const Avatar = styled(DefaultAvatar)`
@@ -113,3 +106,57 @@ const StatusWrapper = styled.div({
 const Status = styled.span({
   fontSize: '13px',
 });
+
+const UpdateStatusButton = styled.button({
+  all: 'unset',
+  gridArea: 'update-status',
+  marginTop: '12px',
+  cursor: 'pointer',
+  borderRadius: '4px',
+  backgroundColor: 'white',
+  border: `1px solid ${Colors.gray_light}`,
+  padding: '7px',
+  color: Colors.gray_dark,
+  lineHeight: '20px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  '&:hover': {
+    color: 'black',
+  },
+  '&:hover svg': {
+    fill: '#F2C744',
+    stroke: Colors.gray_dark,
+  },
+  '&:hover svg > #mouth': {
+    // unfortunately styled components doesn't like the d property :(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    d: 'path("M12 18C14.2091 18 16 16.2091 16 14H8C8 16.2091 9.79086 18 12 18Z")',
+    fill: 'black',
+  },
+  '& svg': {
+    transition: 'fill 0.2s',
+    fill: 'white',
+  },
+});
+
+const Option = styled.button({
+  all: 'unset',
+  cursor: 'pointer',
+  flex: 1,
+  lineHeight: '28px',
+  padding: '0 20px',
+  color: 'black',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  '&:hover': {
+    backgroundColor: Colors.blue_active,
+    color: 'white',
+  },
+});
+
+const StyledSmiley = styled(SmileyFaceSvg)`
+  height: 20px;
+  width: 20px;
+`;

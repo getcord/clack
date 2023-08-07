@@ -13,7 +13,10 @@ import {
 } from 'src/server/handlers/login';
 import { handleGetChannels } from 'src/server/handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
-import { handleGetCordUsers } from 'src/server/handlers/getUsersInOrg';
+import {
+  handleGetCordUsers,
+  handleUpdateUserStatus,
+} from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
 import { handleRoot } from 'src/server/handlers/root';
 
@@ -62,6 +65,7 @@ function main() {
   app.use(enforceLoginMiddleware);
   app.get('/channels', handleGetChannels);
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
+  app.put('/users/:userID', wrapAsyncHandler(handleUpdateUserStatus));
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
 
   // Catch errors and log them
