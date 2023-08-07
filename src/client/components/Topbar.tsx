@@ -76,6 +76,7 @@ export const Topbar = ({
           activity={isActive}
           setActivity={setIsActive}
           onClose={() => setModalState(null)}
+          updateStatus={updateStatus}
         />
       </Modal>
       {isPresent &&
