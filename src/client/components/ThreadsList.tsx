@@ -2,10 +2,10 @@ import React from 'react';
 import { styled } from 'styled-components';
 import type { CoreThreadData } from '@cord-sdk/types';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { ChannelIcon } from 'src/client/channels';
-import { StyledThread } from 'src/client/StyledCord';
-import { FRONT_END_HOST } from 'src/client/consts';
-import { TypingIndicator } from 'src/client/TypingIndicator';
+import { ChannelIcon } from 'src/client/components/Channels';
+import { StyledThread } from 'src/client/components/style/StyledCord';
+import { FRONT_END_HOST } from 'src/client/consts/consts';
+import { TypingIndicator } from 'src/client/components/TypingIndicator';
 
 export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
   const [myThreads, setMyThreads] = React.useState<

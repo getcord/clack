@@ -4,8 +4,8 @@ import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import React, { useCallback, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { Colors } from 'src/client/Colors';
-import { MoreActionsButton } from 'src/client/MoreActionsButton';
+import { Colors } from 'src/client/consts/Colors';
+import { MoreActionsButton } from 'src/client/components/MoreActionsButton';
 
 export const OPTIONS_ICON_HEIGHT = 20;
 export const OPTIONS_ICON_WIDTH = 20;

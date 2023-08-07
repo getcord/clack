@@ -3,11 +3,11 @@ import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
-import { PaginationTrigger } from 'src/client/PaginationTrigger';
-import { MessageListItem } from 'src/client/MessageListItem';
-import { EmptyChannel } from 'src/client/EmptyChannel';
-import { DateDivider } from 'src/client/DateDivider';
-import { Colors } from 'src/client/Colors';
+import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
+import { MessageListItem } from 'src/client/components/MessageListItem';
+import { EmptyChannel } from 'src/client/components/EmptyChannel';
+import { DateDivider } from 'src/client/components/DateDivider';
+import { Colors } from 'src/client/consts/Colors';
 
 type ThreadsProps = {
   channel: string;

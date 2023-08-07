@@ -6,10 +6,10 @@ import {
   presence,
   user,
 } from '@cord-sdk/react';
-import { Colors } from 'src/client/Colors';
-import { ActiveBadge } from 'src/client/ActiveBadge';
-import { Name } from 'src/client/Name';
-import { XIcon } from 'src/client/SetToActiveModal';
+import { Colors } from 'src/client/consts/Colors';
+import { ActiveBadge } from 'src/client/components/ActiveBadge';
+import { Name } from 'src/client/components/Name';
+import { XIcon } from 'src/client/components/SetToActiveModal';
 
 interface UsersInChannelModalProps {
   onClose: () => void;

@@ -3,14 +3,17 @@ import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
-import { PageHeader } from 'src/client/PageHeader';
-import { Colors } from 'src/client/Colors';
-import { StyledComposer, StyledMessage } from 'src/client/StyledCord';
-import { MessageListItemStyled } from 'src/client/MessageListItem';
-import { PaginationTrigger } from 'src/client/PaginationTrigger';
-import { TypingIndicator } from 'src/client/TypingIndicator';
+import { PageHeader } from 'src/client/components/PageHeader';
+import { Colors } from 'src/client/consts/Colors';
+import {
+  StyledComposer,
+  StyledMessage,
+} from 'src/client/components/style/StyledCord';
+import { MessageListItemStyled } from 'src/client/components/MessageListItem';
+import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
+import { TypingIndicator } from 'src/client/components/TypingIndicator';
 
-import { Options } from 'src/client/Options';
+import { Options } from 'src/client/components/Options';
 
 interface MessageProps {
   message: CoreMessageData;

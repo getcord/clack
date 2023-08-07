@@ -1,7 +1,7 @@
 import React from 'react';
 import { user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
-import { Colors } from 'src/client/Colors';
+import { Colors } from 'src/client/consts/Colors';
 import { capitalize } from 'src/client/utils';
 
 export function ProfileDetails({

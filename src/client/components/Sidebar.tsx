@@ -3,10 +3,10 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { NotificationListLauncher } from '@cord-sdk/react';
-import { Colors } from 'src/client/Colors';
-import { PageHeader } from 'src/client/PageHeader';
-import { ChannelButton, Channels } from 'src/client/channels';
-import { NotificationsRequestBanner } from 'src/client/NotificationsRequestBanner';
+import { Colors } from 'src/client/consts/Colors';
+import { PageHeader } from 'src/client/components/PageHeader';
+import { ChannelButton, Channels } from 'src/client/components/Channels';
+import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
 
 type SidebarProps = {
   className?: string;

@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { Colors } from 'src/client/Colors';
+import { Colors } from 'src/client/consts/Colors';
 
 export function ChannelButton({
   option,
