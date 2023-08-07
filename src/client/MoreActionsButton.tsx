@@ -117,7 +117,7 @@ export function MoreActionsButton({
                     $type="alert"
                     onClick={() => void onDeleteMessage()}
                   >
-                    Delete message
+                    Delete message...
                   </StyledButton>
                 </>
               )}
