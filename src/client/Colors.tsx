@@ -13,7 +13,6 @@ export const Colors = {
   gray_border: '#BBBABB',
   blue_selected_bg: '#E8F5FA',
   blue_selected_border: '#1D9BD1',
-  blue_unread: '#0279FF',
   blue_link: '#1264A3',
   green_active: '#2AAC76',
   green: '#117A5A',
