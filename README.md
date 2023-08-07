@@ -26,6 +26,8 @@ Run `./scripts/generate-localhost-cert.sh` to generate https certificates for lo
 
 Run `npm run dev` and visit https://local.cord.com:7307
 
+Note: Must have node v16.15 or newer, as we use `node --experimental-fetch` flag.
+
 ### Deployment
 
 The deployed version is currently in a separate AWS account, running on the same EC2 as the AI chatbot
