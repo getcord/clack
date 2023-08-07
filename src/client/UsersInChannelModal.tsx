@@ -51,7 +51,6 @@ export function UsersInChannelModal({
             return (
               <UserDetails key={id}>
                 <Avatar userId={id} enableTooltip />
-
                 {/* //todo: fill short name values in db console? */}
                 <Name $variant="main">
                   {userData?.shortName || userData?.name}
