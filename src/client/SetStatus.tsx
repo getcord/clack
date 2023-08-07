@@ -7,7 +7,7 @@ interface SetStatusMenuProps {
   onCancel: () => void;
   onClose: () => void;
   status: string | null;
-  updateStatus: (newStatus: string) => Promise<any>;
+  updateStatus: (newStatus: string | null) => void;
 }
 
 export function SetStatusMenu({
@@ -16,22 +16,15 @@ export function SetStatusMenu({
   status,
   updateStatus,
 }: SetStatusMenuProps) {
-  const [input, setInput] = useState<string>(status || '');
+  const [input, setInput] = useState<string | undefined>(status ?? undefined);
 
   const onSubmit = () => {
-    updateStatus(input).catch((e) =>
-      console.error(
-        `Uh oh! Something went wrong while trying to update your status... `,
-        e,
-      ),
-    );
+    updateStatus(input || null);
     onClose();
   };
 
   useEffect(() => {
-    if (typeof status === 'string') {
-      setInput(status);
-    }
+    setInput(status ?? undefined);
   }, [status]);
 
   return (
@@ -65,7 +58,7 @@ export function SetStatusMenu({
         </Button>
         <Button
           $variant="primary"
-          disabled={input === status || input.length < 1}
+          disabled={input === status || !!(input && input.length < 1)}
           onClick={onSubmit}
         >
           Save

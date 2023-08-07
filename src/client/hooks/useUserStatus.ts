@@ -2,9 +2,11 @@ import { user } from '@cord-sdk/react';
 import { useEffect, useState } from 'react';
 import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 
+type UpdateUserStatus = (newStatus: string | null) => void;
+
 export function useUserStatus(): [
   status: string | null,
-  updateUserStatus: (newStatus: string) => Promise<any>,
+  updateUserStatus: UpdateUserStatus,
 ] {
   const [status, setStatus] = useState<string | null>(null);
   const viewer = user.useViewerData();
@@ -18,13 +20,13 @@ export function useUserStatus(): [
 
   const updateUser = useAPIUpdateFetch();
 
-  const updateUserStatus = async (newStatus: string) => {
+  const updateUserStatus: UpdateUserStatus = (newStatus) => {
     const body = {
       metadata: {
-        status: newStatus,
+        status: newStatus ?? '',
       },
     };
-    return updateUser(`/users/${viewerID}`, 'PUT', body)
+    updateUser(`/users/${viewerID}`, 'PUT', body)
       .then((res) => res.json())
       .catch((e) => e);
   };

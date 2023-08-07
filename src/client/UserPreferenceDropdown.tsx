@@ -14,6 +14,7 @@ interface UserPreferencesDropdownProps {
   onClose: () => void;
   className?: string;
   openStatusModal: React.MouseEventHandler<HTMLButtonElement>;
+  updateStatus: (newStatus: string | null) => void;
 }
 
 export function UserPreferencesDropdown({
@@ -23,6 +24,7 @@ export function UserPreferencesDropdown({
   status,
   className,
   openStatusModal,
+  updateStatus,
 }: UserPreferencesDropdownProps) {
   const data = user.useViewerData();
 
@@ -44,9 +46,12 @@ export function UserPreferencesDropdown({
           </StatusWrapper>
           <UpdateStatusButton onClick={openStatusModal}>
             <StyledSmiley />
-            {status ?? 'Update your status'}
+            {status || 'Update your status'}
           </UpdateStatusButton>
         </UserInfo>
+        {status && (
+          <Option onClick={() => updateStatus(null)}>Clear status</Option>
+        )}
         <Option onClick={onSetToAway}>
           Set yourself as{' '}
           <strong>{activity === 'active' ? 'away' : 'active'}</strong>
