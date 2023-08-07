@@ -8,12 +8,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { StyledMessage } from 'src/client/StyledCord';
-import { ThreadReplies } from 'src/client/ThreadReplies';
-import { Colors } from 'src/client/Colors';
-import { Options } from 'src/client/Options';
-import { ProfileDetails } from 'src/client/ProfileDetails';
-import { Modal } from 'src/client/Modal';
+import { StyledMessage } from 'src/client/components/style/StyledCord';
+import { ThreadReplies } from 'src/client/components/ThreadReplies';
+import { Colors } from 'src/client/consts/Colors';
+import { Options } from 'src/client/components/Options';
+import { ProfileDetails } from 'src/client/components/ProfileDetails';
+import { Modal } from 'src/client/components/Modal';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}

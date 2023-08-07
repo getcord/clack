@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Colors } from 'src/client/Colors';
-import { SmileyFaceSvg } from 'src/client/SmileyFaceSVG';
+import { Colors } from 'src/client/consts/Colors';
+import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
 
 interface SetStatusMenuProps {
   onCancel: () => void;

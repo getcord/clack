@@ -1,11 +1,11 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { Colors } from 'src/client/Colors';
-import { Threads } from 'src/client/Threads';
-import { PageHeader } from 'src/client/PageHeader';
-import { StyledComposer } from 'src/client/StyledCord';
+import { Colors } from 'src/client/consts/Colors';
+import { Threads } from 'src/client/components/Threads';
+import { PageHeader } from 'src/client/components/PageHeader';
+import { StyledComposer } from 'src/client/components/style/StyledCord';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { PageUsersLabel } from 'src/client/PageUsersLabel';
+import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 
 interface ChatProps {
   channel: string;

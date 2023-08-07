@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
-import { Modal } from 'src/client/Modal';
+import { Modal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
-import { SetStatusMenu } from 'src/client/SetStatus';
+import { SetStatusMenu } from 'src/client/components/SetStatus';
 import { useUserActivity } from 'src/client/hooks/useUserActivity';
-import { ActiveBadge as DefaultActiveBadge } from 'src/client/ActiveBadge';
-import { SetToActiveModal } from 'src/client/SetToActiveModal';
-import { UserPreferencesDropdown } from 'src/client/UserPreferenceDropdown';
+import { ActiveBadge as DefaultActiveBadge } from 'src/client/components/ActiveBadge';
+import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
+import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { user, Avatar as DefaultAvatar } from '@cord-sdk/react';
 import styled from 'styled-components';
-import { SmileyFaceSvg } from 'src/client/SmileyFaceSVG';
+import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
 import type { SetActivity, Activity } from 'src/client/hooks/useUserActivity';
-import { ActiveBadge } from 'src/client/ActiveBadge';
-import { Colors } from 'src/client/Colors';
+import { ActiveBadge } from 'src/client/components/ActiveBadge';
+import { Colors } from 'src/client/consts/Colors';
 import { capitalize } from 'src/client/utils';
 
 interface UserPreferencesDropdownProps {

@@ -5,15 +5,15 @@ import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
-import { Colors } from 'src/client/Colors';
+import { Colors } from 'src/client/consts/Colors';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { Topbar as TopbarDefault } from 'src/client/topbar';
-import { Chat } from 'src/client/Chat';
-import { ThreadDetails as ThreadDetailsDefault } from 'src/client/ThreadDetails';
-import { Sidebar as DefaultSidebar } from 'src/client/Sidebar';
-import { BrowserNotificationBridge } from 'src/client/BrowserNotificationBridge';
-import { ThreadsList } from 'src/client/ThreadsList';
-import { GlobalStyle } from 'src/client/GlobalStyle';
+import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
+import { Chat } from 'src/client/components/Chat';
+import { ThreadDetails as ThreadDetailsDefault } from 'src/client/components/ThreadDetails';
+import { Sidebar as DefaultSidebar } from 'src/client/components/Sidebar';
+import { BrowserNotificationBridge } from 'src/client/components/BrowserNotificationBridge';
+import { ThreadsList } from 'src/client/components/ThreadsList';
+import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<

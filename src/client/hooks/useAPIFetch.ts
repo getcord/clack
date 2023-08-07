@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { API_HOST } from 'src/client/consts';
+import { API_HOST } from 'src/client/consts/consts';
 
 export function useAPIFetch<T extends object = object>(
   path: string,

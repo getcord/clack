@@ -1,7 +1,7 @@
 import React from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import styled from 'styled-components';
-import { Colors } from 'src/client/Colors';
+import { Colors } from 'src/client/consts/Colors';
 
 interface SetToActiveModalProps {
   onClose: React.MouseEventHandler<HTMLButtonElement>;

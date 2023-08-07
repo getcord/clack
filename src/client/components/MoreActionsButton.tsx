@@ -4,14 +4,14 @@ import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
 import { CordContext } from '@cord-sdk/react';
-import { Modal as DefaultModal } from 'src/client/Modal';
-import { Colors } from 'src/client/Colors';
+import { Modal as DefaultModal } from 'src/client/components/Modal';
+import { Colors } from 'src/client/consts/Colors';
 import {
   OPTIONS_ICON_HEIGHT,
   OPTIONS_ICON_WIDTH,
   OptionsButton,
-} from 'src/client/Options';
-import { FRONT_END_HOST } from 'src/client/consts';
+} from 'src/client/components/Options';
+import { FRONT_END_HOST } from 'src/client/consts/consts';
 
 export function MoreActionsButton({
   thread,
