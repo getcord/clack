@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -12,9 +12,16 @@ import { Colors } from 'src/client/consts/Colors';
 type ThreadsProps = {
   channel: string;
   onOpenThread: (threadID: string) => void;
+  onScrollUp: () => void;
+  onScrollToBottom: () => void;
 };
 
-export function Threads({ channel, onOpenThread }: ThreadsProps) {
+export function Threads({
+  channel,
+  onOpenThread,
+  onScrollToBottom,
+  onScrollUp,
+}: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
     {
@@ -38,6 +45,25 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
     }
     return threadListRef.current.scrollTop >= 0;
   };
+
+  const scrollUpHandler = useCallback(() => {
+    if (!isAtBottom()) {
+      onScrollUp();
+      return;
+    }
+    if (isAtBottom()) {
+      setTimeout(() => isAtBottom() && onScrollToBottom(), 100);
+    }
+  }, [onScrollToBottom, onScrollUp]);
+
+  useEffect(() => {
+    const el = threadListRef.current;
+    if (!el) {
+      return;
+    }
+    el.addEventListener('scroll', scrollUpHandler);
+    return () => el.removeEventListener('scroll', scrollUpHandler);
+  }, [scrollUpHandler]);
 
   const scrollToBottom = () => {
     if (anchorRef.current) {
@@ -79,7 +105,7 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   });
 
   return (
-    <Root>
+    <Root ref={threadListRef}>
       <div ref={anchorRef} />
       {renderThreads}
       {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}

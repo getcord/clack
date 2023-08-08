@@ -84,18 +84,42 @@ export function MoreActionsButton({
     setShowOptionsDialog(false);
   }, [setShowOptionsDialog, thread]);
 
+  const onPinToConversation = () => {
+    const threadIsAlreadyPinned = !!thread.metadata.pinned;
+    const metadata: { pinned?: boolean; pinnedBy?: string } = {
+      pinned: !threadIsAlreadyPinned,
+    };
+    if (!threadIsAlreadyPinned) {
+      metadata.pinnedBy = cordUserID;
+    }
+    void window.CordSDK?.thread.updateThread(thread.id, {
+      metadata,
+    });
+  };
+
+  const keyboardEvents: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'p') {
+      onPinToConversation();
+      setShowOptionsDialog(false);
+    }
+  };
+
   return (
     <>
-      <div style={{ position: 'relative' }}>
+      <div
+        style={{ position: 'relative' }}
+        onKeyDown={keyboardEvents}
+        tabIndex={0}
+      >
         <Tooltip id="more-actions-button" />
         <OptionsButton
           ref={moreOptionsButtonRef}
           data-tooltip-id="more-actions-button"
           data-tooltip-content="More actions"
           data-tooltip-place="top"
+          onClick={onMoreOptionsClick}
         >
           <EllipsisVerticalIcon
-            onClick={onMoreOptionsClick}
             width={OPTIONS_ICON_WIDTH}
             height={OPTIONS_ICON_HEIGHT}
           />
@@ -121,6 +145,10 @@ export function MoreActionsButton({
             </StyledButton>
             <Divider />
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
+            <Divider />
+            <StyledButton onClick={onPinToConversation}>
+              Pin to this conversation <KeyBindingLabel>P</KeyBindingLabel>
+            </StyledButton>
 
             {cordUserID === messageData?.authorID &&
               messageData?.deletedTimestamp === null && (
@@ -145,6 +173,10 @@ export function MoreActionsButton({
   );
 }
 
+const KeyBindingLabel = styled.span({
+  textAlign: 'right',
+});
+
 export const Modal = styled(DefaultModal)`
   pointer-events: none;
 `;
@@ -158,6 +190,9 @@ const StyledButton = styled.button<{ $type?: string }>`
   cursor: pointer;
   width: 100%;
   background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-align: left;
   color: ${({ $type }) => ($type === 'alert' ? Colors.red : '#1d1d1c')};
 
