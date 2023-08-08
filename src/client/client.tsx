@@ -5,7 +5,7 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
-import { App } from 'src/client/components/App';
+import { App } from 'src/client/App';
 import { SlackRedirect } from 'src/client/components/SlackRedirect';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
