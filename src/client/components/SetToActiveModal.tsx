@@ -1,7 +1,7 @@
 import React from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import styled from 'styled-components';
-import { Colors } from 'src/client/consts/Colors';
+import { CloseButton, ActionButton } from 'src/client/components/Buttons';
 
 interface SetToActiveModalProps {
   onClose: React.MouseEventHandler<HTMLButtonElement>;
@@ -43,12 +43,12 @@ export function SetToActiveModal({
           />
           <Label htmlFor="dont-ask-again">Don't ask again</Label>
         </CheckboxWrapper>
-        <Button $variant="secondary" onClick={onCancel}>
+        <ActionButton $variant="secondary" onClick={onCancel}>
           No Thanks
-        </Button>
-        <Button $variant="primary" onClick={onSetToActive}>
+        </ActionButton>
+        <ActionButton $variant="primary" onClick={onSetToActive}>
           Set to Active
-        </Button>
+        </ActionButton>
       </Box>
     </Modal>
   );
@@ -98,20 +98,6 @@ const Box = styled.div({
   gap: '12px',
 });
 
-const CloseButton = styled.button({
-  all: 'unset',
-  gridArea: 'close-button',
-  cursor: 'pointer',
-  color: Colors.gray_dark,
-  justifySelf: 'end',
-  height: 'fit-content',
-  lineHeight: 0,
-  borderRadius: '4px',
-  '&:hover': {
-    backgroundColor: Colors.gray_highlight,
-  },
-});
-
 export const XIcon = styled(XMarkIcon)({
   width: '24px',
   height: '24px',
@@ -128,16 +114,3 @@ const Description = styled.p({
   fontSize: '13px',
   paddingBottom: '12px',
 });
-
-const Button = styled.button<{ $variant: 'primary' | 'secondary' }>(
-  ({ $variant }) => ({
-    all: 'unset',
-    gridArea: `${$variant}-button`,
-    cursor: 'pointer',
-    backgroundColor: $variant === 'primary' ? Colors.green : 'inherit',
-    color: $variant === 'primary' ? 'white' : 'inherit',
-    padding: '8px 16px',
-    border: `1px solid ${Colors.gray_border}`,
-    borderRadius: '4px',
-  }),
-);

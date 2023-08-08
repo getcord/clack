@@ -12,19 +12,23 @@ import {
   OptionsButton,
 } from 'src/client/components/Options';
 import { FRONT_END_HOST } from 'src/client/consts/consts';
+import { MessageContext } from 'src/client/context/MessageContext';
 
 export function MoreActionsButton({
   thread,
   message,
   showOptionsDialog,
   setShowOptionsDialog,
+  page,
 }: {
   thread: ThreadSummary;
   message?: CoreMessageData;
   showOptionsDialog: boolean;
   setShowOptionsDialog: (state: boolean) => void;
+  page: 'threadDetails' | 'channel';
 }) {
   const { userID: cordUserID } = React.useContext(CordContext);
+  const { setIsEditingMessage } = React.useContext(MessageContext);
   const messageData = message ?? thread.firstMessage;
 
   const initialSubscribedToThread =
@@ -32,6 +36,12 @@ export function MoreActionsButton({
   const [subscribedToThread, setSubscribedToThread] = useState(
     initialSubscribedToThread,
   );
+
+  const onUpdateMessage = React.useCallback(() => {
+    setIsEditingMessage({ page, messageId: messageData?.id });
+    setShowOptionsDialog(false);
+  }, [messageData?.id, page, setIsEditingMessage, setShowOptionsDialog]);
+
   const onDeleteMessage = React.useCallback(async () => {
     if (!messageData) {
       return;
@@ -93,9 +103,9 @@ export function MoreActionsButton({
           data-tooltip-id="more-actions-button"
           data-tooltip-content="More actions"
           data-tooltip-place="top"
+          onClick={onMoreOptionsClick}
         >
           <EllipsisVerticalIcon
-            onClick={onMoreOptionsClick}
             width={OPTIONS_ICON_WIDTH}
             height={OPTIONS_ICON_HEIGHT}
           />
@@ -126,6 +136,11 @@ export function MoreActionsButton({
               messageData?.deletedTimestamp === null && (
                 <>
                   <Divider />
+
+                  <StyledButton onClick={() => void onUpdateMessage()}>
+                    Edit message
+                  </StyledButton>
+
                   <StyledButton
                     $type="alert"
                     onClick={() => void onDeleteMessage()}

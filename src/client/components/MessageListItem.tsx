@@ -14,6 +14,7 @@ import { Colors } from 'src/client/consts/Colors';
 import { Options } from 'src/client/components/Options';
 import { ProfileDetails } from 'src/client/components/ProfileDetails';
 import { Modal } from 'src/client/components/Modal';
+import { MessageContext } from 'src/client/context/MessageContext';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -38,14 +39,18 @@ export const MessageListItemStyled = styled.div<{ $isHighlighted?: boolean }>`
       : null}
 `;
 
+export type MessageListItemProps = {
+  thread: ThreadSummary;
+  onOpenThread: (threadID: string) => void;
+};
+
 export function MessageListItem({
   thread,
   onOpenThread,
-}: {
-  thread: ThreadSummary;
-  onOpenThread: (threadID: string) => void;
-}) {
+}: MessageListItemProps) {
   const { threadID: threadIDParam } = useParams();
+  const { isEditingMessage, setIsEditingMessage } =
+    React.useContext(MessageContext);
 
   useEffect(() => {
     if (thread.id === threadIDParam) {
@@ -145,6 +150,10 @@ export function MessageListItem({
             ),
           );
         }}
+        isEditing={isEditingMessage === `channel/${thread.firstMessage?.id}`}
+        onEditEnd={() => {
+          setIsEditingMessage(undefined);
+        }}
       />
       <Modal
         isOpen={showProfileDetails}
@@ -164,7 +173,14 @@ export function MessageListItem({
         />
       </Modal>
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-      <Options thread={thread} hovered={hovered} onOpenThread={onOpenThread} />
+      {isEditingMessage !== `channel/${thread.firstMessage?.id}` && (
+        <Options
+          thread={thread}
+          hovered={hovered}
+          onOpenThread={onOpenThread}
+          page={'channel'}
+        />
+      )}
     </MessageListItemStyled>
   );
 }

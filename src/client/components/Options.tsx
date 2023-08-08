@@ -15,6 +15,7 @@ interface OptionsProps {
   hovered: boolean;
   onOpenThread?: (threadID: string) => void;
   message?: CoreMessageData;
+  page: 'threadDetails' | 'channel';
 }
 
 export function Options({
@@ -22,6 +23,7 @@ export function Options({
   hovered,
   onOpenThread,
   message,
+  page,
 }: OptionsProps) {
   const [optionsHovered, setOptionsHovered] = useState(false);
   const [showOptionsDialog, setShowOptionsDialog] = useState(false);
@@ -66,6 +68,7 @@ export function Options({
           message={message}
           showOptionsDialog={showOptionsDialog}
           setShowOptionsDialog={setShowOptionsDialog}
+          page={page}
         />
       </OptionsStyled>
     )
