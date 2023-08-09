@@ -1,45 +1,89 @@
 import { thread, user } from '@cord-sdk/react';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
 
-export function TypingIndicator({ threadID }: { threadID: string }) {
+export function TypingIndicator({
+  threadID,
+  typing,
+}: {
+  threadID: string;
+  typing?: string[];
+}) {
   const [typingUsers, setTypingUsers] = React.useState<string[] | undefined>();
   const summary = thread.useThreadSummary(threadID);
 
-  const getUserName = (u: string) => {
-    const data = user.useUserData(u);
+  const getUserName = useCallback((userID: string) => {
+    const data = user.useUserData(userID);
     return data?.name ?? '';
-  };
+  }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getTyping = () => {
-      const users = summary?.typing.map((id) => getUserName(id)) || [];
-      setTypingUsers(users);
+      setTypingUsers(summary?.typing);
     };
-    // Set up the interval to fetch data every 5 seconds
-    const intervalId = setInterval(getTyping, 5000);
+    // Set up the interval to fetch data every 3 seconds
+    const intervalId = setInterval(getTyping, 3000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [summary]);
+  }, [getUserName, summary?.typing, typing]);
 
   return (
     <>
       {typingUsers && typingUsers.length > 0 && (
-        <Text>
-          {typingUsers.join(', ')}
-          {typingUsers.length == 1 ? ' is' : ' are'} typing
-        </Text>
+        <Wrapper>
+          {typingUsers.map((user, index) => (
+            <TypingUserText
+              key={user}
+              typing={user}
+              total={typingUsers.length}
+              index={index}
+            />
+          ))}
+          <Text>{typingUsers.length == 1 ? ' is' : ' are'} typing</Text>
+        </Wrapper>
+      )}
+    </>
+  );
+}
+
+export function TypingUserText({
+  typing,
+  total,
+  index,
+}: {
+  typing: string;
+  total: number;
+  index: number;
+}) {
+  const data = user.useUserData(typing);
+
+  return (
+    <>
+      {data && (
+        <TextName>
+          {data?.name}
+          {total <= 1 || index === total - 1
+            ? ' '
+            : index < total - 2
+            ? ', '
+            : ' and '}
+        </TextName>
       )}
     </>
   );
 }
 
 const Text = styled.span`
-  display: block;
-  fontsize: 12px;
   color: #616061;
-  margin: 5px 4px;
-  margin-left: 16px;
+`;
+
+const TextName = styled(Text)`
+  font-weight: 700;
+`;
+
+const Wrapper = styled.div`
+  font-size: 12px;
+  margin: 5px 4px 20px 20px;
 `;
