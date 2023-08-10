@@ -18,6 +18,7 @@ export function handleGetChannels(_: Request, res: Response) {
     'impromptutor',
     'launch-team',
     'life-snaps',
+    'marketing',
     'memes',
     'music',
     'notifications',
