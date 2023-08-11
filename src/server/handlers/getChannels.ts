@@ -27,6 +27,7 @@ export function handleGetChannels(_: Request, res: Response) {
     'random',
     'sdk',
     'the-cordially-book-club',
+    'til',
 
     // Please keep last (testing/spamming):
     'noise',
