@@ -86,7 +86,7 @@ function PinnedMessages({ channel, isOpen, onClose }: PinnedMessagesProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Box>
-        <ThreadList
+        <StyledThreadList
           location={{ channel }}
           filter={{ metadata: { pinned: true } }}
           onThreadClick={(threadId) =>
@@ -100,11 +100,13 @@ function PinnedMessages({ channel, isOpen, onClose }: PinnedMessagesProps) {
 
 const Box = styled.div({
   position: 'absolute',
-  top: '50px',
-  width: '300px',
+  top: '150px',
+  left: '260px',
+  width: '400px',
   borderRadius: '8px',
   backgroundColor: Colors.gray_highlight,
-  paddingBottom: '10px',
+  padding: '20px',
+  // paddingBottom: '10px',
   display: 'flex',
   flexDirection: 'column',
 });
@@ -182,4 +184,11 @@ const ChannelDetailsBar = styled.div({
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;
+`;
+
+const StyledThreadList = styled(ThreadList)`
+  background-color: inherit;
+  .cord-scroll-container {
+    padding: 0px;
+  }
 `;
