@@ -5,7 +5,15 @@ can find it at https://clack.cord.com
 
 ### Things to note
 Clack connects to the STAGING deployment of Cord, so changes landed to monorepo 
-throughout the day will be instantly available
+throughout the day will be instantly available.
+
+If you want to run it against your LOCAL build, e.g. to test changes you're making
+in monorepo, set
+`cordScriptUrl="https://local.cord.com:8179/sdk/v1/sdk.latest.js"`
+on the CordProvider in src/client/App.tsx
+
+You may need to bootstrap your db if it's the first time you're doing this, to 
+get the application info (see ./scripts/bootstrap-database.sh in monorepo)
 
 ### Local setup
 
