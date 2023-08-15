@@ -1,13 +1,10 @@
 import { thread, user } from '@cord-sdk/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
 
 export function TypingIndicator({ threadID }: { threadID: string }) {
-  const [typingUsers, setTypingUsers] = React.useState<string[] | undefined>();
   const summary = thread.useThreadSummary(threadID);
-  useEffect(() => {
-    setTypingUsers(summary?.typing);
-  }, [summary?.typing]);
+  const typingUsers = summary?.typing;
 
   return (
     <>
