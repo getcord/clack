@@ -13,7 +13,7 @@ export function TypingIndicator({ threadID }: { threadID: string }) {
           {typingUsers.map((user, index) => (
             <TypingUserText
               key={user}
-              typing={user}
+              userID={user}
               total={typingUsers.length}
               index={index}
             />
@@ -26,15 +26,15 @@ export function TypingIndicator({ threadID }: { threadID: string }) {
 }
 
 export function TypingUserText({
-  typing,
+  userID,
   total,
   index,
 }: {
-  typing: string;
+  userID: string;
   total: number;
   index: number;
 }) {
-  const data = user.useUserData(typing);
+  const data = user.useUserData(userID);
 
   return (
     <>
