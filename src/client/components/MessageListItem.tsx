@@ -8,23 +8,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
-<<<<<<< HEAD:src/client/components/MessageListItem.tsx
+import { user } from '@cord-sdk/react';
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { Colors } from 'src/client/consts/Colors';
 import { Options } from 'src/client/components/Options';
 import { ProfileDetails } from 'src/client/components/ProfileDetails';
+import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Modal } from 'src/client/components/Modal';
-=======
-import { user } from '@cord-sdk/react';
-import { PushPinSvg } from 'src/client/PushPinSVG';
-import { StyledMessage } from 'src/client/StyledCord';
-import { ThreadReplies } from 'src/client/ThreadReplies';
-import { Colors } from 'src/client/Colors';
-import { Options } from 'src/client/Options';
-import { ProfileDetails } from 'src/client/ProfileDetails';
-import { Modal } from 'src/client/Modal';
->>>>>>> 5244a9f (wip|):src/client/MessageListItem.tsx
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}

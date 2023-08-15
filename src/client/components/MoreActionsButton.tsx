@@ -147,7 +147,8 @@ export function MoreActionsButton({
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
             <Divider />
             <StyledButton onClick={onPinToConversation}>
-              Pin to this conversation <KeyBindingLabel>P</KeyBindingLabel>
+              {thread.metadata.pinned ? 'Unpin' : 'Pin to'} this conversation{' '}
+              <KeyBindingLabel>P</KeyBindingLabel>
             </StyledButton>
 
             {cordUserID === messageData?.authorID &&

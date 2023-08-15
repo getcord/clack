@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { keyframes, styled } from 'styled-components';
 import { ThreadList, thread } from '@cord-sdk/react';
+import { useNavigate } from 'react-router-dom';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Colors } from 'src/client/consts/Colors';
 import { Threads } from 'src/client/components/Threads';
@@ -81,13 +82,16 @@ interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
   channel: string;
 }
 function PinnedMessages({ channel, isOpen, onClose }: PinnedMessagesProps) {
+  const navigate = useNavigate();
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Box>
         <ThreadList
           location={{ channel }}
           filter={{ metadata: { pinned: true } }}
-          onThreadClick={() => console.log('GO TO THREAD')}
+          onThreadClick={(threadId) =>
+            navigate(`/channel/${channel}/thread/${threadId}`)
+          }
         />
       </Box>
     </Modal>
