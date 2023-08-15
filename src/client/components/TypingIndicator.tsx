@@ -1,33 +1,13 @@
 import { thread, user } from '@cord-sdk/react';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from 'styled-components';
 
-export function TypingIndicator({
-  threadID,
-  typing,
-}: {
-  threadID: string;
-  typing?: string[];
-}) {
+export function TypingIndicator({ threadID }: { threadID: string }) {
   const [typingUsers, setTypingUsers] = React.useState<string[] | undefined>();
   const summary = thread.useThreadSummary(threadID);
-
-  const getUserName = useCallback((userID: string) => {
-    const data = user.useUserData(userID);
-    return data?.name ?? '';
-  }, []);
-
   useEffect(() => {
-    const getTyping = () => {
-      setTypingUsers(summary?.typing);
-    };
-    // Set up the interval to fetch data every 3 seconds
-    const intervalId = setInterval(getTyping, 3000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [getUserName, summary?.typing, typing]);
+    setTypingUsers(summary?.typing);
+  }, [summary?.typing]);
 
   return (
     <>
