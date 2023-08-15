@@ -1,18 +1,21 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Colors } from 'src/client/consts/Colors';
+import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
+import { Overlay } from 'src/client/components/MoreActionsButton';
 
 export function ChannelButton({
   option,
   onClick,
+  onContextMenu,
   isActive,
   icon,
 }: {
   option: string;
   onClick: () => void;
+  onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
   icon: React.ReactNode;
 }) {
@@ -26,6 +29,7 @@ export function ChannelButton({
     <ChannelButtonStyled
       $activePage={isActive}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       $hasUnread={hasUnread}
     >
       {icon}
@@ -37,23 +41,53 @@ export function ChannelButton({
 export function Channels({
   setCurrentChannel,
   currentChannel,
+  channels,
 }: {
   setCurrentChannel: (channel: string) => void;
   currentChannel: string;
+  channels: string[];
 }) {
-  const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [contextMenuOpenForChannel, setContextMenuOpenForChannel] = useState<
+    string | undefined
+  >(undefined);
+
   return (
-    <ChannelsList>
-      {channelsOptions.map((option, index) => (
-        <ChannelButton
-          isActive={currentChannel === option}
-          key={index}
-          onClick={() => setCurrentChannel(option)}
-          option={option}
-          icon={<ChannelIcon />}
-        />
-      ))}
-    </ChannelsList>
+    <>
+      <ChannelsList>
+        {channels.map((option, index) => (
+          <ChannelButton
+            isActive={currentChannel === option}
+            key={index}
+            onClick={() => setCurrentChannel(option)}
+            onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault();
+              setContextMenuPosition({
+                x: e.clientX,
+                y: e.clientY,
+              });
+              setContextMenuOpenForChannel(option);
+            }}
+            option={option}
+            icon={<ChannelIcon />}
+          />
+        ))}
+        {contextMenuOpenForChannel && (
+          <ChannelsRightClickMenu
+            position={contextMenuPosition}
+            channel={contextMenuOpenForChannel}
+            closeMenu={() => setContextMenuOpenForChannel(undefined)}
+          ></ChannelsRightClickMenu>
+        )}
+      </ChannelsList>
+      <Overlay
+        onClick={() => setContextMenuOpenForChannel(undefined)}
+        $shouldShow={!!contextMenuOpenForChannel}
+      />
+    </>
   );
 }
 

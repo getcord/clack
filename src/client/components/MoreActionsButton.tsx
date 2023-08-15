@@ -70,6 +70,13 @@ export function MoreActionsButton({
     setSubscribedToThread(!subscribedToThread);
   }, [setShowOptionsDialog, subscribedToThread, thread]);
 
+  // TODO This is currently not v useful because it will mark itself as read a few s
+  // later since it's on screen - need to think of a solution
+  const onMarkUnread = React.useCallback(async () => {
+    await window.CordSDK?.thread.setSeen(thread.id, false);
+    setShowOptionsDialog(false);
+  }, [setShowOptionsDialog, thread.id]);
+
   const onCopyButtonClick = React.useCallback(() => {
     const channel = thread.location.channel;
     const url = `${FRONT_END_HOST}/channel/${channel}/thread/${thread.id}`;
@@ -109,6 +116,10 @@ export function MoreActionsButton({
                 : 'Get notified about new replies'}{' '}
             </StyledButton>
             <Divider />
+            <StyledButton onClick={() => void onMarkUnread()}>
+              Mark unread
+            </StyledButton>
+            <Divider />
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
 
             {cordUserID === messageData?.authorID &&
@@ -134,7 +145,7 @@ export function MoreActionsButton({
   );
 }
 
-const Modal = styled(DefaultModal)`
+export const Modal = styled(DefaultModal)`
   pointer-events: none;
 `;
 
