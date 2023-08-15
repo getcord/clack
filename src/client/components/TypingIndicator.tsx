@@ -4,11 +4,11 @@ import { keyframes, styled } from 'styled-components';
 
 export function TypingIndicator({ threadID }: { threadID: string }) {
   const summary = thread.useThreadSummary(threadID);
-  const typingUsers = summary?.typing;
+  const typingUsers = summary?.typing ?? [];
 
   return (
     <>
-      {typingUsers && typingUsers.length > 0 && (
+      {typingUsers.length > 0 && (
         <Wrapper>
           {typingUsers.map((user, index) => (
             <TypingUserText
@@ -52,6 +52,14 @@ export function TypingUserText({
   );
 }
 
+const Text = styled.span`
+  color: #616061;
+`;
+
+const TextName = styled(Text)`
+  font-weight: 700;
+`;
+
 const animateDots = keyframes`
 50% {
   content: '..';
@@ -59,14 +67,6 @@ const animateDots = keyframes`
 100% {
   content: '...';
 }
-`;
-
-const Text = styled.span`
-  color: #616061;
-`;
-
-const TextName = styled(Text)`
-  font-weight: 700;
 `;
 
 const Wrapper = styled.div`
