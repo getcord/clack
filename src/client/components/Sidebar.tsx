@@ -7,6 +7,7 @@ import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { ChannelButton, Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 type SidebarProps = {
   className?: string;
@@ -16,6 +17,10 @@ type SidebarProps = {
 
 export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
   const navigate = useNavigate();
+
+  // API call here so it doesn't rerun when context menu is opened
+  const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
+
   return (
     <SidebarWrap className={className}>
       <SidebarHeader>
@@ -41,6 +46,7 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
         <Channels
           setCurrentChannel={(channel) => navigate(`/channel/${channel}`)}
           currentChannel={channelID}
+          channels={channelsOptions}
         />
       </ScrollableContent>
       <NotificationsRequestBanner />
