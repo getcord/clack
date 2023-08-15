@@ -27,12 +27,11 @@ export function MoreActionsButton({
   const { userID: cordUserID } = React.useContext(CordContext);
   const messageData = message ?? thread.firstMessage;
 
-  const subscribedToThread =
-    cordUserID &&
-    thread.participants
-      .map((participant) => participant.userID)
-      .includes(cordUserID);
-
+  const initialSubscribedToThread =
+    cordUserID && thread.subscribers.includes(cordUserID);
+  const [subscribedToThread, setSubscribedToThread] = useState(
+    initialSubscribedToThread,
+  );
   const onDeleteMessage = React.useCallback(async () => {
     if (!messageData) {
       return;
@@ -68,6 +67,7 @@ export function MoreActionsButton({
   const onSubscribeOrUnsubscribe = React.useCallback(async () => {
     await window.CordSDK?.thread.setSubscribed(thread.id, !subscribedToThread);
     setShowOptionsDialog(false);
+    setSubscribedToThread(!subscribedToThread);
   }, [setShowOptionsDialog, subscribedToThread, thread]);
 
   const onCopyButtonClick = React.useCallback(() => {
@@ -104,7 +104,9 @@ export function MoreActionsButton({
             $shouldShow={showOptionsDialog}
           >
             <StyledButton onClick={() => void onSubscribeOrUnsubscribe()}>
-              Turn {subscribedToThread ? 'off' : 'on'} notifications for reply
+              {subscribedToThread
+                ? 'Turn off notifications for replies'
+                : 'Get notified about new replies'}{' '}
             </StyledButton>
             <Divider />
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
