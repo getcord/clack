@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
 import { Colors } from 'src/client/consts/Colors';
-import { RightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
+import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
 
 export function ChannelButton({
@@ -65,7 +65,10 @@ export function Channels({
             onClick={() => setCurrentChannel(option)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
-              setContextMenuPosition({ x: e.clientX, y: e.clientY - 44 });
+              setContextMenuPosition({
+                x: e.clientX,
+                y: e.clientY,
+              });
               setContextMenuOpenForChannel(option);
             }}
             option={option}
@@ -73,11 +76,11 @@ export function Channels({
           />
         ))}
         {contextMenuOpenForChannel && (
-          <RightClickMenu
+          <ChannelsRightClickMenu
             position={contextMenuPosition}
             channel={contextMenuOpenForChannel}
             closeMenu={() => setContextMenuOpenForChannel(undefined)}
-          ></RightClickMenu>
+          ></ChannelsRightClickMenu>
         )}
       </ChannelsList>
       <Overlay

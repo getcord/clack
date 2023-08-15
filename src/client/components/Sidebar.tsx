@@ -18,6 +18,7 @@ type SidebarProps = {
 export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
   const navigate = useNavigate();
 
+  // API call here so it doesn't rerun when context menu is opened
   const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
 
   return (

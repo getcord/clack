@@ -75,7 +75,7 @@ export function MoreActionsButton({
   const onMarkUnread = React.useCallback(async () => {
     await window.CordSDK?.thread.setSeen(thread.id, false);
     setShowOptionsDialog(false);
-  }, [setShowOptionsDialog, thread]);
+  }, [setShowOptionsDialog, thread.id]);
 
   const onCopyButtonClick = React.useCallback(() => {
     const channel = thread.location.channel;
@@ -143,7 +143,7 @@ export function MoreActionsButton({
   );
 }
 
-const Modal = styled(DefaultModal)`
+export const Modal = styled(DefaultModal)`
   pointer-events: none;
 `;
 

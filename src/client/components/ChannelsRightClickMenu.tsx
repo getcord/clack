@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
+import { ReactPortal } from 'src/client/components/ReactPortal';
 
-export function RightClickMenu({
+export function ChannelsRightClickMenu({
   position,
   channel,
   closeMenu,
@@ -50,15 +51,17 @@ export function RightClickMenu({
   }, [closeMenu, hasMore, loading, shouldMarkAsUnread, threadIDs]);
 
   return (
-    <Menu $x={position.x} $y={position.y}>
-      <MenuList>
-        <MenuListItem>
-          <MenuListItemButton onClick={() => setShouldMarkAsUnread(true)}>
-            Mark all as read
-          </MenuListItemButton>
-        </MenuListItem>
-      </MenuList>
-    </Menu>
+    <ReactPortal wrapperID={'channels-right-click-menu'}>
+      <Menu $x={position.x} $y={position.y}>
+        <MenuList>
+          <MenuListItem>
+            <MenuListItemButton onClick={() => setShouldMarkAsUnread(true)}>
+              Mark all as read
+            </MenuListItemButton>
+          </MenuListItem>
+        </MenuList>
+      </Menu>
+    </ReactPortal>
   );
 }
 
@@ -91,12 +94,12 @@ const MenuListItemButton = styled.button`
 
 const Menu = styled.div<{ $x: number; $y: number }>`
   position: absolute;
+  pointer-events: auto;
   background-color: #fff;
   border-radius: 6px;
   box-shadow:
     0 0 0 1px rgba(29, 28, 29, 0.13),
     0 4px 12px 0 #0000001f;
-  z-index: 1000;
   top: ${({ $y }) => $y}px;
   left: ${({ $x }) => $x}px;
 `;
