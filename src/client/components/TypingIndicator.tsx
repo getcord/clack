@@ -1,6 +1,6 @@
 import { thread, user } from '@cord-sdk/react';
 import React from 'react';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 
 export function TypingIndicator({ threadID }: { threadID: string }) {
   const summary = thread.useThreadSummary(threadID);
@@ -52,6 +52,15 @@ export function TypingUserText({
   );
 }
 
+const animateDots = keyframes`
+50% {
+  content: '..';
+}
+100% {
+  content: '...';
+}
+`;
+
 const Text = styled.span`
   color: #616061;
 `;
@@ -63,4 +72,8 @@ const TextName = styled(Text)`
 const Wrapper = styled.div`
   font-size: 12px;
   margin: 5px 4px 20px 20px;
+  &:after {
+    animation: ${animateDots} 1s linear infinite;
+    content: '.';
+  }
 `;
