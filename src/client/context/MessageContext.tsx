@@ -20,19 +20,17 @@ export const MessageContext = createContext<MessageContextType>(
 export function MessageProvider({ children }: React.PropsWithChildren) {
   const [isEditing, setIsEditing] = useState<string | undefined>();
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
-  const [page, setPage] = useState<string | undefined>();
-  const [messageId, setMessageId] = useState<string | undefined>();
+  const [messageDetails, setMessageDetails] = useState<string | undefined>();
 
   const setIsEditingMessage = useCallback(
     (editing?: { page: string; messageId?: string }) => {
+      const m = editing ? `${editing.page}/${editing.messageId}` : undefined;
+
       if (isEditing === undefined || !editing) {
-        setIsEditing(
-          editing ? `${editing.page}/${editing.messageId}` : undefined,
-        );
+        setIsEditing(m);
       } else {
         setIsMessageModalOpen(true);
-        setPage(editing.page);
-        setMessageId(editing.messageId);
+        setMessageDetails(m);
       }
     },
     [isEditing],
@@ -58,7 +56,7 @@ export function MessageProvider({ children }: React.PropsWithChildren) {
           }}
           onDiscardEdit={() => {
             setIsMessageModalOpen(false);
-            setIsEditing(`${page}/${messageId}`);
+            setIsEditing(messageDetails);
           }}
         />
       )}
