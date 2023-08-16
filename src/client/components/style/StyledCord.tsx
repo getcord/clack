@@ -27,10 +27,12 @@ export const StyledMessage = styled(Message)`
     width: 36px;
   }
 
-  //TODO(K)  Resize x/-> BUTTONS
-  // .cord-button{
-
-  // }
+  .cord-composer-primary-buttons {
+    button svg {
+      width: 14px;
+      height: 12px;
+    }
+  }
   .linkified {
     color: ${Colors.blue_link};
     font-weight: 400;
