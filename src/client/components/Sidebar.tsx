@@ -32,6 +32,8 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
           <SidebarNavButton
             option={'Threads'}
             onClick={() => {
+              // check if we're editing a message
+              // show modal if we are, to prevent losing changes
               navigate('/threads/');
             }}
             icon={

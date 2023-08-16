@@ -35,7 +35,7 @@ function Message({ message, thread }: MessageProps) {
   }, []);
 
   return (
-    <MessageListItemStyled key={message.id}>
+    <MessageListItemStyled key={`${isEditingMessage} - ${message.id}`}>
       <div>
         <StyledMessage
           threadId={thread.id}
