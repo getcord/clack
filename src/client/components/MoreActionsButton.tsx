@@ -136,11 +136,9 @@ export function MoreActionsButton({
               messageData?.deletedTimestamp === null && (
                 <>
                   <Divider />
-
                   <StyledButton onClick={() => void onUpdateMessage()}>
                     Edit message
                   </StyledButton>
-
                   <StyledButton
                     $type="alert"
                     onClick={() => void onDeleteMessage()}

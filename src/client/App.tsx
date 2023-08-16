@@ -71,7 +71,7 @@ export function App() {
       </Helmet>
       <CordProvider
         clientAuthToken={cordToken}
-        cordScriptUrl="https://local.cord.com:8179/sdk/v1/sdk.latest.js"
+        cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
         enableSlack={false}
         enableTasks={false}
         enableAnnotations={false}

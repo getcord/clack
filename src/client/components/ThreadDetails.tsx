@@ -50,7 +50,7 @@ function Message({ message, thread }: MessageProps) {
             thread={thread}
             hovered={hovered}
             message={message}
-            page="threadDetails"
+            page={'threadDetails'}
           />
         )}
       </div>
