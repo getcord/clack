@@ -106,7 +106,6 @@ const Box = styled.div({
   borderRadius: '8px',
   backgroundColor: Colors.gray_highlight,
   padding: '20px',
-  // paddingBottom: '10px',
   display: 'flex',
   flexDirection: 'column',
 });

@@ -49,9 +49,8 @@ export function Threads({
   const scrollUpHandler = useCallback(() => {
     if (!isAtBottom()) {
       onScrollUp();
-      return;
-    }
-    if (isAtBottom()) {
+    } else {
+      // little delay for a nice UX ✨
       setTimeout(() => isAtBottom() && onScrollToBottom(), 100);
     }
   }, [onScrollToBottom, onScrollUp]);

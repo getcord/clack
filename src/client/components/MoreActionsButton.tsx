@@ -88,13 +88,15 @@ export function MoreActionsButton({
     const threadIsAlreadyPinned = !!thread.metadata.pinned;
     const metadata: { pinned?: boolean; pinnedBy?: string } = {
       pinned: !threadIsAlreadyPinned,
+      pinnedBy: !threadIsAlreadyPinned ? cordUserID : undefined,
     };
-    if (!threadIsAlreadyPinned) {
-      metadata.pinnedBy = cordUserID;
-    }
-    void window.CordSDK?.thread.updateThread(thread.id, {
-      metadata,
-    });
+    window.CordSDK?.thread
+      .updateThread(thread.id, {
+        metadata,
+      })
+      .catch((e) =>
+        console.error(`Having issues pinning the thread ${thread.name}: ${e}`),
+      );
   };
 
   const keyboardEvents: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
