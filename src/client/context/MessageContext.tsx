@@ -8,8 +8,6 @@ type MessageContextType = {
     page: string;
     messageId: string | undefined;
   }) => void;
-  isMessageModalOpen: boolean;
-  setIsMessageModalOpen: (state: boolean) => void;
 };
 
 export const MessageContext = createContext<MessageContextType>(
@@ -43,10 +41,8 @@ export function MessageProvider({ children }: React.PropsWithChildren) {
     () => ({
       editingMessage: editing,
       setEditingMessage,
-      isMessageModalOpen,
-      setIsMessageModalOpen,
     }),
-    [editing, isMessageModalOpen, setEditingMessage],
+    [editing, setEditingMessage],
   );
 
   return (
