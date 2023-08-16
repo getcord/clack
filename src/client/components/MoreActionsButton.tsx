@@ -28,7 +28,7 @@ export function MoreActionsButton({
   page: 'threadDetails' | 'channel';
 }) {
   const { userID: cordUserID } = React.useContext(CordContext);
-  const { setIsEditingMessage } = React.useContext(MessageContext);
+  const { setEditingMessage } = React.useContext(MessageContext);
   const messageData = message ?? thread.firstMessage;
 
   const initialSubscribedToThread =
@@ -38,9 +38,9 @@ export function MoreActionsButton({
   );
 
   const onUpdateMessage = React.useCallback(() => {
-    setIsEditingMessage({ page, messageId: messageData?.id });
+    setEditingMessage({ page, messageId: messageData?.id });
     setShowOptionsDialog(false);
-  }, [messageData?.id, page, setIsEditingMessage, setShowOptionsDialog]);
+  }, [messageData?.id, page, setEditingMessage, setShowOptionsDialog]);
 
   const onDeleteMessage = React.useCallback(async () => {
     if (!messageData) {

@@ -3,8 +3,8 @@ import { EditMessageModal } from 'src/client/components/editMessageModal';
 export const NO_PROVIDER_DEFINED = Symbol.for('NO_PROVIDER_DEFINED');
 
 type MessageContextType = {
-  isEditingMessage: string | null | undefined;
-  setIsEditingMessage: (editing?: {
+  editingMessage: string | null | undefined;
+  setEditingMessage: (data?: {
     page: string;
     messageId: string | undefined;
   }) => void;
@@ -18,32 +18,35 @@ export const MessageContext = createContext<MessageContextType>(
 );
 
 export function MessageProvider({ children }: React.PropsWithChildren) {
-  const [isEditing, setIsEditing] = useState<string | undefined>();
+  const [editing, setEditing] = useState<string | undefined>();
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [messageDetails, setMessageDetails] = useState<string | undefined>();
 
-  const setIsEditingMessage = useCallback(
-    (editing?: { page: string; messageId?: string }) => {
-      const m = editing ? `${editing.page}/${editing.messageId}` : undefined;
+  const setEditingMessage = useCallback(
+    (data?: { page: string; messageId?: string }) => {
+      const editingString = data ? `${data.page}/${data.messageId}` : undefined;
 
-      if (isEditing === undefined || !editing) {
-        setIsEditing(m);
-      } else {
+      // editing a new messsage
+      if (editing === undefined || !data) {
+        setEditing(editingString);
+      }
+      // trying to edit a message while another one is being edited
+      else {
         setIsMessageModalOpen(true);
-        setMessageDetails(m);
+        setMessageDetails(editingString);
       }
     },
-    [isEditing],
+    [editing],
   );
 
   const contextValue = useMemo(
     () => ({
-      isEditingMessage: isEditing,
-      setIsEditingMessage,
+      editingMessage: editing,
+      setEditingMessage,
       isMessageModalOpen,
       setIsMessageModalOpen,
     }),
-    [isEditing, isMessageModalOpen, setIsEditingMessage],
+    [editing, isMessageModalOpen, setEditingMessage],
   );
 
   return (
@@ -56,7 +59,7 @@ export function MessageProvider({ children }: React.PropsWithChildren) {
           }}
           onDiscardEdit={() => {
             setIsMessageModalOpen(false);
-            setIsEditing(messageDetails);
+            setEditing(messageDetails);
           }}
         />
       )}

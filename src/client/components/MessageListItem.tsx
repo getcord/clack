@@ -49,7 +49,7 @@ export function MessageListItem({
   onOpenThread,
 }: MessageListItemProps) {
   const { threadID: threadIDParam } = useParams();
-  const { isEditingMessage, setIsEditingMessage } =
+  const { editingMessage, setEditingMessage } =
     React.useContext(MessageContext);
 
   useEffect(() => {
@@ -150,9 +150,9 @@ export function MessageListItem({
             ),
           );
         }}
-        isEditing={isEditingMessage === `channel/${thread.firstMessage?.id}`}
+        isEditing={editingMessage === `channel/${thread.firstMessage?.id}`}
         onEditEnd={() => {
-          setIsEditingMessage(undefined);
+          setEditingMessage(undefined);
         }}
       />
       <Modal
@@ -173,7 +173,7 @@ export function MessageListItem({
         />
       </Modal>
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-      {isEditingMessage !== `channel/${thread.firstMessage?.id}` && (
+      {editingMessage !== `channel/${thread.firstMessage?.id}` && (
         <Options
           thread={thread}
           hovered={hovered}
