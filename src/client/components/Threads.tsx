@@ -41,8 +41,10 @@ export function Threads({
   useEffect(() => {
     if (!isAtBottomOfThreads()) {
       setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
+    } else {
+      onScrollToBottom();
     }
-  }, [isAtBottomOfThreads, threads]);
+  }, [isAtBottomOfThreads, threads, onScrollToBottom]);
 
   const scrollHandler = useCallback(() => {
     if (!isAtBottomOfThreads()) {

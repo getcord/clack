@@ -31,9 +31,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
   );
 
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
-  // instantiating as true as for now if you re-render the page it will always start
-  // at the "bottom" of the threads
-  const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(true);
+  const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
