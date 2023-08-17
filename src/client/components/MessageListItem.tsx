@@ -156,6 +156,10 @@ export function MessageListItem({
       : '',
   );
   const pinnedByUserName = data?.name;
+  const isMessageBeingEdited =
+    editingMessage &&
+    editingMessage.page === 'channel' &&
+    editingMessage.messageId === thread.firstMessage?.id;
 
   return (
     <MessageListItemStyled
