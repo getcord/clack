@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { keyframes, styled } from 'styled-components';
-import { ThreadList, thread } from '@cord-sdk/react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { styled } from 'styled-components';
+import { thread } from '@cord-sdk/react';
+import { PinnedMessages } from 'src/client/components/PinnedMessages';
+import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Colors } from 'src/client/consts/Colors';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { StyledComposer } from 'src/client/components/style/StyledCord';
-import { Modal } from 'src/client/components/Modal';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 
@@ -30,11 +30,12 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     },
   );
 
-  const [showToolbar, setShowToolbar] = useState(true);
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
-  useEffect(() => {
-    setShowToolbar(pinnedThreads.length > 0);
-  }, [pinnedThreads]);
+  // instantiating as true as for now if you re-render the page it will always start
+  // at the "bottom" of the threads
+  const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(true);
+
+  const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
   return (
     <Wrapper>
@@ -63,9 +64,11 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
       />
       <StyledThreads
         onScrollUp={() => {
-          setShowToolbar(false);
+          setIsAtBottomOfThreads(false);
         }}
-        onScrollToBottom={() => pinnedThreads.length && setShowToolbar(true)}
+        onScrollToBottom={() => {
+          setIsAtBottomOfThreads(true);
+        }}
         channel={channel}
         onOpenThread={onOpenThread}
       />
@@ -77,38 +80,6 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     </Wrapper>
   );
 }
-
-interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
-  channel: string;
-}
-function PinnedMessages({ channel, isOpen, onClose }: PinnedMessagesProps) {
-  const navigate = useNavigate();
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <Box>
-        <StyledThreadList
-          location={{ channel }}
-          filter={{ metadata: { pinned: true } }}
-          onThreadClick={(threadId) =>
-            navigate(`/channel/${channel}/thread/${threadId}`)
-          }
-        />
-      </Box>
-    </Modal>
-  );
-}
-
-const Box = styled.div({
-  position: 'absolute',
-  top: '150px',
-  left: '260px',
-  width: '400px',
-  borderRadius: '8px',
-  backgroundColor: Colors.gray_highlight,
-  padding: '20px',
-  display: 'flex',
-  flexDirection: 'column',
-});
 
 const PushPinIcon = styled(PushPinSvg)`
   height: 13px;
@@ -137,42 +108,6 @@ const PageHeaderWrapper = styled.div({
   margin: 0,
 });
 
-const slideIn = keyframes`
-  0% {
-    translate: 0 -100%;
-  }
-  100% {
-    translate: 0% 100%;
-  }
-`;
-
-const slideOut = keyframes`
-  0% {
-    translate: 0% 100%;
-  }
-  100% {
-    translate: 0% -100%;
-  }
-`;
-
-// top is 18px to sit underneath the channel details bar
-const Toolbar = styled.div<{ $showToolbar: boolean }>`
-  position: absolute;
-  width: 100%;
-  top: 18px;
-  animation: ${({ $showToolbar }) => ($showToolbar ? slideIn : slideOut)} 0.5s
-    ease;
-  translate: ${({ $showToolbar: showToolbar }) =>
-    `0% ${showToolbar ? '100%' : '-100%'}`};
-  z-index: 1;
-  background-color: white;
-  border-top: 1px solid ${Colors.gray_light};
-  border-bottom: 1px solid ${Colors.gray_light};
-  font-size: 13px;
-  color: ${Colors.gray_dark};
-  padding: 10px 20px;
-`;
-
 const ChannelDetailsBar = styled.div({
   gridArea: 'channel-details',
   borderBottom: `1px solid ${Colors.gray_light}`,
@@ -183,11 +118,4 @@ const ChannelDetailsBar = styled.div({
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;
-`;
-
-const StyledThreadList = styled(ThreadList)`
-  background-color: inherit;
-  .cord-scroll-container {
-    padding: 0px;
-  }
 `;

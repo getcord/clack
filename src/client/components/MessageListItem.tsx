@@ -140,7 +140,11 @@ export function MessageListItem({
     queueShowProfileDetails,
   ]);
 
-  const data = user.useUserData(`${thread.metadata.pinnedBy || ''}`);
+  const data = user.useUserData(
+    thread.metadata.pinnedBy && typeof thread.metadata.pinnedBy === 'string'
+      ? thread.metadata.pinnedBy
+      : '',
+  );
   const pinnedByUserName = data?.name;
 
   return (
