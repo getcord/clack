@@ -27,10 +27,14 @@ export const StyledMessage = styled(Message)`
     width: 36px;
   }
 
-  .cord-composer-primary-buttons {
-    button svg {
+  .cord-composer-primary-buttons button {
+    padding: 2px;
+    border-radius: 99px;
+    height: 24px;
+    width: 24px;
+    svg {
       width: 14px;
-      height: 12px;
+      height: 14px;
     }
   }
   .linkified {
