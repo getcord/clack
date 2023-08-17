@@ -25,7 +25,11 @@ function Message({ message, thread }: MessageProps) {
   const [hovered, setHovered] = React.useState(false);
   const { editingMessage, setEditingMessage } =
     React.useContext(MessageContext);
-  const isEditing = editingMessage === `threadDetails/${message.id}`;
+  const isMessageBeingEdited =
+    editingMessage &&
+    editingMessage.page == 'threadDetails' &&
+    editingMessage.messageId === message.id;
+
   const onMouseEnter = React.useCallback(() => {
     setHovered(true);
   }, []);
@@ -35,17 +39,19 @@ function Message({ message, thread }: MessageProps) {
   }, []);
 
   return (
-    <MessageListItemStyled key={`${editingMessage} - ${message.id}`}>
+    <MessageListItemStyled
+      key={`${editingMessage?.page}-${editingMessage?.messageId}-${message.id}`}
+    >
       <div>
         <StyledMessage
           threadId={thread.id}
           messageId={message.id}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          isEditing={isEditing}
+          isEditing={isMessageBeingEdited}
           onEditEnd={() => setEditingMessage(undefined)}
         />
-        {!isEditing && (
+        {!isMessageBeingEdited && (
           <Options
             thread={thread}
             hovered={hovered}

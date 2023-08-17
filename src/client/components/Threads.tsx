@@ -54,7 +54,7 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
     if (index < 1) {
       return (
         <MessageListItem
-          key={`${editingMessage} - ${thread.id}`}
+          key={`${editingMessage?.page}-${editingMessage?.messageId}-${thread.id}`}
           thread={thread}
           onOpenThread={onOpenThread}
         />
@@ -71,7 +71,9 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
         lastMessageTimestamp.getDate();
 
     return (
-      <React.Fragment key={`${editingMessage} - ${thread.id}`}>
+      <React.Fragment
+        key={`${editingMessage?.page}-${editingMessage?.messageId}-${thread.id}`}
+      >
         {lastMessageTimestamp && isDifferentDay ? (
           <DateDivider timestamp={lastMessageTimestamp} />
         ) : null}

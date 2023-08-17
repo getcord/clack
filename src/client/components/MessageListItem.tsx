@@ -133,6 +133,11 @@ export function MessageListItem({
     queueShowProfileDetails,
   ]);
 
+  const isMessageBeingEdited =
+    editingMessage &&
+    editingMessage.page === 'channel' &&
+    editingMessage.messageId === thread.firstMessage?.id;
+
   return (
     <MessageListItemStyled
       ref={ref}
@@ -150,7 +155,7 @@ export function MessageListItem({
             ),
           );
         }}
-        isEditing={editingMessage === `channel/${thread.firstMessage?.id}`}
+        isEditing={isMessageBeingEdited}
         onEditEnd={() => {
           setEditingMessage(undefined);
         }}
@@ -173,7 +178,7 @@ export function MessageListItem({
         />
       </Modal>
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-      {editingMessage !== `channel/${thread.firstMessage?.id}` && (
+      {!isMessageBeingEdited && (
         <Options
           thread={thread}
           hovered={hovered}

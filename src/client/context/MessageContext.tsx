@@ -3,35 +3,38 @@ import { EditMessageModal } from 'src/client/components/editMessageModal';
 export const NO_PROVIDER_DEFINED = Symbol.for('NO_PROVIDER_DEFINED');
 
 type MessageContextType = {
-  editingMessage: string | null | undefined;
-  setEditingMessage: (data?: {
-    page: string;
-    messageId: string | undefined;
-  }) => void;
+  editingMessage: EditingMessageInfo | undefined;
+  setEditingMessage: (data?: EditingMessageInfo) => void;
 };
 
+type EditingMessageInfo = {
+  page: 'channel' | 'threadDetails';
+  messageId?: string;
+};
 export const MessageContext = createContext<MessageContextType>(
   // TODO: Fix this
   {} as MessageContextType,
 );
 
 export function MessageProvider({ children }: React.PropsWithChildren) {
-  const [editing, setEditing] = useState<string | undefined>();
+  const [editing, setEditing] = useState<EditingMessageInfo | undefined>();
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
-  const [messageDetails, setMessageDetails] = useState<string | undefined>();
+  const [messageDetails, setMessageDetails] = useState<
+    EditingMessageInfo | undefined
+  >();
 
   const setEditingMessage = useCallback(
-    (data?: { page: string; messageId?: string }) => {
-      const editingString = data ? `${data.page}/${data.messageId}` : undefined;
-
+    (data?: EditingMessageInfo) => {
       // editing a new messsage
       if (editing === undefined || !data) {
-        setEditing(editingString);
+        setEditing(data);
       }
       // trying to edit a message while another one is being edited
       else {
         setIsMessageModalOpen(true);
-        setMessageDetails(editingString);
+        // save the message to be edited here until the modal action is
+        // selected (whether to discard or keep the message)
+        setMessageDetails(data);
       }
     },
     [editing],
