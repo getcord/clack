@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import React from 'react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { Colors } from 'src/client/consts/Colors';
 
 export const ActionButton = styled.button<{
@@ -19,7 +21,7 @@ export const ActionButton = styled.button<{
   borderRadius: '4px',
 }));
 
-export const CloseButton = styled.button({
+export const StyledCloseButton = styled.button({
   all: 'unset',
   gridArea: 'close-button',
   cursor: 'pointer',
@@ -32,3 +34,20 @@ export const CloseButton = styled.button({
     backgroundColor: Colors.gray_highlight,
   },
 });
+
+export const XIcon = styled(XMarkIcon)({
+  width: '24px',
+  height: '24px',
+});
+
+export function CloseButton({
+  onClick,
+}: {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}) {
+  return (
+    <StyledCloseButton onClick={onClick}>
+      <XIcon />
+    </StyledCloseButton>
+  );
+}

@@ -9,7 +9,7 @@ import {
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
-import { XIcon } from 'src/client/components/SetToActiveModal';
+import { XIcon } from 'src/client/components/Buttons';
 
 interface UsersInChannelModalProps {
   onClose: () => void;

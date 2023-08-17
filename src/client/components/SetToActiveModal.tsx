@@ -1,7 +1,7 @@
 import React from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import styled from 'styled-components';
-import { CloseButton, ActionButton } from 'src/client/components/Buttons';
+import { ActionButton } from 'src/client/components/Buttons';
+import { ActionModal } from 'src/client/components/ActionModal';
 
 interface SetToActiveModalProps {
   onClose: React.MouseEventHandler<HTMLButtonElement>;
@@ -25,32 +25,32 @@ export function SetToActiveModal({
   };
 
   return (
-    <Modal>
-      <Box>
-        <Heading>Set yourself to active?</Heading>
-        <CloseButton onClick={onClose}>
-          <XIcon />
-        </CloseButton>
-        <Description>
-          You're currently set to away, but it looks like you're back. Want to
-          update your availability?
-        </Description>
-        <CheckboxWrapper>
-          <Input
-            id="dont-ask-again"
-            type="checkbox"
-            onChange={savePreferenceToLocalStorage}
-          />
-          <Label htmlFor="dont-ask-again">Don't ask again</Label>
-        </CheckboxWrapper>
-        <ActionButton $variant="secondary" onClick={onCancel}>
-          No Thanks
-        </ActionButton>
-        <ActionButton $variant="primary" onClick={onSetToActive}>
-          Set to Active
-        </ActionButton>
-      </Box>
-    </Modal>
+    <ActionModal
+      modalSize={'s'}
+      descriptionSize={'s'}
+      heading={'Set yourself to active?'}
+      description={`You're currently set to away, but it looks like you're back. Want to
+    update your availability?`}
+      footer={
+        <Footer>
+          <CheckboxWrapper>
+            <Input
+              id="dont-ask-again"
+              type="checkbox"
+              onChange={savePreferenceToLocalStorage}
+            />
+            <Label htmlFor="dont-ask-again">Don't ask again</Label>
+          </CheckboxWrapper>
+          <ActionButton $variant="secondary" onClick={onCancel}>
+            No Thanks
+          </ActionButton>
+          <ActionButton $variant="primary" onClick={onSetToActive}>
+            Set to Active
+          </ActionButton>
+        </Footer>
+      }
+      onClose={onClose}
+    />
   );
 }
 
@@ -69,48 +69,9 @@ const CheckboxWrapper = styled.div({
   gap: '8px',
 });
 
-const Modal = styled.div({
-  position: 'absolute',
-  height: '100vh',
-  inset: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  zIndex: 999,
-
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Box = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '1fr auto auto',
-  gridTemplateRows: 'auto auto auto',
-  gridTemplateAreas: `
-    "heading heading close-button"
-    "description description description"
-    "checkbox secondary-button primary-button"
-  `,
-  backgroundColor: 'white',
-  padding: '20px 24px',
-  borderRadius: '12px',
-  color: 'black',
-  maxWidth: '400px',
-  gap: '12px',
-});
-
-export const XIcon = styled(XMarkIcon)({
-  width: '24px',
-  height: '24px',
-});
-
-const Heading = styled.h2({
-  gridArea: 'heading',
-  marginTop: 0,
-});
-
-const Description = styled.p({
-  gridArea: 'description',
-  margin: 0,
-  fontSize: '13px',
-  paddingBottom: '12px',
-});
+const Footer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas: 'checkbox secondary-button primary-button';
+  gap: 12px;
+`;

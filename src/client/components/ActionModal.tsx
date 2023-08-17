@@ -1,13 +1,16 @@
 import React from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { CloseButton } from 'src/client/components/Buttons';
+
+type Size = 's' | 'm';
 
 interface ActionModalProps {
   onClose: React.MouseEventHandler<HTMLButtonElement>;
   heading: string;
   description: string;
   footer: React.ReactNode;
+  modalSize?: Size;
+  descriptionSize?: Size;
 }
 
 export function ActionModal({
@@ -15,16 +18,16 @@ export function ActionModal({
   heading,
   description,
   footer,
+  modalSize = 'm',
+  descriptionSize = 'm',
 }: ActionModalProps) {
   return (
     <Modal>
-      <Box>
+      <Box $size={modalSize}>
         <Heading>{heading}</Heading>
-        <CloseButton onClick={onClose}>
-          <XIcon />
-        </CloseButton>
-        <Description>{description}</Description>
-        {footer}
+        <CloseButton onClick={onClose} />
+        <Description $size={descriptionSize}>{description}</Description>
+        <Footer>{footer}</Footer>
       </Box>
     </Modal>
   );
@@ -41,28 +44,29 @@ const Modal = styled.div({
   justifyContent: 'center',
 });
 
-const Box = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '1fr auto auto',
-  gridTemplateRows: 'auto auto auto',
-  gridTemplateAreas: `
-    "heading heading close-button"
-    "description description description"
-    "footer footer footer"
-  `,
-  backgroundColor: 'white',
-  padding: '24px 28px',
-  borderRadius: '12px',
-  color: 'black',
-  minWidth: '450px',
-  minHeight: '150px',
-  gap: '12px',
-});
+const Box = styled.div<{ $size: 's' | 'm' }>`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'heading close-button'
+    'description description'
+    'footer footer';
+  background-color: white;
+  padding: 24px 28px;
+  border-radius: 12px;
+  color: black;
+  gap: 12px;
 
-export const XIcon = styled(XMarkIcon)({
-  width: '24px',
-  height: '24px',
-});
+  ${({ $size }) =>
+    $size === 's'
+      ? css`
+          max-width: 400px;
+        `
+      : css`
+          min-width: 450px;
+          min-height: 150px;
+        `}
+`;
 
 const Heading = styled.h1({
   gridArea: 'heading',
@@ -71,9 +75,23 @@ const Heading = styled.h1({
   fontSize: '22px',
 });
 
-const Description = styled.p({
-  gridArea: 'description',
-  margin: 0,
-  fontSize: '15px',
-  paddingBottom: '24px',
+const Description = styled.p<{ $size?: 's' | 'm' }>`
+  grid-area: description;
+  margin: 0;
+  font-size: 13px;
+  padding-bottom: 12px;
+  ${({ $size }) =>
+    $size === 's'
+      ? css`
+          font-size: 13px;
+          padding-bottom: 12px;
+        `
+      : css`
+          font-size: 15px;
+          padding-bottom: 24px;
+        `}
+`;
+
+const Footer = styled.div({
+  gridArea: 'footer',
 });
