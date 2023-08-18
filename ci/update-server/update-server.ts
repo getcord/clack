@@ -59,7 +59,6 @@ function main() {
       logs += data.toString();
     });
 
-    // Listen for stderr data
     proc.stderr.on('data', (data) => {
       console.error(`${data}`);
       logs += data.toString();
