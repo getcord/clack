@@ -10,6 +10,7 @@ export function handleGetChannels(_: Request, res: Response) {
     'clack-allcustomers',
     'clackless',
     'cordless',
+    'cordathon',
     'design',
     'docs',
     'e',
