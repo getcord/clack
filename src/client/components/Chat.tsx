@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
+import { thread } from '@cord-sdk/react';
+import { PinnedMessages } from 'src/client/components/PinnedMessages';
+import { Toolbar } from 'src/client/components/Toolbar';
+import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Colors } from 'src/client/consts/Colors';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
@@ -15,6 +19,22 @@ interface ChatProps {
 export function Chat({ channel, onOpenThread }: ChatProps) {
   const usersInChannel = useAPIFetch<(string | number)[]>('/users');
 
+  const { threads: pinnedThreads } = thread.useLocationData(
+    { channel },
+    {
+      filter: {
+        metadata: {
+          pinned: true,
+        },
+      },
+    },
+  );
+
+  const [showPinnedMessages, setShowPinnedMessages] = useState(false);
+  const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
+
+  const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
+
   return (
     <Wrapper>
       <ChannelDetailsBar>
@@ -25,7 +45,31 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
           )}
         </PageHeaderWrapper>
       </ChannelDetailsBar>
-      <StyledThreads channel={channel} onOpenThread={onOpenThread} />
+      <Toolbar $showToolbar={showToolbar}>
+        <span
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={() => setShowPinnedMessages(true)}
+        >
+          <PushPinIcon /> {pinnedThreads.length} Pinned
+        </span>
+      </Toolbar>
+      <PinnedMessages
+        channel={channel}
+        isOpen={showPinnedMessages}
+        onClose={() => setShowPinnedMessages(false)}
+      />
+      <StyledThreads
+        onScrollUp={() => {
+          setIsAtBottomOfThreads(false);
+        }}
+        onScrollToBottom={() => {
+          setIsAtBottomOfThreads(true);
+        }}
+        channel={channel}
+        onOpenThread={onOpenThread}
+      />
       <StyledComposer
         location={{ channel }}
         threadName={`#${channel}`}
@@ -34,6 +78,12 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     </Wrapper>
   );
 }
+
+const PushPinIcon = styled(PushPinSvg)`
+  height: 13px;
+  width: 13px;
+  margin-right: 6px;
+`;
 
 const Wrapper = styled.div({
   position: 'relative',

@@ -101,6 +101,7 @@ const OptionsStyled = styled.div`
   box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
   border-radius: 8px;
   padding: 4px;
+  z-index: 1;
 
   .cord-reaction-list {
     display: none;
