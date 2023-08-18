@@ -35,7 +35,7 @@ const Box = styled.div({
   top: '150px',
   left: '260px',
   width: '400px',
-  height: '500px',
+  maxHeight: '500px',
   overflow: 'auto',
   borderRadius: '8px',
   backgroundColor: Colors.gray_highlight,
