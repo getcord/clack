@@ -14,6 +14,7 @@ import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 import { TypingIndicator } from 'src/client/components/TypingIndicator';
 
 import { Options } from 'src/client/components/Options';
+import { MessageContext } from 'src/client/context/MessageContext';
 
 interface MessageProps {
   message: CoreMessageData;
@@ -22,6 +23,12 @@ interface MessageProps {
 
 function Message({ message, thread }: MessageProps) {
   const [hovered, setHovered] = React.useState(false);
+  const { editingMessage, setEditingMessage } =
+    React.useContext(MessageContext);
+  const isMessageBeingEdited =
+    editingMessage &&
+    editingMessage.page == 'threadDetails' &&
+    editingMessage.messageId === message.id;
 
   const onMouseEnter = React.useCallback(() => {
     setHovered(true);
@@ -32,15 +39,26 @@ function Message({ message, thread }: MessageProps) {
   }, []);
 
   return (
-    <MessageListItemStyled key={message.id}>
+    <MessageListItemStyled
+      key={`${editingMessage?.page}-${editingMessage?.messageId}-${message.id}`}
+    >
       <div>
         <StyledMessage
           threadId={thread.id}
           messageId={message.id}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          isEditing={isMessageBeingEdited}
+          onEditEnd={() => setEditingMessage(undefined)}
         />
-        <Options thread={thread} hovered={hovered} message={message} />
+        {!isMessageBeingEdited && (
+          <Options
+            thread={thread}
+            hovered={hovered}
+            message={message}
+            page={'threadDetails'}
+          />
+        )}
       </div>
     </MessageListItemStyled>
   );

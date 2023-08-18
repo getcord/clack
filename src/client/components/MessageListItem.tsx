@@ -16,6 +16,7 @@ import { Options } from 'src/client/components/Options';
 import { ProfileDetails } from 'src/client/components/ProfileDetails';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Modal } from 'src/client/components/Modal';
+import { MessageContext } from 'src/client/context/MessageContext';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -50,14 +51,18 @@ export const MessageListItemStyled = styled.div<{
         `}
 `;
 
+export type MessageListItemProps = {
+  thread: ThreadSummary;
+  onOpenThread: (threadID: string) => void;
+};
+
 export function MessageListItem({
   thread,
   onOpenThread,
-}: {
-  thread: ThreadSummary;
-  onOpenThread: (threadID: string) => void;
-}) {
+}: MessageListItemProps) {
   const { threadID: threadIDParam } = useParams();
+  const { editingMessage, setEditingMessage } =
+    React.useContext(MessageContext);
 
   useEffect(() => {
     if (thread.id === threadIDParam) {
@@ -140,6 +145,11 @@ export function MessageListItem({
     queueShowProfileDetails,
   ]);
 
+  const isMessageBeingEdited =
+    editingMessage &&
+    editingMessage.page === 'channel' &&
+    editingMessage.messageId === thread.firstMessage?.id;
+
   const data = user.useUserData(
     thread.metadata.pinnedBy && typeof thread.metadata.pinnedBy === 'string'
       ? thread.metadata.pinnedBy
@@ -170,6 +180,10 @@ export function MessageListItem({
             ),
           );
         }}
+        isEditing={isMessageBeingEdited}
+        onEditEnd={() => {
+          setEditingMessage(undefined);
+        }}
       />
       <Modal
         isOpen={showProfileDetails}
@@ -189,7 +203,14 @@ export function MessageListItem({
         />
       </Modal>
       <ThreadReplies summary={thread} onOpenThread={onOpenThread} />
-      <Options thread={thread} hovered={hovered} onOpenThread={onOpenThread} />
+      {!isMessageBeingEdited && (
+        <Options
+          thread={thread}
+          hovered={hovered}
+          onOpenThread={onOpenThread}
+          page={'channel'}
+        />
+      )}
     </MessageListItemStyled>
   );
 }

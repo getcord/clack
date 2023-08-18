@@ -14,6 +14,7 @@ import { Sidebar as DefaultSidebar } from 'src/client/components/Sidebar';
 import { BrowserNotificationBridge } from 'src/client/components/BrowserNotificationBridge';
 import { ThreadsList } from 'src/client/components/ThreadsList';
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
+import { MessageProvider } from 'src/client/context/MessageContext';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -82,26 +83,28 @@ export function App() {
           <Layout className={threadID ? 'openThread' : ''}>
             <Topbar userID={cordUserID} />
             <Sidebar channelID={channelID} openPanel={openPanel} />
-            <Content>
-              {openPanel === 'channel' && (
-                <Chat
-                  key={channelID}
-                  channel={channelID}
-                  onOpenThread={onOpenThread}
+            <MessageProvider>
+              <Content>
+                {openPanel === 'channel' && (
+                  <Chat
+                    key={channelID}
+                    channel={channelID}
+                    onOpenThread={onOpenThread}
+                  />
+                )}
+
+                {openPanel === 'threads' && (
+                  <ThreadsList cordUserID={cordUserID} />
+                )}
+              </Content>
+              {threadID && (
+                <ThreadDetails
+                  channelID={channelID}
+                  threadID={threadID}
+                  onClose={() => navigate(`/channel/${channelID}`)}
                 />
               )}
-
-              {openPanel === 'threads' && (
-                <ThreadsList cordUserID={cordUserID} />
-              )}
-            </Content>
-            {threadID && (
-              <ThreadDetails
-                channelID={channelID}
-                threadID={threadID}
-                onClose={() => navigate(`/channel/${channelID}`)}
-              />
-            )}
+            </MessageProvider>
           </Layout>
         </PresenceObserver>
       </CordProvider>

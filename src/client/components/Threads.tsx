@@ -8,6 +8,7 @@ import { MessageListItem } from 'src/client/components/MessageListItem';
 import { EmptyChannel } from 'src/client/components/EmptyChannel';
 import { DateDivider } from 'src/client/components/DateDivider';
 import { Colors } from 'src/client/consts/Colors';
+import { MessageContext } from 'src/client/context/MessageContext';
 
 type ThreadsProps = {
   channel: string;
@@ -72,12 +73,13 @@ export function Threads({
 
   const firstMessageTimestamp =
     threads[threads.length - 1]?.firstMessage?.createdTimestamp;
+  const { editingMessage } = React.useContext(MessageContext);
 
   const renderThreads = threads.map((thread, index) => {
     if (index < 1) {
       return (
         <MessageListItem
-          key={thread.id}
+          key={`${editingMessage?.page}-${editingMessage?.messageId}-${thread.id}`}
           thread={thread}
           onOpenThread={onOpenThread}
         />
@@ -94,7 +96,9 @@ export function Threads({
         lastMessageTimestamp.getDate();
 
     return (
-      <React.Fragment key={thread.id}>
+      <React.Fragment
+        key={`${editingMessage?.page}-${editingMessage?.messageId}-${thread.id}`}
+      >
         {lastMessageTimestamp && isDifferentDay ? (
           <DateDivider timestamp={lastMessageTimestamp} />
         ) : null}

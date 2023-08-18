@@ -9,6 +9,10 @@ export const StyledMessage = styled(Message)`
     background-color: inherit;
     grid-template-columns: auto auto auto auto 1fr auto;
   }
+  :where(.cord-editing).cord-message {
+    grid-template-rows: auto;
+    grid-template-columns: auto 1fr;
+  }
   .cord-thread {
     border: none;
   }
@@ -23,6 +27,16 @@ export const StyledMessage = styled(Message)`
     width: 36px;
   }
 
+  .cord-composer-primary-buttons button {
+    padding: 2px;
+    border-radius: 99px;
+    height: 24px;
+    width: 24px;
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
   .linkified {
     color: ${Colors.blue_link};
     font-weight: 400;
