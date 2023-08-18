@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -13,9 +13,16 @@ import { MessageContext } from 'src/client/context/MessageContext';
 type ThreadsProps = {
   channel: string;
   onOpenThread: (threadID: string) => void;
+  onScrollUp: () => void;
+  onScrollToBottom: () => void;
 };
 
-export function Threads({ channel, onOpenThread }: ThreadsProps) {
+export function Threads({
+  channel,
+  onOpenThread,
+  onScrollToBottom,
+  onScrollUp,
+}: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
     {
@@ -23,26 +30,44 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
     },
   );
   const [unseenMessages, setUnseenMessages] = useState<ThreadSummary[]>([]);
-
-  useEffect(() => {
-    if (!isAtBottom()) {
-      setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
-    }
-  }, [threads]);
-
   const threadListRef = useRef<HTMLDivElement>(null);
-  const anchorRef = useRef<HTMLDivElement>(null);
 
-  const isAtBottom = () => {
+  const isAtBottomOfThreads = useCallback(() => {
     if (!threadListRef.current) {
       return false;
     }
     return threadListRef.current.scrollTop >= 0;
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isAtBottomOfThreads()) {
+      setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
+    } else {
+      onScrollToBottom();
+    }
+  }, [isAtBottomOfThreads, threads, onScrollToBottom]);
+
+  const scrollHandler = useCallback(() => {
+    if (!isAtBottomOfThreads()) {
+      onScrollUp();
+    } else {
+      // little delay for a nice UX ✨
+      setTimeout(() => isAtBottomOfThreads() && onScrollToBottom(), 100);
+    }
+  }, [isAtBottomOfThreads, onScrollToBottom, onScrollUp]);
+
+  useEffect(() => {
+    const el = threadListRef.current;
+    if (!el) {
+      return;
+    }
+    el.addEventListener('scroll', scrollHandler);
+    return () => el.removeEventListener('scroll', scrollHandler);
+  }, [scrollHandler, threadListRef]);
 
   const scrollToBottom = () => {
-    if (anchorRef.current) {
-      anchorRef.current.scrollIntoView();
+    if (threadListRef.current) {
+      threadListRef.current.scrollTop = 0;
     }
   };
 
@@ -83,10 +108,8 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
   });
 
   return (
-    <Root>
-      <div ref={anchorRef} />
+    <Root ref={threadListRef}>
       {renderThreads}
-      {/* This is rendered column-reverse so we need the pagination trigger to be at the bottom. */}
       <PaginationTrigger
         loading={loading}
         hasMore={hasMore}
@@ -100,7 +123,7 @@ export function Threads({ channel, onOpenThread }: ThreadsProps) {
           <EmptyChannel channelID={channel} />
         </>
       ) : null}
-      {unseenMessages.length && !isAtBottom() ? (
+      {unseenMessages.length && !isAtBottomOfThreads() ? (
         <NewMessagePill
           count={unseenMessages.length}
           onClick={() => {

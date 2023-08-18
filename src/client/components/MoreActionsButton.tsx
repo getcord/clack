@@ -94,9 +94,36 @@ export function MoreActionsButton({
     setShowOptionsDialog(false);
   }, [setShowOptionsDialog, thread]);
 
+  const onPinToConversation = () => {
+    const threadIsAlreadyPinned = !!thread.metadata.pinned;
+    const metadata: { pinned?: boolean; pinnedBy?: string } = {
+      pinned: !threadIsAlreadyPinned,
+      pinnedBy: !threadIsAlreadyPinned ? cordUserID : undefined,
+    };
+    window.CordSDK?.thread
+      .updateThread(thread.id, {
+        metadata,
+      })
+      .catch((e) =>
+        console.error(`Having issues pinning the thread ${thread.name}: ${e}`),
+      );
+  };
+
+  const keyboardEvents: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    if (e.key === 'p') {
+      onPinToConversation();
+      setShowOptionsDialog(false);
+    }
+  };
+
   return (
     <>
-      <div style={{ position: 'relative' }}>
+      <div
+        style={{ position: 'relative' }}
+        onKeyDown={keyboardEvents}
+        tabIndex={0}
+      >
         <Tooltip id="more-actions-button" />
         <OptionsButton
           ref={moreOptionsButtonRef}
@@ -131,6 +158,11 @@ export function MoreActionsButton({
             </StyledButton>
             <Divider />
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
+            <Divider />
+            <StyledButton onClick={onPinToConversation}>
+              {thread.metadata.pinned ? 'Unpin' : 'Pin to'} this conversation{' '}
+              <KeyBindingLabel>P</KeyBindingLabel>
+            </StyledButton>
 
             {cordUserID === messageData?.authorID &&
               messageData?.deletedTimestamp === null && (
@@ -158,6 +190,10 @@ export function MoreActionsButton({
   );
 }
 
+const KeyBindingLabel = styled.span({
+  textAlign: 'right',
+});
+
 export const Modal = styled(DefaultModal)`
   pointer-events: none;
 `;
@@ -171,6 +207,9 @@ const StyledButton = styled.button<{ $type?: string }>`
   cursor: pointer;
   width: 100%;
   background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-align: left;
   color: ${({ $type }) => ($type === 'alert' ? Colors.red : '#1d1d1c')};
 

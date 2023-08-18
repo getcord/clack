@@ -8,11 +8,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { user } from '@cord-sdk/react';
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { Colors } from 'src/client/consts/Colors';
 import { Options } from 'src/client/components/Options';
 import { ProfileDetails } from 'src/client/components/ProfileDetails';
+import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Modal } from 'src/client/components/Modal';
 import { MessageContext } from 'src/client/context/MessageContext';
 
@@ -22,14 +24,13 @@ const backgroundFadeToNone = keyframes`
   to {background-color: none;}
 `;
 
-export const MessageListItemStyled = styled.div<{ $isHighlighted?: boolean }>`
+export const MessageListItemStyled = styled.div<{
+  $isHighlighted?: boolean;
+  $isPinned?: boolean;
+}>`
   padding: 8px 20px;
   position: relative;
   transition: background-color 0.2s;
-
-  &:hover {
-    background-color: ${Colors.gray_highlight};
-  }
 
   ${({ $isHighlighted }) =>
     $isHighlighted
@@ -37,6 +38,17 @@ export const MessageListItemStyled = styled.div<{ $isHighlighted?: boolean }>`
           animation: ${backgroundFadeToNone} 4s;
         `
       : null}
+
+  ${({ $isPinned }) =>
+    $isPinned
+      ? css`
+          background-color: #faf5e5;
+        `
+      : css`
+          &:hover {
+            background-color: ${Colors.gray_highlight};
+          }
+        `}
 `;
 
 export type MessageListItemProps = {
@@ -138,16 +150,29 @@ export function MessageListItem({
     editingMessage.page === 'channel' &&
     editingMessage.messageId === thread.firstMessage?.id;
 
+  const data = user.useUserData(
+    thread.metadata.pinnedBy && typeof thread.metadata.pinnedBy === 'string'
+      ? thread.metadata.pinnedBy
+      : '',
+  );
+  const pinnedByUserName = data?.name;
+
   return (
     <MessageListItemStyled
       ref={ref}
       $isHighlighted={thread.id === threadIDParam}
+      $isPinned={!!thread.metadata.pinned}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
+      {thread.metadata.pinned && (
+        <PinLabel>
+          <PushPinIcon filled /> <span> Pinned by {pinnedByUserName}</span>
+        </PinLabel>
+      )}
       <StyledMessage
         threadId={thread.id}
         messageId={thread.firstMessage?.id}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         onRender={() => {
           setAvatarElement(
             document.querySelector(
@@ -198,4 +223,21 @@ const PositionedProfileDetails = styled(ProfileDetails)<{
   top: ${({ $top }) => $top}px;
   left: ${({ $left }) => $left}px;
   translate: 10% -110%;
+`;
+
+const PinLabel = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  color: Colors.gray_dark,
+  paddingBottom: '4px',
+  paddingLeft: '16px',
+  fontSize: '13px',
+});
+
+const PushPinIcon = styled(PushPinSvg)`
+  stroke: #e8912d;
+  fill: #e8912d;
+  height: 11px;
+  width: 11px;
 `;
