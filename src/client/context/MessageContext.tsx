@@ -1,6 +1,5 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { EditMessageModal } from 'src/client/components/editMessageModal';
-export const NO_PROVIDER_DEFINED = Symbol.for('NO_PROVIDER_DEFINED');
 
 type MessageContextType = {
   editingMessage: EditingMessageInfo | undefined;
