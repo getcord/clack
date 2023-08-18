@@ -37,7 +37,7 @@ export function MoreActionsButton({
     initialSubscribedToThread,
   );
 
-  const onUpdateMessage = React.useCallback(() => {
+  const onEditMessage = React.useCallback(() => {
     setEditingMessage({ page, messageId: messageData?.id });
     setShowOptionsDialog(false);
   }, [messageData?.id, page, setEditingMessage, setShowOptionsDialog]);
@@ -136,7 +136,7 @@ export function MoreActionsButton({
               messageData?.deletedTimestamp === null && (
                 <>
                   <Divider />
-                  <StyledButton onClick={() => void onUpdateMessage()}>
+                  <StyledButton onClick={() => void onEditMessage()}>
                     Edit message
                   </StyledButton>
                   <StyledButton
