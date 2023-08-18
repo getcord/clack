@@ -150,7 +150,7 @@ export function MoreActionsButton({
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
             <Divider />
             <StyledButton onClick={onPinToConversation}>
-              {thread.metadata.pinned ? 'Unpin' : 'Pin to'} this conversation{' '}
+              {thread.metadata.pinned ? 'Unpin' : 'Pin'} this conversation{' '}
               <KeyBindingLabel>P</KeyBindingLabel>
             </StyledButton>
 

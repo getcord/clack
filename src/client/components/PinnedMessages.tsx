@@ -35,6 +35,8 @@ const Box = styled.div({
   top: '150px',
   left: '260px',
   width: '400px',
+  height: '500px',
+  overflow: 'auto',
   borderRadius: '8px',
   backgroundColor: Colors.gray_highlight,
   padding: '20px',
@@ -61,6 +63,7 @@ const StyledThreadList = styled(ThreadList)`
   background-color: inherit;
   .cord-scroll-container {
     padding: 0px;
+    gap: 8px;
   }
   .cord-thread-footer-container {
     display: none;
