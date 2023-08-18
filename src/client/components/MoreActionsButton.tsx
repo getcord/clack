@@ -100,6 +100,7 @@ export function MoreActionsButton({
   };
 
   const keyboardEvents: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
     if (e.key === 'p') {
       onPinToConversation();
       setShowOptionsDialog(false);
