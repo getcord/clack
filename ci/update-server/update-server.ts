@@ -52,8 +52,16 @@ function main() {
 
     const proc = child_process.spawn('./scripts/update.sh');
 
+    let logs = '';
+
     proc.stdout.on('data', (data) => {
       console.log(`${data}`);
+      logs += data.toString();
+    });
+
+    proc.stderr.on('data', (data) => {
+      console.error(`${data}`);
+      logs += data.toString();
     });
 
     proc.on('close', (code) => {
@@ -62,14 +70,14 @@ function main() {
         res.send('ok!');
       } else {
         console.log(`Error when updating - non 0 exit code`);
-        res.status(500).send('Server error - check logs');
+        res.status(500).send(logs);
       }
     });
 
     proc.on('error', (err) => {
       console.log(`Error when updating`);
       console.error(err);
-      res.status(500).send('Server error - check logs');
+      res.status(500).send(logs);
     });
   });
 
