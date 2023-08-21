@@ -1,29 +1,46 @@
 import { user } from '@cord-sdk/react';
+import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 
-type UpdateUserStatus = (newStatus: string | null) => void;
+export type UserStatus = {
+  text?: string | null;
+  emojiUrl?: string | null;
+  emojiUnified?: string | null;
+};
+type UpdateUserStatus = () => void;
 
 export function useUserStatus(): [
-  status: string | null,
+  status: UserStatus | null,
+  setStatus: Dispatch<SetStateAction<UserStatus | null>>,
   updateUserStatus: UpdateUserStatus,
 ] {
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<UserStatus | null>(null);
   const viewer = user.useViewerData();
   const viewerID = viewer?.id;
 
   useEffect(() => {
-    if (typeof viewer?.metadata.status === 'string') {
-      setStatus(viewer.metadata.status);
+    if (
+      typeof viewer?.metadata.statusText === 'string' &&
+      typeof viewer?.metadata.statusEmojiUrl === 'string' &&
+      typeof viewer?.metadata.statusEmojiUnified === 'string'
+    ) {
+      setStatus({
+        text: viewer.metadata.statusText,
+        emojiUrl: viewer.metadata.statusEmojiUrl,
+        emojiUnified: viewer.metadata.statusEmojiUnified,
+      });
     }
   }, [viewer]);
 
   const updateUser = useAPIUpdateFetch();
 
-  const updateUserStatus: UpdateUserStatus = (newStatus) => {
+  const updateUserStatus = () => {
     const body = {
       metadata: {
-        status: newStatus ?? '',
+        statusText: status?.text ?? undefined,
+        statusEmojiUrl: status?.emojiUrl ?? undefined,
+        statusEmojiUnified: status?.emojiUnified ?? undefined,
       },
     };
     updateUser(`/users/${viewerID}`, 'PUT', body)
@@ -31,5 +48,5 @@ export function useUserStatus(): [
       .catch((e) => e);
   };
 
-  return [status, updateUserStatus];
+  return [status, setStatus, updateUserStatus];
 }

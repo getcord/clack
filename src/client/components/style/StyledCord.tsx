@@ -1,8 +1,22 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { Composer, Message, Thread } from '@cord-sdk/react';
 import { Colors } from 'src/client/consts/Colors';
 
-export const StyledMessage = styled(Message)`
+// .cord-author-name {
+//   display: flex;
+//   align-items: center;
+// }
+// .cord-author-name:after {
+//   background-image: url(${$statusEmoji});
+//   background-size: 16px 16px;
+//   content: '';
+//   width: 16px;
+//   height: 16px;
+//   display: inline-block;
+//   margin-left: 4px;
+// }
+
+export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
   .cord-message {
     padding: 0;
     align-items: flex-start;
@@ -13,6 +27,26 @@ export const StyledMessage = styled(Message)`
     grid-template-rows: auto;
     grid-template-columns: auto 1fr;
   }
+
+  ${({ $statusEmoji }) =>
+    $statusEmoji
+      ? css`
+          .cord-author-name {
+            display: flex;
+            align-items: center;
+          }
+          .cord-author-name:after {
+            background-image: url(${({ $statusEmoji }) => ''});
+            content: '';
+            margin-left: 4px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            background-size: 16px 16px;
+          }
+        `
+      : null}
+
   .cord-thread {
     border: none;
   }

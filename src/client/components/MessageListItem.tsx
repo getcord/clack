@@ -72,6 +72,19 @@ export function MessageListItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const messageAuthorData = user.useUserData(
+    thread.firstMessage?.authorID || '',
+  );
+  const authorStatus = {
+    emojiUrl:
+      typeof messageAuthorData?.metadata.statusEmojiUrl === 'string'
+        ? messageAuthorData.metadata.statusEmojiUrl
+        : undefined,
+    text:
+      typeof messageAuthorData?.metadata.statusText === 'string'
+        ? messageAuthorData?.metadata.statusText
+        : undefined,
+  };
   const [hovered, setHovered] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
   const [hoveredProfileDetails, setHoveredProfileDetails] = useState(false);
@@ -150,12 +163,12 @@ export function MessageListItem({
     editingMessage.page === 'channel' &&
     editingMessage.messageId === thread.firstMessage?.id;
 
-  const data = user.useUserData(
+  const pinnedByUserData = user.useUserData(
     thread.metadata.pinnedBy && typeof thread.metadata.pinnedBy === 'string'
       ? thread.metadata.pinnedBy
       : '',
   );
-  const pinnedByUserName = data?.name;
+  const pinnedByUserName = pinnedByUserData?.name;
 
   return (
     <MessageListItemStyled
@@ -185,6 +198,7 @@ export function MessageListItem({
         onEditEnd={() => {
           setEditingMessage(undefined);
         }}
+        $statusEmoji={authorStatus?.emojiUrl}
       />
       <Modal
         isOpen={showProfileDetails}

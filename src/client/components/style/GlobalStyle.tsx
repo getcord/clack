@@ -34,6 +34,11 @@ export const GlobalStyle = createGlobalStyle`
     --cord-color-content-primary: rgb(29,28,29);
     --cord-line-height-body: 1.46668;
     --cord-composer-height-max: 67vh;
+    .EmojiPickerReact {
+      --epr-emoji-size: 22px;
+      --epr-header-padding: 8px var(--epr-horizontal-padding);
+      --epr-category-navigation-button-size: 24px;
+    }
   }
 
   button {

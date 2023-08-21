@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
+import { Avatar as DefaultAvatar, presence, user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
+import { Emoji } from 'emoji-picker-react';
+import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { SetStatusMenu } from 'src/client/components/SetStatus';
@@ -29,11 +31,12 @@ export const Topbar = ({
   const channelID = channelIDParam ?? 'general';
 
   const [isActive, setIsActive] = useUserActivity();
-  const [status, updateStatus] = useUserStatus();
+  const [status, setStatus, updateStatus] = useUserStatus();
   const present = presence.useLocationData(
     { page: 'clack' },
     { exclude_durable: false, partial_match: true },
   );
+  const viewer = user.useViewerData();
   const [modalState, setModalState] = React.useState<ModalState>(null);
   // this is not included in the modalState state as it's whether it *should* show,
   // not whether it *is* showing
@@ -77,9 +80,25 @@ export const Topbar = ({
       </ChannelsList>
       <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
+        {viewer?.metadata?.statusEmojiUnified && (
+          <EmojiBackground>
+            <Emoji
+              size={16}
+              unified={
+                typeof viewer.metadata.statusEmojiUnified === 'string'
+                  ? viewer.metadata.statusEmojiUnified
+                  : ''
+              }
+            />
+          </EmojiBackground>
+        )}
         {userID && (
           <>
-            <Avatar userId={userID} enableTooltip />
+            <Avatar
+              userId={userID}
+              enableTooltip
+              $withStatus={!!viewer?.metadata.statusEmojiUnified}
+            />
             <ActiveBadge $isActive={isActive === 'active'} />
           </>
         )}
@@ -93,7 +112,14 @@ export const Topbar = ({
             e.stopPropagation();
             setModalState('SET_STATUS');
           }}
-          status={status}
+          status={{
+            text: viewer?.metadata.statusText
+              ? viewer?.metadata.statusText.toString()
+              : null,
+            emojiUnified: viewer?.metadata.statusEmojiUnified
+              ? viewer?.metadata.statusEmojiUnified.toString()
+              : null,
+          }}
           activity={isActive}
           setActivity={setIsActive}
           onClose={() => setModalState(null)}
@@ -119,6 +145,7 @@ export const Topbar = ({
           updateStatus={updateStatus}
           onCancel={() => setModalState(null)}
           onClose={() => setModalState(null)}
+          setStatus={setStatus}
         />
       </DarkBGModal>
     </Container>
@@ -192,11 +219,26 @@ const AvatarWrapper = styled.div({
   backgroundColor: 'inherit',
 });
 
-const Avatar = styled(DefaultAvatar)`
+const EmojiBackground = styled.div({
+  cursor: 'pointer',
+  backgroundColor: Colors.purple_hover,
+  padding: '6px',
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: '4px 0 0 4px',
+  height: '14px',
+  '&:hover': {
+    backgroundColor: Colors.purple_light,
+  },
+});
+
+const Avatar = styled(DefaultAvatar)<{ $withStatus: boolean }>`
   .cord-avatar-container {
     width: 26px;
     height: 26px;
     position: relative;
+    border-radius: ${({ $withStatus }) =>
+      $withStatus ? '0 4px 4px 0' : '4px'};
     &:after {
       content: '';
       position: absolute;
