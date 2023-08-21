@@ -2,20 +2,6 @@ import { css, styled } from 'styled-components';
 import { Composer, Message, Thread } from '@cord-sdk/react';
 import { Colors } from 'src/client/consts/Colors';
 
-// .cord-author-name {
-//   display: flex;
-//   align-items: center;
-// }
-// .cord-author-name:after {
-//   background-image: url(${$statusEmoji});
-//   background-size: 16px 16px;
-//   content: '';
-//   width: 16px;
-//   height: 16px;
-//   display: inline-block;
-//   margin-left: 4px;
-// }
-
 export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
   .cord-message {
     padding: 0;
