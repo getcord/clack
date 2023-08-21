@@ -36,7 +36,7 @@ export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
             align-items: center;
           }
           .cord-author-name:after {
-            background-image: url(${({ $statusEmoji }) => ''});
+            background-image: url(${$statusEmoji});
             content: '';
             margin-left: 4px;
             width: 16px;
