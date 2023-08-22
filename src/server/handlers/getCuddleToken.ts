@@ -1,4 +1,4 @@
-import { AccessToken } from 'livekit-server-sdk';
+import { AccessToken, EgressClient, EncodedFileType } from 'livekit-server-sdk';
 import { nanoid } from 'nanoid';
 import {
   type ServerUpdateMessage,
@@ -9,6 +9,7 @@ import type { Request, Response } from 'express';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 import { ORG_ID } from 'src/server/consts';
 
+const serverUrl = 'https://cuddle-test-yjaxne2q.livekit.cloud';
 export async function handleGetCuddleToken(req: Request, res: Response) {
   const { channel, userID } = req.body;
   const user = await fetchCordRESTApi<ServerUpdateUser>(
@@ -51,12 +52,37 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
         extraClassnames: 'cuddle',
       },
     });
-
     await fetchCordRESTApi<ServerUpdateMessage>(
       `threads/${channel}${nanoid(16)}/messages`,
       'POST',
       newThreadBody,
     ).catch((e) => console.log('failed to create cuddle thread', e.message));
   }
+  const client = new EgressClient(
+    serverUrl,
+    process.env.LK_API_KEY,
+    process.env.LK_API_SECRET,
+  );
+  const egressInfo = await client.startRoomCompositeEgress(
+    channel,
+    {
+      filepath: `${channel}4.mp4`,
+      fileType: EncodedFileType.MP4,
+      s3: {
+        accessKey: process.env.S3_ACCESS_KEY,
+        secret: process.env.S3_SECRET_KEY,
+        region: process.env.S3_REGION,
+        bucket: process.env.S3_BUCKET,
+      },
+    },
+    { layout: 'speaker' },
+  );
+  console.log(egressInfo);
+
+  setTimeout(() => {
+    void client.stopEgress(egressInfo.egressId!);
+    console.log('stopped recording', egressInfo);
+  }, 30000);
+
   res.json({ token: at.toJwt() });
 }
