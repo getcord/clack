@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
@@ -8,15 +8,17 @@ import { Colors } from 'src/client/consts/Colors';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { StyledComposer } from 'src/client/components/style/StyledCord';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { useAPIFetch, useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
+import Cuddle from 'src/client/components/Cuddle';
 
 interface ChatProps {
   channel: string;
   onOpenThread: (threadID: string) => void;
+  cordUserID: string | undefined;
 }
 
-export function Chat({ channel, onOpenThread }: ChatProps) {
+export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
   const usersInChannel = useAPIFetch<(string | number)[]>('/users');
 
   const { threads: pinnedThreads } = thread.useLocationData(
@@ -32,6 +34,20 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
   const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
+
+  const [cuddleToken, setCuddleToken] = useState<string>();
+
+  const postCuddleToken = useAPIUpdateFetch();
+
+  const getUserCuddleToken = useCallback(async () => {
+    const body = {
+      userID: cordUserID,
+      roomName: channel,
+    };
+    const response = await postCuddleToken(`/cuddle`, 'POST', body);
+    const { token } = response;
+    setCuddleToken(token);
+  }, [channel, cordUserID, postCuddleToken]);
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
@@ -70,11 +86,13 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
+      {cuddleToken && <Cuddle token={cuddleToken} />}
       <StyledComposer
         location={{ channel }}
         threadName={`#${channel}`}
         showExpanded
       />
+      <button onClick={getUserCuddleToken}>{`Cuddle in ${channel} 🧸`}</button>
     </Wrapper>
   );
 }

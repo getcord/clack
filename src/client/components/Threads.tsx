@@ -9,7 +9,6 @@ import { EmptyChannel } from 'src/client/components/EmptyChannel';
 import { DateDivider } from 'src/client/components/DateDivider';
 import { Colors } from 'src/client/consts/Colors';
 import { MessageContext } from 'src/client/context/MessageContext';
-import Cuddle from './Cuddle';
 
 type ThreadsProps = {
   channel: string;
@@ -110,7 +109,6 @@ export function Threads({
 
   return (
     <Root ref={threadListRef}>
-      {channel === 'cuddle' && <Cuddle />}
       {renderThreads}
       <PaginationTrigger
         loading={loading}

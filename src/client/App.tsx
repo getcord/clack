@@ -90,6 +90,7 @@ export function App() {
                     key={channelID}
                     channel={channelID}
                     onOpenThread={onOpenThread}
+                    cordUserID={cordUserID}
                   />
                 )}
 
