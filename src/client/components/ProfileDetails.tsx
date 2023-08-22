@@ -1,6 +1,7 @@
 import React from 'react';
 import { user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
+import { Emoji } from 'emoji-picker-react';
 import { Colors } from 'src/client/consts/Colors';
 import { capitalize } from 'src/client/utils';
 
@@ -15,10 +16,22 @@ export function ProfileDetails({
   onMouseEnter: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave: React.MouseEventHandler<HTMLDivElement>;
 }) {
-  const data = user.useUserData(userID);
-  if (!data) {
+  const userData = user.useUserData(userID);
+  const viewerData = user.useViewerData();
+
+  if (!userData) {
     return null;
   }
+
+  const statusEmojiUnified =
+    typeof userData.metadata.statusEmojiUnified === 'string'
+      ? userData.metadata.statusEmojiUnified
+      : undefined;
+  const statusText =
+    typeof userData.metadata.statusText === 'string'
+      ? userData.metadata.statusText
+      : undefined;
+
   return (
     <Root
       className={className}
@@ -28,11 +41,38 @@ export function ProfileDetails({
       <Banner>
         <span>Workspace Admin</span>
       </Banner>
-      {data.name && <Name>{capitalize(data.name)}</Name>}
-      <Image src={data.profilePictureURL!} />
+      {userData.name && (
+        <Name>
+          {capitalize(userData.name)}{' '}
+          {viewerData?.id === userData.id ? '(you)' : ''}
+        </Name>
+      )}
+      <Image src={userData.profilePictureURL!} />
+      {statusEmojiUnified || statusText ? (
+        <div
+          style={{
+            gridArea: 'content',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
+          <Divider />
+          <Status>
+            <Emoji size={20} unified={statusEmojiUnified || ''} />
+            <span>{statusText}</span>
+          </Status>
+        </div>
+      ) : null}
     </Root>
   );
 }
+
+const Divider = styled.div({
+  borderBottom: `1px solid ${Colors.gray_light}`,
+  width: '100%',
+  marginBottom: '16px',
+});
 
 const Root = styled.div({
   pointerEvents: 'auto',
@@ -42,10 +82,11 @@ const Root = styled.div({
   padding: '0 18px 18px 18px',
   borderRadius: '4px',
   gridTemplateColumns: 'auto 1fr',
-  gridTemplateRows: 'auto auto',
+  gridTemplateRows: 'auto auto auto',
   gridTemplateAreas: `
     "banner banner"
     "image details"
+    "content content"
   `,
   gridGap: '12px',
   minWidth: '300px',
@@ -71,4 +112,10 @@ const Banner = styled.div({
 const Name = styled.p({
   gridArea: 'details',
   fontWeight: 700,
+});
+
+const Status = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
 });
