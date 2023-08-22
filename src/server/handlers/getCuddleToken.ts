@@ -40,7 +40,7 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
       id: `cuddle-${nanoid(16)}`,
       authorID: 'ernest',
       content: [
-        { type: 'p', children: [{ text: `${user.name} want a cuddle.` }] },
+        { type: 'p', children: [{ text: `${user.name} wants a cuddle.` }] },
       ],
       createThread: {
         name: 'Cuddle',
