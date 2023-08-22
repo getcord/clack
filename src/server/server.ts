@@ -19,6 +19,7 @@ import {
 } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
 import { handleRoot } from 'src/server/handlers/root';
+import { handleGetCuddleToken } from 'src/server/handlers/getCuddleToken';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -67,6 +68,7 @@ function main() {
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
   app.put('/users/:userID', wrapAsyncHandler(handleUpdateUserStatus));
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
+  app.post('/cuddle', wrapAsyncHandler(handleGetCuddleToken));
 
   // Catch errors and log them
   app.use(
