@@ -42,9 +42,15 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
   const getUserCuddleToken = useCallback(async () => {
     const body = {
       userID: cordUserID,
-      roomName: channel,
+      channel,
     };
     const response = await postCuddleToken(`/cuddle`, 'POST', body);
+    if (!('token' in response)) {
+      return;
+    }
+    if (typeof response.token !== 'string') {
+      return;
+    }
     const { token } = response;
     setCuddleToken(token);
   }, [channel, cordUserID, postCuddleToken]);
