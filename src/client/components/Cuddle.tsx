@@ -5,7 +5,13 @@ import styled from 'styled-components';
 
 const wsURL = 'wss://cuddle-test-yjaxne2q.livekit.cloud';
 
-export default function Cuddle({ token }: { token?: string }) {
+export default function Cuddle({
+  token,
+  onQuit,
+}: {
+  token?: string;
+  onQuit: () => void;
+}) {
   return (
     <div data-lk-theme="default">
       <StyledLiveKitRoom
@@ -13,6 +19,7 @@ export default function Cuddle({ token }: { token?: string }) {
         serverUrl={wsURL}
         connect={true}
         data-lk-theme="default"
+        onDisconnected={onQuit}
       >
         <VideoConference />
       </StyledLiveKitRoom>
@@ -21,7 +28,8 @@ export default function Cuddle({ token }: { token?: string }) {
 }
 
 const StyledLiveKitRoom = styled(LiveKitRoom)`
-  .lk-chat, .lk-button.lk-chat-toggle {
+  .lk-chat,
+  .lk-button.lk-chat-toggle {
     display: none;
   }
 `;

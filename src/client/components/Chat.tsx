@@ -39,20 +39,22 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
 
   const postCuddleToken = useAPIUpdateFetch();
 
-  const getUserCuddleToken = useCallback(async () => {
-    const body = {
-      userID: cordUserID,
-      channel,
-    };
-    const response = await postCuddleToken(`/cuddle`, 'POST', body);
-    if (!('token' in response)) {
-      return;
-    }
-    if (typeof response.token !== 'string') {
-      return;
-    }
-    const { token } = response;
-    setCuddleToken(token);
+  const getUserCuddleToken = useCallback(() => {
+    void (async () => {
+      const body = {
+        userID: cordUserID,
+        channel,
+      };
+      const response = await postCuddleToken(`/cuddle`, 'POST', body);
+      if (!('token' in response)) {
+        return;
+      }
+      if (typeof response.token !== 'string') {
+        return;
+      }
+      const { token } = response;
+      setCuddleToken(token);
+    })();
   }, [channel, cordUserID, postCuddleToken]);
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
@@ -92,7 +94,9 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
-      {cuddleToken && <Cuddle token={cuddleToken} />}
+      {cuddleToken && (
+        <Cuddle token={cuddleToken} onQuit={() => setCuddleToken(undefined)} />
+      )}
       <StyledComposer
         location={{ channel }}
         threadName={`#${channel}`}
