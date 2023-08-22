@@ -4,12 +4,19 @@ import '@livekit/components-styles';
 
 const wsURL = 'wss://cuddle-test-yjaxne2q.livekit.cloud';
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI3ODUxNjEsImlzcyI6IkFQSVpBYm9GTEQ4YnptQSIsIm5iZiI6MTY5MjY5ODc2MSwic3ViIjoicXVpY2tzdGFydCB1c2VyIHN4dHhuMyIsInZpZGVvIjp7ImNhblB1Ymxpc2giOnRydWUsImNhblB1Ymxpc2hEYXRhIjp0cnVlLCJjYW5TdWJzY3JpYmUiOnRydWUsInJvb20iOiJxdWlja3N0YXJ0IHJvb20iLCJyb29tSm9pbiI6dHJ1ZX19.TWvT2Npk8FLUGJ7Vm2NnY49FRsbowaMWKM5d1lErJrk';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6InF1aWNrc3RhcnQtcm9vbSJ9LCJpYXQiOjE2OTI3MDAyOTMsIm5iZiI6MTY5MjcwMDI5MywiZXhwIjoxNjkyNzIxODkzLCJpc3MiOiJBUElrVlRkdEhGZDlDb0UiLCJzdWIiOiJteWhvYSIsImp0aSI6Im15aG9hIn0.jjeF-yNlfm7f3gL9h4VrljNxOUHpJ0D_bbIItKr2in8';
 
 export default function App() {
   return (
-    <LiveKitRoom token={token} serverUrl={wsURL} connect={true}>
-      <VideoConference />
-    </LiveKitRoom>
+    <div data-lk-theme="default">
+      <LiveKitRoom
+        token={token}
+        serverUrl={wsURL}
+        connect={true}
+        data-lk-theme="default"
+      >
+        <VideoConference />
+      </LiveKitRoom>
+    </div>
   );
 }
