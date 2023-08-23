@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
-import { useDisconnectButton, useParticipants } from '@livekit/components-react';
 import {
+  useDisconnectButton,
+  useParticipants,
   LiveKitRoom,
-  LiveKitRoomProps,
   VideoConference,
-  useLiveKitRoom,
 } from '@livekit/components-react';
 import '@livekit/components-styles';
 import styled from 'styled-components';
@@ -18,13 +17,9 @@ export default function Cuddle({
   token?: string;
   onQuit: () => void;
 }) {
-  const onDisconnected = useCallback(
-    (e) => {
-      console.log(e);
-      onQuit();
-    },
-    [onQuit],
-  );
+  const onDisconnected = useCallback(() => {
+    onQuit();
+  }, [onQuit]);
   return (
     <div data-lk-theme="default">
       <StyledLiveKitRoom
@@ -43,7 +38,6 @@ export default function Cuddle({
 
 function Trying() {
   const participants = useParticipants();
-  const disconnectButton = useDisconnectButton();
   useEffect(() => {
     console.log(participants);
   });
