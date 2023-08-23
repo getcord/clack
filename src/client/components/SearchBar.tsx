@@ -42,7 +42,9 @@ export function SearchBar() {
         // Not using latest SDK package so it isn't properly typed yet
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        const data = await window.CordSDK!.thread.searchMessages(searchInput);
+        const data = await window.CordSDK!.thread.searchMessages({
+          textToMatch: searchInput,
+        });
 
         setSearchResults(data);
       })();
@@ -112,7 +114,7 @@ export function SearchBar() {
 
 const SingleSearchResult = ({ message }: { message: SearchResultData }) => {
   const navigate = useNavigate();
-  const channelName = message.location.data.channel;
+  const channelName = message.location.channel;
   const url = `/channel/${channelName}/thread/${message.threadID}`;
 
   const date = message.createdTimestamp.toLocaleString('default', {
