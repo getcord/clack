@@ -187,15 +187,16 @@ function copyCord(srcWindow: Window, destWindow: Window) {
     const scriptElement = document.createElement('script');
     scriptElement.src = script.src;
     scriptElement.addEventListener('load', () => {
+      // I am not sure if we need the timeout
       setTimeout(() => {
-        console.log('init cord');
+        destWindow.console.log('init cord');
         if (!destWindow.CordSDK || !srcWindow.CordSDK) {
           return;
         }
         void destWindow.CordSDK.init({
           client_auth_token: srcWindow.CordSDK.accessToken,
         });
-      }, 1000);
+      }, 0);
     });
     dest.head.appendChild(scriptElement);
   });
