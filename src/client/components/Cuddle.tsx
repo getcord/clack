@@ -32,7 +32,6 @@ export default function Cuddle({
   }, [onQuit]);
   return (
     <RenderInPersistentWindow>
-      <span>Cord should be around</span>
       <div data-lk-theme="default">
         <StyledLiveKitRoom
           token={token}
@@ -130,11 +129,7 @@ const RenderInPersistentWindow = (props: PropsWithChildren) => {
     // When container is ready
     if (container) {
       // Create window
-      newWindow.current = window.open(
-        '',
-        '',
-        'width=600,height=400,left=200,top=200',
-      );
+      newWindow.current = window.open('', '', 'left=200,top=200');
       if (!newWindow.current) {
         return;
       }
