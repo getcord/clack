@@ -58,31 +58,31 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
       newThreadBody,
     ).catch((e) => console.log('failed to create cuddle thread', e.message));
   }
-  const client = new EgressClient(
-    serverUrl,
-    process.env.LK_API_KEY,
-    process.env.LK_API_SECRET,
-  );
-  const egressInfo = await client.startRoomCompositeEgress(
-    channel,
-    {
-      filepath: `${channel}4.mp4`,
-      fileType: EncodedFileType.MP4,
-      s3: {
-        accessKey: process.env.S3_ACCESS_KEY,
-        secret: process.env.S3_SECRET_KEY,
-        region: process.env.S3_REGION,
-        bucket: process.env.S3_BUCKET,
-      },
-    },
-    { layout: 'speaker' },
-  );
-  console.log(egressInfo);
+  // const client = new EgressClient(
+  //   serverUrl,
+  //   process.env.LK_API_KEY,
+  //   process.env.LK_API_SECRET,
+  // );
+  // const egressInfo = await client.startRoomCompositeEgress(
+  //   channel,
+  //   {
+  //     filepath: `${channel}5.mp4`,
+  //     fileType: EncodedFileType.MP4,
+  //     s3: {
+  //       accessKey: process.env.S3_ACCESS_KEY,
+  //       secret: process.env.S3_SECRET_KEY,
+  //       region: process.env.S3_REGION,
+  //       bucket: process.env.S3_BUCKET,
+  //     },
+  //   },
+  //   { layout: 'speaker' },
+  // );
+  // console.log(egressInfo);
 
-  setTimeout(() => {
-    void client.stopEgress(egressInfo.egressId!);
-    console.log('stopped recording', egressInfo);
-  }, 30000);
+  // setTimeout(() => {
+  //   void client.stopEgress(egressInfo.egressId!);
+  //   console.log('stopped recording', egressInfo);
+  // }, 30000);
 
   res.json({ token: at.toJwt() });
 }
