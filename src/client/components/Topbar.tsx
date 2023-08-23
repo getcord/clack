@@ -8,6 +8,7 @@ import { useUserActivity } from 'src/client/hooks/useUserActivity';
 import { ActiveBadge as DefaultActiveBadge } from 'src/client/components/ActiveBadge';
 import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
+import { SearchBar } from 'src/client/components/SearchBar';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 
@@ -59,6 +60,7 @@ export const Topbar = ({
 
   return (
     <Container className={className}>
+      <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
         {userID && <Avatar userId={userID} enableTooltip />}
       </AvatarWrapper>
@@ -108,9 +110,10 @@ const Container = styled.div({
   position: 'relative',
   color: '#f00',
   display: 'flex',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
   alignItems: 'center',
   paddingInlineEnd: '12px',
+  zIndex: 3,
 });
 
 const DarkBGModal = styled(Modal)`
