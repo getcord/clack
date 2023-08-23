@@ -3,15 +3,22 @@ import { styled } from 'styled-components';
 import { Colors } from 'src/client/consts/Colors';
 
 export function DateDivider({ timestamp }: { timestamp: Date }) {
+  const now = new Date();
+  const isToday =
+    now.getFullYear() === timestamp.getFullYear() &&
+    now.getMonth() === timestamp.getMonth() &&
+    now.getDate() === timestamp.getDate();
   return (
     <Root>
       <Line />
       <Pill>
-        {timestamp.toLocaleDateString('en-GB', {
-          weekday: 'short',
-          month: 'long',
-          day: 'numeric',
-        })}
+        {isToday
+          ? 'Today'
+          : timestamp.toLocaleDateString('en-GB', {
+              weekday: 'short',
+              month: 'long',
+              day: 'numeric',
+            })}
       </Pill>
     </Root>
   );
