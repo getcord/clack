@@ -1,5 +1,5 @@
 import React, {
-  PropsWithChildren,
+  type PropsWithChildren,
   useCallback,
   useEffect,
   useRef,
@@ -14,14 +14,17 @@ import '@livekit/components-styles';
 import styled from 'styled-components';
 import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
+import { CordProvider, PagePresence, Thread } from '@cord-sdk/react';
 
 const serverUrl = 'wss://cuddle-test-yjaxne2q.livekit.cloud';
 
 export default function Cuddle({
   token,
+  channelId,
   onQuit,
 }: {
   token?: string;
+  channelId?: string;
   onQuit: () => void;
 }) {
   const onDisconnected = useCallback(() => {
@@ -29,6 +32,7 @@ export default function Cuddle({
   }, [onQuit]);
   return (
     <RenderInPersistentWindow>
+      <span>Cord should be around</span>
       <div data-lk-theme="default">
         <StyledLiveKitRoom
           token={token}
@@ -40,6 +44,7 @@ export default function Cuddle({
           <VideoConference />
           <Trying />
         </StyledLiveKitRoom>
+        {channelId && <Thread threadId={channelId} />}
       </div>
     </RenderInPersistentWindow>
   );
@@ -90,6 +95,7 @@ const RenderInWindow = (
 
       newWindow.current.document.body.appendChild(container);
 
+      // copyCord(window, newWindow.current);
       copyStyles(document, newWindow.current.document);
       // Save reference to window for cleanup
       const curWindow = newWindow.current;
@@ -133,14 +139,19 @@ const RenderInPersistentWindow = (props: PropsWithChildren) => {
         return;
       }
       // Append container
-
       newWindow.current.document.body.appendChild(container);
 
+      copyCord(window, newWindow.current);
       copyStyles(document, newWindow.current.document);
       // Save reference to window for cleanup
       const curWindow = newWindow.current;
       const root = createRoot(container);
-      root.render(props.children);
+      root.render(
+        <>
+          <PagePresence />
+          {props.children}
+        </>,
+      );
 
       // Return cleanup function
       return () => {
@@ -170,4 +181,27 @@ function copyStyles(src: Document, dest: Document) {
   } catch (e) {
     console.warn('error copying fonts', e);
   }
+}
+function copyCord(srcWindow: Window, destWindow: Window) {
+  const src = srcWindow.document;
+  const dest = destWindow.document;
+  Array.from(src.scripts).forEach((script) => {
+    if (!script.src.includes('cord.com') && !script.src.includes('sdk')) {
+      return;
+    }
+    const scriptElement = document.createElement('script');
+    scriptElement.src = script.src;
+    scriptElement.addEventListener('load', () => {
+      setTimeout(() => {
+        console.log('init cord');
+        if (!destWindow.CordSDK || !srcWindow.CordSDK) {
+          return;
+        }
+        void destWindow.CordSDK.init({
+          client_auth_token: srcWindow.CordSDK.accessToken,
+        });
+      }, 1000);
+    });
+    dest.head.appendChild(scriptElement);
+  });
 }

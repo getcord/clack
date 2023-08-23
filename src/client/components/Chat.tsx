@@ -36,6 +36,7 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
   const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
 
   const [cuddleToken, setCuddleToken] = useState<string>();
+  const [threadID, setThreadID] = useState<string>();
 
   const postCuddleToken = useAPIUpdateFetch();
 
@@ -46,14 +47,18 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
         channel,
       };
       const response = await postCuddleToken(`/cuddle`, 'POST', body);
-      if (!('token' in response)) {
+      if (!('token' in response && 'threadID' in response)) {
         return;
       }
-      if (typeof response.token !== 'string') {
+      if (
+        typeof response.token !== 'string' ||
+        typeof response.threadID !== 'string'
+      ) {
         return;
       }
-      const { token } = response;
+      const { token, threadID } = response;
       setCuddleToken(token);
+      setThreadID(threadID);
     })();
   }, [channel, cordUserID, postCuddleToken]);
 
@@ -95,7 +100,11 @@ export function Chat({ channel, onOpenThread, cordUserID }: ChatProps) {
         onOpenThread={onOpenThread}
       />
       {cuddleToken && (
-        <Cuddle token={cuddleToken} onQuit={() => setCuddleToken(undefined)} />
+        <Cuddle
+          token={cuddleToken}
+          channelId={threadID}
+          onQuit={() => setCuddleToken(undefined)}
+        />
       )}
       <StyledComposer
         location={{ channel }}

@@ -35,8 +35,10 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
     'GET',
   );
 
+  let threadID = allThreads[0]?.id;
   if (allThreads.length === 0) {
     // create a new thread for cuddle
+    threadID = `${channel}${nanoid(16)}`;
     const newThreadBody = JSON.stringify({
       id: `cuddle-${nanoid(16)}`,
       authorID: 'ernest',
@@ -53,7 +55,7 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
       },
     });
     await fetchCordRESTApi<ServerUpdateMessage>(
-      `threads/${channel}${nanoid(16)}/messages`,
+      `threads/${threadID}/messages`,
       'POST',
       newThreadBody,
     ).catch((e) => console.log('failed to create cuddle thread', e.message));
@@ -84,5 +86,5 @@ export async function handleGetCuddleToken(req: Request, res: Response) {
   //   console.log('stopped recording', egressInfo);
   // }, 30000);
 
-  res.json({ token: at.toJwt() });
+  res.json({ token: at.toJwt(), threadID });
 }
