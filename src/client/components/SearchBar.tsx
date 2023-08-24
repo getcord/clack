@@ -240,10 +240,12 @@ const SearchPopup = styled.div({
   display: 'flex',
   flexDirection: 'column',
   left: '200px',
-  minWidth: '65%',
+  width: '65%',
   position: 'absolute',
   top: '4px',
   boxShadow: '0px 0px 16px 0px #00000029',
+  maxHeight: '700px',
+  overflow: 'scroll',
 });
 
 const SearchContainer = styled.div({
