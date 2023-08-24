@@ -1,22 +1,27 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
 import type { ChangeEvent } from 'react';
-import type { SearchResultData } from '@cord-sdk/types';
+import type { SearchResultData, ServerUserData } from '@cord-sdk/types';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { Tooltip } from 'react-tooltip';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { Overlay } from 'src/client/components/MoreActionsButton';
+import { UsersContext } from 'src/client/context/UsersProvider';
 
 export function SearchBar() {
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+
+  const { usersData } = useContext(UsersContext);
 
   const [searchResults, setSearchResults] = useState<
     SearchResultData[] | undefined
@@ -34,8 +39,17 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
+        const { textToMatch, authorID, channel } = getSearchInputs(
+          searchInput,
+          usersData,
+        );
+
         const data = await window.CordSDK!.thread.searchMessages({
-          textToMatch: searchInput,
+          textToMatch,
+          authorID,
+          ...(channel && {
+            locationOptions: { location: { channel }, partialMatch: false },
+          }),
         });
 
         setSearchResults(data);
@@ -43,13 +57,26 @@ export function SearchBar() {
     }, 300);
 
     return () => clearTimeout(searchTimeoutRef.current);
-  }, [searchInput]);
+  }, [searchInput, usersData]);
 
   const searchResultsArray = useMemo(() => {
     return searchResults?.map((message) => {
       return <SingleSearchResult key={message.id} message={message} />;
     });
   }, [searchResults]);
+
+  const close = useCallback(() => {
+    setShowSearchPopup(false);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        close();
+      }
+    });
+    return () => document.removeEventListener('keydown', close);
+  }, [close, setShowSearchPopup]);
 
   return (
     <>
@@ -77,6 +104,15 @@ export function SearchBar() {
                 value={searchInput}
                 onChange={(e) => void handleSearchInputChange(e)}
               />
+              <Tooltip id="close-button" />
+              <CloseButton
+                onClick={close}
+                data-tooltip-id="close-button"
+                data-tooltip-content="Close search"
+                data-tooltip-place="bottom"
+              >
+                <XMarkIcon width={24} height={24} />
+              </CloseButton>
             </SearchHeader>
 
             {searchResults && (
@@ -233,3 +269,59 @@ const SearchButton = styled.button({
     backgroundColor: '#644665',
   },
 });
+
+const CloseButton = styled.div({
+  cursor: 'pointer',
+  color: 'rgba(97,96,97,1)',
+  '&:hover': {
+    color: 'rgba(29,28,29,1)',
+  },
+});
+
+const getSearchInputs = (searchInput: string, usersData: ServerUserData[]) => {
+  // This is terrible.  Let it be stated for the record that it was bashed
+  // out with increasing frenzy as the Cordathon deadline loomed.
+
+  let textToMatch = searchInput;
+  let authorID: string | undefined;
+  let channel: string | undefined;
+
+  const authorStartIndex = textToMatch.indexOf('from:');
+
+  if (authorStartIndex > -1) {
+    const authorNameMaybeWithAt = textToMatch
+      .substring(authorStartIndex + 5)
+      .split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, authorStartIndex) +
+      textToMatch
+        .slice(authorStartIndex + 5 + authorNameMaybeWithAt.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const user = usersData.find(
+      (u) =>
+        u.name
+          ?.toLowerCase()
+          .includes(authorNameMaybeWithAt.replace('@', '').toLowerCase()),
+    );
+
+    authorID = user?.id ? user.id.toString() : undefined;
+  }
+
+  const channelStartIndex = textToMatch.indexOf('in:');
+
+  if (channelStartIndex > -1) {
+    channel = textToMatch.substring(channelStartIndex + 3).split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, channelStartIndex) +
+      textToMatch
+        .slice(channelStartIndex + 3 + channel.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+  }
+
+  return { textToMatch, authorID, channel };
+};
