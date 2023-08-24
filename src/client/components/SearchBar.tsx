@@ -6,18 +6,13 @@ import React, {
   useState,
 } from 'react';
 import type { ChangeEvent } from 'react';
-import type { ClientMessageData } from '@cord-sdk/types';
+import type { SearchResultData } from '@cord-sdk/types';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { Overlay } from 'src/client/components/MoreActionsButton';
-
-// Until proper type is available via npm package
-type SearchResultData = ClientMessageData & {
-  location: any;
-};
 
 export function SearchBar() {
   const [showSearchPopup, setShowSearchPopup] = useState(false);
@@ -39,9 +34,6 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
-        // Not using latest SDK package so it isn't properly typed yet
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
         const data = await window.CordSDK!.thread.searchMessages({
           textToMatch: searchInput,
         });
