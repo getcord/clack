@@ -15,6 +15,7 @@ import { BrowserNotificationBridge } from 'src/client/components/BrowserNotifica
 import { ThreadsList } from 'src/client/components/ThreadsList';
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
+import { UsersProvider } from 'src/client/context/UsersProvider';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -80,35 +81,37 @@ export function App() {
         navigate={onCordNavigate}
         translations={translations}
       >
-        <BrowserNotificationBridge />
-        <PresenceObserver location={{ page: 'clack', durable: true }}>
-          <Layout className={threadID ? 'openThread' : ''}>
-            <Topbar userID={cordUserID} />
-            <Sidebar channelID={channelID} openPanel={openPanel} />
-            <MessageProvider>
-              <Content>
-                {openPanel === 'channel' && (
-                  <Chat
-                    key={channelID}
-                    channel={channelID}
-                    onOpenThread={onOpenThread}
+        <UsersProvider>
+          <BrowserNotificationBridge />
+          <PresenceObserver location={{ page: 'clack', durable: true }}>
+            <Layout className={threadID ? 'openThread' : ''}>
+              <Topbar userID={cordUserID} />
+              <Sidebar channelID={channelID} openPanel={openPanel} />
+              <MessageProvider>
+                <Content>
+                  {openPanel === 'channel' && (
+                    <Chat
+                      key={channelID}
+                      channel={channelID}
+                      onOpenThread={onOpenThread}
+                    />
+                  )}
+
+                  {openPanel === 'threads' && (
+                    <ThreadsList cordUserID={cordUserID} />
+                  )}
+                </Content>
+                {threadID && (
+                  <ThreadDetails
+                    channelID={channelID}
+                    threadID={threadID}
+                    onClose={() => navigate(`/channel/${channelID}`)}
                   />
                 )}
-
-                {openPanel === 'threads' && (
-                  <ThreadsList cordUserID={cordUserID} />
-                )}
-              </Content>
-              {threadID && (
-                <ThreadDetails
-                  channelID={channelID}
-                  threadID={threadID}
-                  onClose={() => navigate(`/channel/${channelID}`)}
-                />
-              )}
-            </MessageProvider>
-          </Layout>
-        </PresenceObserver>
+              </MessageProvider>
+            </Layout>
+          </PresenceObserver>
+        </UsersProvider>
       </CordProvider>
     </>
   );
