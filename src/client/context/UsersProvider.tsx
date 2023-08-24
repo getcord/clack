@@ -8,10 +8,6 @@ type UsersContextType = {
 
 export const UsersContext = createContext<UsersContextType>({ usersData: [] });
 
-export function isDefined<T>(value: T | null | undefined): value is T {
-  return value !== null && value !== undefined;
-}
-
 export function UsersProvider({ children }: React.PropsWithChildren) {
   const usersData = useAPIFetch<ServerUserData[]>('/usersData');
 
