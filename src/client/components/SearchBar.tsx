@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import type { ChangeEvent } from 'react';
-import type { SearchResultData } from '@cord-sdk/types';
+import type { SearchResultData, ServerUserData } from '@cord-sdk/types';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
@@ -39,38 +39,17 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
-        // This is terrible.  Let it be stated for the record that it was bashed
-        // out with increasing frenzy as the Cordathon deadline loomed.
-        let authorID: string | undefined;
-        let textToMatch = searchInput;
-
-        const authorStartIndex = searchInput.indexOf('from:');
-
-        if (authorStartIndex > -1) {
-          const authorNameMaybeWithAt = searchInput
-            .substring(authorStartIndex + 5)
-            .split(' ')[0];
-
-          textToMatch =
-            searchInput.slice(0, authorStartIndex) +
-            searchInput
-              .slice(authorStartIndex + 5 + authorNameMaybeWithAt.length)
-              .replace(/\s+/g, ' ')
-              .trim();
-
-          const user = usersData.find(
-            (u) =>
-              u.name
-                ?.toLowerCase()
-                .includes(authorNameMaybeWithAt.replace('@', '').toLowerCase()),
-          );
-
-          authorID = user?.id?.toString();
-        }
+        const { textToMatch, authorID, channel } = getSearchInputs(
+          searchInput,
+          usersData,
+        );
 
         const data = await window.CordSDK!.thread.searchMessages({
           textToMatch,
           authorID,
+          ...(channel && {
+            locationOptions: { location: { channel }, partialMatch: false },
+          }),
         });
 
         setSearchResults(data);
@@ -298,3 +277,51 @@ const CloseButton = styled.div({
     color: 'rgba(29,28,29,1)',
   },
 });
+
+const getSearchInputs = (searchInput: string, usersData: ServerUserData[]) => {
+  // This is terrible.  Let it be stated for the record that it was bashed
+  // out with increasing frenzy as the Cordathon deadline loomed.
+
+  let textToMatch = searchInput;
+  let authorID: string | undefined;
+  let channel: string | undefined;
+
+  const authorStartIndex = textToMatch.indexOf('from:');
+
+  if (authorStartIndex > -1) {
+    const authorNameMaybeWithAt = textToMatch
+      .substring(authorStartIndex + 5)
+      .split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, authorStartIndex) +
+      textToMatch
+        .slice(authorStartIndex + 5 + authorNameMaybeWithAt.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const user = usersData.find(
+      (u) =>
+        u.name
+          ?.toLowerCase()
+          .includes(authorNameMaybeWithAt.replace('@', '').toLowerCase()),
+    );
+
+    authorID = user?.id ? user.id.toString() : undefined;
+  }
+
+  const channelStartIndex = textToMatch.indexOf('in:');
+
+  if (channelStartIndex > -1) {
+    channel = textToMatch.substring(channelStartIndex + 3).split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, channelStartIndex) +
+      textToMatch
+        .slice(channelStartIndex + 3 + channel.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+  }
+
+  return { textToMatch, authorID, channel };
+};
