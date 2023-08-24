@@ -15,6 +15,7 @@ import { handleGetChannels } from 'src/server/handlers/getChannels';
 import { handleGetMyCordThreads } from 'src/server/handlers/getCordThreads';
 import {
   handleGetCordUsers,
+  handleGetCordUsersData,
   handleUpdateUserStatus,
 } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
@@ -67,6 +68,7 @@ function main() {
   app.get('/threads', wrapAsyncHandler(handleGetMyCordThreads));
   app.put('/users/:userID', wrapAsyncHandler(handleUpdateUserStatus));
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
+  app.get('/usersData', wrapAsyncHandler(handleGetCordUsersData));
 
   // Catch errors and log them
   app.use(
