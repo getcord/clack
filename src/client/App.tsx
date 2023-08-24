@@ -24,7 +24,9 @@ function useCordToken(): [string | undefined, string | undefined] {
   if (!data) {
     return [undefined, undefined];
   } else if ('redirect' in data) {
-    window.location.href = data.redirect;
+    const redirectUrl = new URL(data.redirect);
+    redirectUrl.searchParams.set('state', window.location.href);
+    window.location.href = redirectUrl.toString();
     return [undefined, undefined];
   } else {
     return [data.token, data.userID];

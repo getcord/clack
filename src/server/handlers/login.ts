@@ -178,7 +178,6 @@ function redirectToSlackLogin(req: Request, res: Response) {
       response_type: 'code',
       scope: ['openid', 'profile', 'email'].join(','),
       client_id: SLACK_CLIENT_ID,
-      state: req.get('Referer'), // TODO: does this need to be signed?
       team: SLACK_TEAM,
       nonce,
       redirect_uri: makeRedirectUri(req),
