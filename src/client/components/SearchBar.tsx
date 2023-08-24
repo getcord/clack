@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -9,14 +10,18 @@ import type { ChangeEvent } from 'react';
 import type { SearchResultData } from '@cord-sdk/types';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { Tooltip } from 'react-tooltip';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { Overlay } from 'src/client/components/MoreActionsButton';
+import { UsersContext } from 'src/client/context/UsersProvider';
 
 export function SearchBar() {
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+
+  const { usersData } = useContext(UsersContext);
 
   const [searchResults, setSearchResults] = useState<
     SearchResultData[] | undefined
@@ -34,8 +39,38 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
+        // This is terrible.  Let it be stated for the record that it was bashed
+        // out with increasing frenzy as the Cordathon deadline loomed.
+        let authorID: string | undefined;
+        let textToMatch = searchInput;
+
+        const authorStartIndex = searchInput.indexOf('from:');
+
+        if (authorStartIndex > -1) {
+          const authorNameMaybeWithAt = searchInput
+            .substring(authorStartIndex + 5)
+            .split(' ')[0];
+
+          textToMatch =
+            searchInput.slice(0, authorStartIndex) +
+            searchInput
+              .slice(authorStartIndex + 5 + authorNameMaybeWithAt.length)
+              .replace(/\s+/g, ' ')
+              .trim();
+
+          const user = usersData.find(
+            (u) =>
+              u.name
+                ?.toLowerCase()
+                .includes(authorNameMaybeWithAt.replace('@', '').toLowerCase()),
+          );
+
+          authorID = user?.id?.toString();
+        }
+
         const data = await window.CordSDK!.thread.searchMessages({
-          textToMatch: searchInput,
+          textToMatch,
+          authorID,
         });
 
         setSearchResults(data);
@@ -43,13 +78,26 @@ export function SearchBar() {
     }, 300);
 
     return () => clearTimeout(searchTimeoutRef.current);
-  }, [searchInput]);
+  }, [searchInput, usersData]);
 
   const searchResultsArray = useMemo(() => {
     return searchResults?.map((message) => {
       return <SingleSearchResult key={message.id} message={message} />;
     });
   }, [searchResults]);
+
+  const close = useCallback(() => {
+    setShowSearchPopup(false);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        close();
+      }
+    });
+    return () => document.removeEventListener('keydown', close);
+  }, [close, setShowSearchPopup]);
 
   return (
     <>
@@ -77,6 +125,15 @@ export function SearchBar() {
                 value={searchInput}
                 onChange={(e) => void handleSearchInputChange(e)}
               />
+              <Tooltip id="close-button" />
+              <CloseButton
+                onClick={close}
+                data-tooltip-id="close-button"
+                data-tooltip-content="Close search"
+                data-tooltip-place="bottom"
+              >
+                <XMarkIcon width={24} height={24} />
+              </CloseButton>
             </SearchHeader>
 
             {searchResults && (
@@ -231,5 +288,13 @@ const SearchButton = styled.button({
   width: '100%',
   '&:hover': {
     backgroundColor: '#644665',
+  },
+});
+
+const CloseButton = styled.div({
+  cursor: 'pointer',
+  color: 'rgba(97,96,97,1)',
+  '&:hover': {
+    color: 'rgba(29,28,29,1)',
   },
 });
