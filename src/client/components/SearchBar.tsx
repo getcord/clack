@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -14,10 +15,13 @@ import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { Overlay } from 'src/client/components/MoreActionsButton';
+import { UsersContext } from 'src/client/context/UsersProvider';
 
 export function SearchBar() {
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+
+  const { usersData } = useContext(UsersContext);
 
   const [searchResults, setSearchResults] = useState<
     SearchResultData[] | undefined
@@ -35,8 +39,38 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
+        // This is terrible.  Let it be stated for the record that it was bashed
+        // out with increasing frenzy as the Cordathon deadline loomed.
+        let authorID: string | undefined;
+        let textToMatch = searchInput;
+
+        const authorStartIndex = searchInput.indexOf('from:');
+
+        if (authorStartIndex > -1) {
+          const authorNameMaybeWithAt = searchInput
+            .substring(authorStartIndex + 5)
+            .split(' ')[0];
+
+          textToMatch =
+            searchInput.slice(0, authorStartIndex) +
+            searchInput
+              .slice(authorStartIndex + 5 + authorNameMaybeWithAt.length)
+              .replace(/\s+/g, ' ')
+              .trim();
+
+          const user = usersData.find(
+            (u) =>
+              u.name
+                ?.toLowerCase()
+                .includes(authorNameMaybeWithAt.replace('@', '').toLowerCase()),
+          );
+
+          authorID = user?.id?.toString();
+        }
+
         const data = await window.CordSDK!.thread.searchMessages({
-          textToMatch: searchInput,
+          textToMatch,
+          authorID,
         });
 
         setSearchResults(data);
@@ -44,7 +78,7 @@ export function SearchBar() {
     }, 300);
 
     return () => clearTimeout(searchTimeoutRef.current);
-  }, [searchInput]);
+  }, [searchInput, usersData]);
 
   const searchResultsArray = useMemo(() => {
     return searchResults?.map((message) => {
