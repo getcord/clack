@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import EmojiPicker, { Emoji, EmojiStyle } from 'emoji-picker-react';
+import { CloseButton } from 'src/client/components/Buttons';
 import type { UserStatus } from 'src/client/hooks/useUserStatus';
 import { Colors } from 'src/client/consts/Colors';
 import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
@@ -84,6 +85,11 @@ export function SetStatusMenu({
               onSubmit();
             }
           }}
+        />
+        <CloseButton
+          onClick={() =>
+            setInput({ emojiUnified: null, emojiUrl: null, text: '' })
+          }
         />
       </InputBox>
       <Footer>
