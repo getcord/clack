@@ -161,23 +161,31 @@ const SingleSearchResult = ({
     day: 'numeric',
     month: 'short',
   });
+
   return (
     <SingleSearchResultContainer>
       <SingleSearchResultHeader>
         # {channelName} - {date}
       </SingleSearchResultHeader>
-      <StyledMessage
-        key={message.id}
-        threadId={message.threadID}
-        messageId={message.id}
-        onClick={() => {
-          navigate(url);
-          closeSearch();
-        }}
-      />
+      <MessageContainer>
+        <StyledMessage
+          key={message.id}
+          threadId={message.threadID}
+          messageId={message.id}
+          onClick={() => {
+            navigate(url);
+            closeSearch();
+          }}
+        />
+      </MessageContainer>
     </SingleSearchResultContainer>
   );
 };
+
+// simple fix to reduce the jump on load a bit
+const MessageContainer = styled.div`
+  min-height: 50px;
+`;
 
 const SingleSearchResultContainer = styled.div`
   background: #fff;
