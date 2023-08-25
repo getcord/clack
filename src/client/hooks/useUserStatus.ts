@@ -58,7 +58,7 @@ export function useUserStatus(
     };
     updateUser(`/users/${ID}`, 'PUT', body)
       .then(() => setStatus(newStatus))
-      .catch((e) => e);
+      .catch((e) => console.error(e));
   };
 
   return [status, updateUserStatus];
