@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
 import { Modal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { SetStatusMenu } from 'src/client/components/SetStatus';
@@ -9,16 +11,23 @@ import { ActiveBadge as DefaultActiveBadge } from 'src/client/components/ActiveB
 import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
 import { SearchBar } from 'src/client/components/SearchBar';
+import { BREAKPOINTS_PX } from 'src/client/consts/consts';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 
 export const Topbar = ({
   userID,
   className,
+  setShowSidebar,
 }: {
   userID?: string;
   className?: string;
+  setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { channelID: channelIDParam } = useParams();
+  const navigate = useNavigate();
+  const channelID = channelIDParam ?? 'general';
+
   const [isActive, setIsActive] = useUserActivity();
   const [status, updateStatus] = useUserStatus();
   const present = presence.useLocationData(
@@ -60,6 +69,12 @@ export const Topbar = ({
 
   return (
     <Container className={className}>
+      <GoBack onClick={() => navigate(`/channel/${channelID}`)}>
+        <ChevronLeftIcon width={16} height={16} />
+      </GoBack>
+      <ChannelsList onClick={() => setShowSidebar?.((prev) => !prev)}>
+        <HashtagIcon width={16} height={16} />
+      </ChannelsList>
       <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
         {userID && <Avatar userId={userID} enableTooltip />}
@@ -105,6 +120,50 @@ export const Topbar = ({
     </Container>
   );
 };
+
+const Button = styled.button`
+  align-items: center;
+  background: none;
+  border-radius: 4px;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: none;
+  flex-shrink: 0;
+  font: inherit;
+  height: 26px;
+  justify-content: center;
+  line-height: inherit;
+  margin-left: 8px;
+  opacity: 0.8;
+  overflow: initial;
+  padding: 0;
+  text-align: initial;
+  vertical-align: initial;
+  width: 26px;
+
+  &:hover {
+    background: #5c3d5e;
+  }
+`;
+
+const GoBack = styled(Button)`
+  @media (max-width: ${BREAKPOINTS_PX.FULLSCREEN_THREADS}px) {
+    .openThread & {
+      display: flex;
+    }
+  }
+`;
+
+const ChannelsList = styled(Button)`
+  @media (max-width: ${BREAKPOINTS_PX.COLLAPSE_SIDEBAR}px) {
+    display: flex;
+
+    .openThread & {
+      display: none;
+    }
+  }
+`;
 
 const Container = styled.div({
   position: 'relative',

@@ -5,6 +5,8 @@ import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
+import cx from 'classnames';
+
 import { Colors } from 'src/client/consts/Colors';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
@@ -16,6 +18,7 @@ import { ThreadsList } from 'src/client/components/ThreadsList';
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
+import { BREAKPOINTS_PX } from 'src/client/consts/consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -37,6 +40,7 @@ function useCordToken(): [string | undefined, string | undefined] {
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
+  const [showSidebar, setShowSidebar] = React.useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -84,11 +88,17 @@ export function App() {
         <UsersProvider>
           <BrowserNotificationBridge />
           <PresenceObserver location={{ page: 'clack', durable: true }}>
-            <Layout className={threadID ? 'openThread' : ''}>
-              <Topbar userID={cordUserID} />
-              <Sidebar channelID={channelID} openPanel={openPanel} />
+            <ResponsiveLayout
+              className={cx({ openThread: threadID, openSidebar: showSidebar })}
+            >
+              <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
+              <Sidebar
+                channelID={channelID}
+                openPanel={openPanel}
+                setShowSidebar={setShowSidebar}
+              />
               <MessageProvider>
-                <Content>
+                <ResponsiveContent>
                   {openPanel === 'channel' && (
                     <Chat
                       key={channelID}
@@ -100,7 +110,7 @@ export function App() {
                   {openPanel === 'threads' && (
                     <ThreadsList cordUserID={cordUserID} />
                   )}
-                </Content>
+                </ResponsiveContent>
                 {threadID && (
                   <ThreadDetails
                     channelID={channelID}
@@ -109,7 +119,7 @@ export function App() {
                   />
                 )}
               </MessageProvider>
-            </Layout>
+            </ResponsiveLayout>
           </PresenceObserver>
         </UsersProvider>
       </CordProvider>
@@ -117,9 +127,11 @@ export function App() {
   );
 }
 
+// @media queries are NOT supported with the below div({}) Syntax
+// hence why ResponsiveLayout is a separate component.
 const Layout = styled.div({
   display: 'grid',
-  height: '100vh',
+  height: '100%',
   maxHeight: '100vh',
   gridTemplateAreas: `
     "topbar topbar"
@@ -127,28 +139,85 @@ const Layout = styled.div({
   gridTemplateColumns: '260px 1fr',
   gridTemplateRows: '44px 1fr',
 
-  '&.openThread': {
+  '&:where(.openThread)': {
     gridTemplateAreas: `
       "topbar topbar topbar"
       "sidebar content thread"`,
     gridTemplateColumns: '260px 2fr 1fr',
   },
 });
+const ResponsiveLayout = styled(Layout)`
+  @media (max-width: ${BREAKPOINTS_PX.FULLSCREEN_THREADS}px) {
+    &.openThread:not(.openSidebar) {
+      grid-template-areas:
+        'topbar'
+        'thread';
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: ${BREAKPOINTS_PX.COLLAPSE_SIDEBAR}px) {
+    &:not(.openSidebar) {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'topbar'
+        'content';
+    }
+
+    &.openSidebar {
+      grid-template-areas:
+        'topbar'
+        'sidebar';
+      grid-template-columns: 1fr;
+    }
+  }
+`;
 
 const Sidebar = styled(DefaultSidebar)`
   grid-area: sidebar;
+
+  @media (max-width: ${BREAKPOINTS_PX.FULLSCREEN_THREADS}px) {
+    .openThread & {
+      display: none;
+    }
+  }
+
+  @media (max-width: ${BREAKPOINTS_PX.COLLAPSE_SIDEBAR}px) {
+    display: none;
+
+    .openSidebar & {
+      display: grid;
+    }
+  }
 `;
 
+// Can't add @media query to div({}) syntax, hence why
+// separate ResponsiveContent below.
 const Content = styled.div({
   gridArea: 'content',
   background: 'white',
   overflow: 'hidden',
 });
+const ResponsiveContent = styled(Content)`
+  @media (max-width: ${BREAKPOINTS_PX.FULLSCREEN_THREADS}px) {
+    .openThread & {
+      display: none;
+    }
+  }
+
+  @media (max-width: ${BREAKPOINTS_PX.COLLAPSE_SIDEBAR}px) {
+    .openSidebar & {
+      display: none;
+    }
+  }
+`;
 
 const Topbar = styled(TopbarDefault)({
   gridArea: 'topbar',
   background: Colors.purple_dark,
   color: 'white',
+  position: 'sticky',
+  top: 0,
 });
 
 const ThreadDetails = styled(ThreadDetailsDefault)`

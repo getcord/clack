@@ -20,7 +20,7 @@ export const GlobalStyle = createGlobalStyle`
   
   html,
   body {
-    height: 100vh;
+    height: 100%;
     margin: 0;
     font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI',
           Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',

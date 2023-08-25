@@ -13,9 +13,15 @@ type SidebarProps = {
   className?: string;
   channelID: string;
   openPanel: string | null;
+  setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
+export function Sidebar({
+  className,
+  channelID,
+  openPanel,
+  setShowSidebar,
+}: SidebarProps) {
   const navigate = useNavigate();
 
   // API call here so it doesn't rerun when context menu is opened
@@ -44,7 +50,10 @@ export function Sidebar({ className, channelID, openPanel }: SidebarProps) {
         </Panel>
         <Divider />
         <Channels
-          setCurrentChannel={(channel) => navigate(`/channel/${channel}`)}
+          setCurrentChannel={(channel) => {
+            navigate(`/channel/${channel}`);
+            setShowSidebar?.(false);
+          }}
           currentChannel={channelID}
           channels={channelsOptions}
         />
