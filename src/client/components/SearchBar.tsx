@@ -260,7 +260,7 @@ const SearchPopup = styled.div({
   top: '4px',
   boxShadow: '0px 0px 16px 0px #00000029',
   maxHeight: '700px',
-  overflow: 'scroll',
+  overflow: 'auto',
 });
 
 const SearchContainer = styled.div({

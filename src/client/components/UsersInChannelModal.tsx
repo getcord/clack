@@ -110,7 +110,7 @@ const Heading = styled.h2({
 
 const UsersList = styled.div({
   fontSize: '13px',
-  overflow: 'scroll',
+  overflow: 'auto',
   maxHeight: '60vh',
   borderRadius: '12px',
 });
