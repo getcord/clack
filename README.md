@@ -39,7 +39,7 @@ Run `npm run dev` and visit https://local.cord.com:7307
 
 Note: Must have node v16.15 or newer, as we use `node --experimental-fetch` flag.
 (although this is consistent with Node's changelog, experience suggests 16.15
-might not be enough.  16.20 should be fine)
+might not be enough.  16.19+ should be fine)
 
 ### Deployment
 
