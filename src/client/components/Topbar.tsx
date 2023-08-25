@@ -83,7 +83,6 @@ export const Topbar = ({
           <EmojiBackground
             onClick={(e) => {
               e.stopPropagation();
-              e.preventDefault();
               setModalState('SET_STATUS');
             }}
           >

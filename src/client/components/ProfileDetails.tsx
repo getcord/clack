@@ -2,6 +2,7 @@ import React from 'react';
 import { user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { Emoji } from 'emoji-picker-react';
+import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { Colors } from 'src/client/consts/Colors';
 import { capitalize } from 'src/client/utils';
 
@@ -17,20 +18,15 @@ export function ProfileDetails({
   onMouseLeave: React.MouseEventHandler<HTMLDivElement>;
 }) {
   const userData = user.useUserData(userID);
+  const [status] = useUserStatus(userID);
   const viewerData = user.useViewerData();
 
   if (!userData) {
     return null;
   }
 
-  const statusEmojiUnified =
-    typeof userData.metadata.statusEmojiUnified === 'string'
-      ? userData.metadata.statusEmojiUnified
-      : undefined;
-  const statusText =
-    typeof userData.metadata.statusText === 'string'
-      ? userData.metadata.statusText
-      : undefined;
+  const statusEmojiUnified = status?.emojiUnified;
+  const statusText = status?.text;
 
   return (
     <Root
