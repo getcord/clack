@@ -37,7 +37,9 @@ export const StyledMessage = styled(Message)`
       height: 14px;
     }
   }
-  .linkified {
+
+  .linkified,
+  .cord-message-text a {
     color: ${Colors.blue_link};
     font-weight: 400;
     &:hover {
