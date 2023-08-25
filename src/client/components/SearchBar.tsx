@@ -39,10 +39,8 @@ export function SearchBar() {
   useEffect(() => {
     searchTimeoutRef.current = setTimeout(() => {
       void (async () => {
-        const { textToMatch, authorID, channel } = getSearchInputs(
-          searchInput,
-          usersData,
-        );
+        const { textToMatch, authorID, channel, beforeDate, afterDate } =
+          getSearchInputs(searchInput, usersData);
 
         const data = await window.CordSDK!.thread.searchMessages({
           textToMatch,
@@ -50,6 +48,10 @@ export function SearchBar() {
           ...(channel && {
             locationOptions: { location: { channel }, partialMatch: false },
           }),
+          timestampRange: {
+            from: afterDate,
+            to: beforeDate,
+          },
         });
 
         setSearchResults(data);
@@ -300,6 +302,8 @@ const getSearchInputs = (searchInput: string, usersData: ServerUserData[]) => {
   let textToMatch = searchInput;
   let authorID: string | undefined;
   let channel: string | undefined;
+  let beforeDate: Date | undefined;
+  let afterDate: Date | undefined;
 
   const authorStartIndex = textToMatch.indexOf('from:');
 
@@ -338,5 +342,40 @@ const getSearchInputs = (searchInput: string, usersData: ServerUserData[]) => {
         .trim();
   }
 
-  return { textToMatch, authorID, channel };
+  const beforeDateStartIndex = textToMatch.indexOf('before:');
+
+  if (beforeDateStartIndex > -1) {
+    const beforeDateString = textToMatch
+      .substring(beforeDateStartIndex + 7)
+      .split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, beforeDateStartIndex) +
+      textToMatch
+        .slice(beforeDateStartIndex + 7 + beforeDateString.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    // Want to include the whole day
+    beforeDate = new Date(beforeDateString + 'T23:59:59.999');
+  }
+
+  const afterDateStartIndex = textToMatch.indexOf('after:');
+
+  if (afterDateStartIndex > -1) {
+    const afterDateString = textToMatch
+      .substring(afterDateStartIndex + 6)
+      .split(' ')[0];
+
+    textToMatch =
+      textToMatch.slice(0, afterDateStartIndex) +
+      textToMatch
+        .slice(afterDateStartIndex + 6 + afterDateString.length)
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    afterDate = new Date(afterDateString);
+  }
+
+  return { textToMatch, authorID, channel, beforeDate, afterDate };
 };
