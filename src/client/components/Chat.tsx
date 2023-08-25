@@ -32,6 +32,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
   const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
@@ -69,11 +70,13 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         }}
         channel={channel}
         onOpenThread={onOpenThread}
+        shouldScrollToBottom={shouldScrollToBottom}
       />
       <StyledComposer
         location={{ channel }}
         threadName={`#${channel}`}
         showExpanded
+        onSend={() => setShouldScrollToBottom(true)}
       />
     </Wrapper>
   );

@@ -15,6 +15,7 @@ type ThreadsProps = {
   onOpenThread: (threadID: string) => void;
   onScrollUp: () => void;
   onScrollToBottom: () => void;
+  shouldScrollToBottom: boolean;
 };
 
 export function Threads({
@@ -22,6 +23,7 @@ export function Threads({
   onOpenThread,
   onScrollToBottom,
   onScrollUp,
+  shouldScrollToBottom,
 }: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
     { channel },
@@ -42,10 +44,14 @@ export function Threads({
   useEffect(() => {
     if (!isAtBottomOfThreads()) {
       setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
+      if (shouldScrollToBottom) {
+        scrollToBottom();
+        onScrollToBottom();
+      }
     } else {
       onScrollToBottom();
     }
-  }, [isAtBottomOfThreads, threads, onScrollToBottom]);
+  }, [isAtBottomOfThreads, threads, onScrollToBottom, shouldScrollToBottom]);
 
   const scrollHandler = useCallback(() => {
     if (!isAtBottomOfThreads()) {
