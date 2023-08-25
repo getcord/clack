@@ -12,6 +12,9 @@ in monorepo, set
 `cordScriptUrl="https://local.cord.com:8179/sdk/v1/sdk.latest.js"`
 on the CordProvider in src/client/App.tsx
 
+and in src/server/consts.ts set `export const CORD_API_URL = 'https://local.cord.com:8161/v1/';`
+instead of the real staging API endpoint.
+
 You may need to bootstrap your db if it's the first time you're doing this, to 
 get the application info (see ./scripts/bootstrap-database.sh in monorepo)
 
@@ -35,6 +38,8 @@ Run `./scripts/generate-localhost-cert.sh` to generate https certificates for lo
 Run `npm run dev` and visit https://local.cord.com:7307
 
 Note: Must have node v16.15 or newer, as we use `node --experimental-fetch` flag.
+(although this is consistent with Node's changelog, experience suggests 16.15
+might not be enough.  16.20 should be fine)
 
 ### Deployment
 
