@@ -59,15 +59,21 @@ export function SearchBar() {
     return () => clearTimeout(searchTimeoutRef.current);
   }, [searchInput, usersData]);
 
-  const searchResultsArray = useMemo(() => {
-    return searchResults?.map((message) => {
-      return <SingleSearchResult key={message.id} message={message} />;
-    });
-  }, [searchResults]);
-
   const close = useCallback(() => {
     setShowSearchPopup(false);
   }, []);
+
+  const searchResultsArray = useMemo(() => {
+    return searchResults?.map((message) => {
+      return (
+        <SingleSearchResult
+          key={message.id}
+          message={message}
+          closeSearch={close}
+        />
+      );
+    });
+  }, [close, searchResults]);
 
   useEffect(() => {
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -140,7 +146,13 @@ export function SearchBar() {
   );
 }
 
-const SingleSearchResult = ({ message }: { message: SearchResultData }) => {
+const SingleSearchResult = ({
+  message,
+  closeSearch,
+}: {
+  message: SearchResultData;
+  closeSearch: () => void;
+}) => {
   const navigate = useNavigate();
   const channelName = message.location.channel;
   const url = `/channel/${channelName}/thread/${message.threadID}`;
@@ -160,6 +172,7 @@ const SingleSearchResult = ({ message }: { message: SearchResultData }) => {
         messageId={message.id}
         onClick={() => {
           navigate(url);
+          closeSearch();
         }}
       />
     </SingleSearchResultContainer>
