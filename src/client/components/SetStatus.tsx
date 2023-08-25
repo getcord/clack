@@ -10,7 +10,6 @@ interface SetStatusMenuProps {
   onClose: () => void;
   status: UserStatus | null;
   updateStatus: (newStatus: UserStatus | null) => void;
-  setStatus: React.Dispatch<React.SetStateAction<UserStatus | null>>;
 }
 
 export function SetStatusMenu({
@@ -18,17 +17,20 @@ export function SetStatusMenu({
   onClose,
   status,
   updateStatus,
-  setStatus,
 }: SetStatusMenuProps) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [input, setInput] = useState(status);
 
   const onSubmit = () => {
-    updateStatus(status);
+    updateStatus(input);
     onClose();
   };
 
   return (
     <Box
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           onClose();
@@ -40,7 +42,7 @@ export function SetStatusMenu({
         <div style={{ position: 'absolute' }}>
           <EmojiPicker
             onEmojiClick={(emoji) => {
-              setStatus((prev) => ({
+              setInput((prev) => ({
                 ...prev,
                 emojiUnified: emoji.unified,
                 emojiUrl: emoji.getImageUrl(EmojiStyle.APPLE),
@@ -58,10 +60,13 @@ export function SetStatusMenu({
             display: 'flex',
             alignItems: 'center',
           }}
-          onClick={() => setShowEmojiPicker(true)}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowEmojiPicker(true);
+          }}
         >
-          {status?.emojiUnified ? (
-            <Emoji size={20} unified={status.emojiUnified} />
+          {input?.emojiUnified ? (
+            <Emoji size={20} unified={input.emojiUnified} />
           ) : (
             <StyledSmiley />
           )}
@@ -70,9 +75,9 @@ export function SetStatusMenu({
           id="status-input"
           name="status"
           placeholder="What's your status?"
-          value={status?.text ?? undefined}
+          value={input?.text ?? undefined}
           onChange={(e) =>
-            setStatus((prev) => ({ ...prev, text: e.target.value }))
+            setInput((prev) => ({ ...prev, text: e.target.value }))
           }
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -87,7 +92,7 @@ export function SetStatusMenu({
         </Button>
         <Button
           $variant="primary"
-          disabled={!!(status?.text && status.text.length < 1)}
+          disabled={input?.text === status?.text}
           onClick={onSubmit}
         >
           Save

@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 import { user } from '@cord-sdk/react';
+import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { Colors } from 'src/client/consts/Colors';
@@ -72,19 +73,7 @@ export function MessageListItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const messageAuthorData = user.useUserData(
-    thread.firstMessage?.authorID || '',
-  );
-  const authorStatus = {
-    emojiUrl:
-      typeof messageAuthorData?.metadata.statusEmojiUrl === 'string'
-        ? messageAuthorData.metadata.statusEmojiUrl
-        : undefined,
-    text:
-      typeof messageAuthorData?.metadata.statusText === 'string'
-        ? messageAuthorData?.metadata.statusText
-        : undefined,
-  };
+  const [authorStatus] = useUserStatus(thread.firstMessage?.authorID);
   const [hovered, setHovered] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
   const [hoveredProfileDetails, setHoveredProfileDetails] = useState(false);
@@ -198,7 +187,7 @@ export function MessageListItem({
         onEditEnd={() => {
           setEditingMessage(undefined);
         }}
-        $statusEmoji={authorStatus?.emojiUrl}
+        $statusEmoji={authorStatus?.emojiUrl ?? undefined}
       />
       <Modal
         isOpen={showProfileDetails}

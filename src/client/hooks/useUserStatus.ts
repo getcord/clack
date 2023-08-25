@@ -1,52 +1,65 @@
 import { user } from '@cord-sdk/react';
-import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 
 export type UserStatus = {
+  /**
+   * the text or description of the status;
+   */
   text?: string | null;
+  /**
+   * Unfortunately the unified string is not unicode, so the URL is used
+   * to render as an image next to a message author.
+   */
   emojiUrl?: string | null;
+  /**
+   * Used to render emoji's using the package's Emoji component
+   */
   emojiUnified?: string | null;
 };
-type UpdateUserStatus = () => void;
+type UpdateUserStatus = (newStatus: UserStatus | null) => void;
 
-export function useUserStatus(): [
-  status: UserStatus | null,
-  setStatus: Dispatch<SetStateAction<UserStatus | null>>,
-  updateUserStatus: UpdateUserStatus,
-] {
+export function useUserStatus(
+  /**
+   * @param userID optional, if no ID is passed then this will fall back to the viewer's status.
+   */
+  userID?: string,
+): [status: UserStatus | null, updateUserStatus: UpdateUserStatus] {
   const [status, setStatus] = useState<UserStatus | null>(null);
-  const viewer = user.useViewerData();
-  const viewerID = viewer?.id;
+  const viewerData = user.useViewerData();
+  const userData = user.useUserData(userID || '');
+  const ID = userID ? userData?.id : viewerData?.id;
+  const metadata = userID ? userData?.metadata : viewerData?.metadata;
 
   useEffect(() => {
     if (
-      typeof viewer?.metadata.statusText === 'string' &&
-      typeof viewer?.metadata.statusEmojiUrl === 'string' &&
-      typeof viewer?.metadata.statusEmojiUnified === 'string'
+      metadata &&
+      typeof metadata.statusText === 'string' &&
+      typeof metadata.statusEmojiUrl === 'string' &&
+      typeof metadata.statusEmojiUnified === 'string'
     ) {
       setStatus({
-        text: viewer.metadata.statusText,
-        emojiUrl: viewer.metadata.statusEmojiUrl,
-        emojiUnified: viewer.metadata.statusEmojiUnified,
+        text: metadata.statusText,
+        emojiUrl: metadata.statusEmojiUrl,
+        emojiUnified: metadata.statusEmojiUnified,
       });
     }
-  }, [viewer]);
+  }, [metadata]);
 
   const updateUser = useAPIUpdateFetch();
 
-  const updateUserStatus = () => {
+  const updateUserStatus: UpdateUserStatus = (newStatus) => {
     const body = {
       metadata: {
-        statusText: status?.text ?? undefined,
-        statusEmojiUrl: status?.emojiUrl ?? undefined,
-        statusEmojiUnified: status?.emojiUnified ?? undefined,
+        statusText: newStatus?.text ?? undefined,
+        statusEmojiUrl: newStatus?.emojiUrl ?? undefined,
+        statusEmojiUnified: newStatus?.emojiUnified ?? undefined,
       },
     };
-    updateUser(`/users/${viewerID}`, 'PUT', body)
-      .then((res) => res.json())
+    updateUser(`/users/${ID}`, 'PUT', body)
+      .then(() => setStatus(newStatus))
       .catch((e) => e);
   };
 
-  return [status, setStatus, updateUserStatus];
+  return [status, updateUserStatus];
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar as DefaultAvatar, presence, user } from '@cord-sdk/react';
+import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
@@ -31,12 +31,11 @@ export const Topbar = ({
   const channelID = channelIDParam ?? 'general';
 
   const [isActive, setIsActive] = useUserActivity();
-  const [status, setStatus, updateStatus] = useUserStatus();
+  const [status, updateStatus] = useUserStatus();
   const present = presence.useLocationData(
     { page: 'clack' },
     { exclude_durable: false, partial_match: true },
   );
-  const viewer = user.useViewerData();
   const [modalState, setModalState] = React.useState<ModalState>(null);
   // this is not included in the modalState state as it's whether it *should* show,
   // not whether it *is* showing
@@ -80,24 +79,23 @@ export const Topbar = ({
       </ChannelsList>
       <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
-        {viewer?.metadata?.statusEmojiUnified && (
-          <EmojiBackground>
-            <Emoji
-              size={16}
-              unified={
-                typeof viewer.metadata.statusEmojiUnified === 'string'
-                  ? viewer.metadata.statusEmojiUnified
-                  : ''
-              }
-            />
+        {status?.emojiUnified && (
+          <EmojiBackground
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setModalState('SET_STATUS');
+            }}
+          >
+            <Emoji size={16} unified={status?.emojiUnified}></Emoji>
           </EmojiBackground>
         )}
         {userID && (
           <>
             <Avatar
+              $withStatus={!!status?.emojiUnified}
               userId={userID}
               enableTooltip
-              $withStatus={!!viewer?.metadata.statusEmojiUnified}
             />
             <ActiveBadge $isActive={isActive === 'active'} />
           </>
@@ -113,12 +111,8 @@ export const Topbar = ({
             setModalState('SET_STATUS');
           }}
           status={{
-            text: viewer?.metadata.statusText
-              ? viewer?.metadata.statusText.toString()
-              : null,
-            emojiUnified: viewer?.metadata.statusEmojiUnified
-              ? viewer?.metadata.statusEmojiUnified.toString()
-              : null,
+            text: status?.text,
+            emojiUnified: status?.emojiUnified,
           }}
           activity={isActive}
           setActivity={setIsActive}
@@ -145,7 +139,6 @@ export const Topbar = ({
           updateStatus={updateStatus}
           onCancel={() => setModalState(null)}
           onClose={() => setModalState(null)}
-          setStatus={setStatus}
         />
       </DarkBGModal>
     </Container>
