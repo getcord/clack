@@ -114,6 +114,12 @@ export function MoreActionsButton({
     if (e.key === 'p') {
       onPinToConversation();
       setShowOptionsDialog(false);
+    } else if (e.key === 'e') {
+      void onEditMessage();
+    } else if (e.key === 'Backspace') {
+      void onDeleteMessage();
+    } else if (e.key === 'u') {
+      void onMarkUnread();
     }
   };
 
@@ -155,6 +161,7 @@ export function MoreActionsButton({
             <Divider />
             <StyledButton onClick={() => void onMarkUnread()}>
               Mark unread
+              <KeyBindingLabel>U</KeyBindingLabel>
             </StyledButton>
             <Divider />
             <StyledButton onClick={onCopyButtonClick}>Copy link</StyledButton>
@@ -170,12 +177,14 @@ export function MoreActionsButton({
                   <Divider />
                   <StyledButton onClick={() => void onEditMessage()}>
                     Edit message
+                    <KeyBindingLabel>E</KeyBindingLabel>
                   </StyledButton>
                   <StyledButton
                     $type="alert"
                     onClick={() => void onDeleteMessage()}
                   >
                     Delete message...
+                    <KeyBindingLabel>delete</KeyBindingLabel>
                   </StyledButton>
                 </>
               )}
@@ -189,10 +198,6 @@ export function MoreActionsButton({
     </>
   );
 }
-
-const KeyBindingLabel = styled.span({
-  textAlign: 'right',
-});
 
 export const Modal = styled(DefaultModal)`
   pointer-events: none;
@@ -216,7 +221,14 @@ const StyledButton = styled.button<{ $type?: string }>`
   &:hover {
     background: ${({ $type }) =>
       $type === 'alert' ? Colors.red : Colors.blue_active};
+    color: white;
+  }
+`;
 
+const KeyBindingLabel = styled.span`
+  text-align: right;
+  color: ${Colors.gray_dark};
+  ${StyledButton}:hover & {
     color: white;
   }
 `;
