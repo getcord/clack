@@ -88,7 +88,7 @@ export function SearchBar() {
 
   return (
     <>
-      <SearchContainer>
+      <ResponsiveSearchContainer>
         <SearchButton
           onClick={() => {
             setShowSearchPopup(!showSearchPopup);
@@ -139,7 +139,7 @@ export function SearchBar() {
             )}
           </SearchPopup>
         )}
-      </SearchContainer>
+      </ResponsiveSearchContainer>
       <Overlay
         onClick={() => setShowSearchPopup(false)}
         $shouldShow={showSearchPopup}
@@ -263,6 +263,8 @@ const SearchPopup = styled.div({
   overflow: 'auto',
 });
 
+// Can't add @media query to div({}) syntax, hence why
+// separate ResponsiveSearchContainer below.
 const SearchContainer = styled.div({
   flex: '2',
   marginLeft: '260px',
@@ -270,6 +272,12 @@ const SearchContainer = styled.div({
   maxWidth: '732px',
   zIndex: '1',
 });
+const ResponsiveSearchContainer = styled(SearchContainer)`
+  @media (max-width: 768px) {
+    margin: 0;
+    margin: 0 8px;
+  }
+`;
 
 const SearchButton = styled.button({
   backgroundColor: '#5C3D5E',
