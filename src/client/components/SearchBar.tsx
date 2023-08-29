@@ -12,14 +12,17 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { StyledMessage } from 'src/client/components/style/StyledCord';
 import { Overlay } from 'src/client/components/MoreActionsButton';
 import { UsersContext } from 'src/client/context/UsersProvider';
+import { Colors } from 'src/client/consts/Colors';
 
 export function SearchBar() {
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const [history, setHistory] = useState([]);
 
   const { usersData } = useContext(UsersContext);
 
@@ -61,9 +64,20 @@ export function SearchBar() {
     return () => clearTimeout(searchTimeoutRef.current);
   }, [searchInput, usersData]);
 
+  useEffect(() => {
+    const existingSearches = window.localStorage.getItem('searchInputHistory');
+    setHistory(existingSearches ? JSON.parse(existingSearches) : []);
+  }, [showSearchPopup]);
+
   const close = useCallback(() => {
     setShowSearchPopup(false);
-  }, []);
+    if (searchInput !== '') {
+      window.localStorage.setItem(
+        'searchInputHistory',
+        JSON.stringify(Array.from(new Set([searchInput, ...history]))),
+      );
+    }
+  }, [history, searchInput]);
 
   const searchResultsArray = useMemo(() => {
     return searchResults?.map((message) => {
@@ -103,7 +117,7 @@ export function SearchBar() {
               <MagnifyingGlassIcon
                 width={16}
                 height={16}
-                style={{ overflow: 'visible' }}
+                style={{ overflow: 'visible', color: '#616061' }}
               />
 
               <SearchInput
@@ -123,6 +137,15 @@ export function SearchBar() {
               </CloseButton>
             </SearchHeader>
 
+            {history.length > 0 && searchInput === '' && (
+              <>
+                <Divider />
+                <SearchHistory
+                  history={history.slice(0, 3)}
+                  onSelect={setSearchInput}
+                />
+              </>
+            )}
             {searchResults && (
               <>
                 <Divider />
@@ -147,6 +170,26 @@ export function SearchBar() {
     </>
   );
 }
+
+const SearchHistory = ({
+  history,
+  onSelect,
+}: {
+  history: string[];
+  onSelect: (historyEntry: string) => void;
+}) => {
+  return (
+    <>
+      <SearchDescription>Recent searches</SearchDescription>
+      {history.map((searchTerm, index) => (
+        <SearchHistoryEntry key={index} onClick={() => onSelect(searchTerm)}>
+          <ClockIconStyled />
+          <SearchHistoryText>{searchTerm}</SearchHistoryText>
+        </SearchHistoryEntry>
+      ))}
+    </>
+  );
+};
 
 const SingleSearchResult = ({
   message,
@@ -237,6 +280,7 @@ const SearchResultsContainer = styled.div({
   padding: '16px 24px',
   width: '100%',
 });
+
 const SearchHeader = styled.div({
   alignItems: 'center',
   boxSizing: 'border-box',
@@ -245,6 +289,45 @@ const SearchHeader = styled.div({
   padding: '16px 24px 16px',
   width: '100%',
 });
+
+const ClockIconStyled = styled(ClockIcon)({
+  width: '18px',
+  height: '18px',
+  overflow: 'visible',
+  color: Colors.gray_dark,
+  strokeWidth: '2px',
+});
+
+const SearchHistoryText = styled.span({
+  color: Colors.gray_text,
+  fontSize: '16px',
+  lineHeight: '20px',
+  fontWeight: 700,
+});
+
+const SearchDescription = styled.span({
+  boxSizing: 'border-box',
+  width: '100%',
+  fontSize: '13px',
+  lineHeight: '16px',
+  padding: `20px 16px 8px 26px`,
+  color: '#868686',
+});
+
+const SearchHistoryEntry = styled(SearchHeader)`
+  padding: 8px 24px 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: ${Colors.blue_active};
+    ${SearchHistoryText} {
+      color: white;
+    }
+    ${ClockIconStyled} {
+      color: white;
+    }
+  }
+`;
 
 const SearchPopup = styled.div({
   alignItems: 'center',
