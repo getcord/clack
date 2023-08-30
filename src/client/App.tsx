@@ -49,6 +49,9 @@ export function App() {
     id: openPanel === 'channel' ? channelIDParam || 'general' : '',
   };
 
+  const allChannelsToOrg =
+    useAPIFetch<Record<string, unknown>>('/channels') ?? {};
+
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
   };
@@ -96,6 +99,7 @@ export function App() {
               <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
               <Sidebar
                 channel={channel}
+                allChannels={Object.keys(allChannelsToOrg)}
                 openPanel={openPanel}
                 setShowSidebar={setShowSidebar}
               />
