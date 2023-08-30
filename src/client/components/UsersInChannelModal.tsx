@@ -6,6 +6,7 @@ import {
   presence,
   user,
 } from '@cord-sdk/react';
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
@@ -13,7 +14,7 @@ import { XIcon } from 'src/client/components/Buttons';
 
 interface UsersInChannelModalProps {
   onClose: () => void;
-  channel: string;
+  channel: Channel;
   users: (string | number)[];
 }
 
@@ -32,7 +33,7 @@ export function UsersInChannelModal({
     <Modal>
       <Box>
         <Header>
-          <Heading># {channel}</Heading>
+          <Heading># {channel.id}</Heading>
           <CloseButton onClick={onClose}>
             <XIcon />
           </CloseButton>

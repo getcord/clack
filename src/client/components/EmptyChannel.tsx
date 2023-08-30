@@ -1,16 +1,18 @@
 import React from 'react';
 import { styled } from 'styled-components';
+import type { Channel } from 'src/client/consts/Channel';
 
 interface EmptyChannelProps {
-  channelID: string;
+  channel: Channel;
 }
 
-export function EmptyChannel({ channelID }: EmptyChannelProps) {
+export function EmptyChannel({ channel }: EmptyChannelProps) {
   return (
     <Root>
-      <ChannelName>#{channelID}</ChannelName>
+      <ChannelName>#{channel.id}</ChannelName>
       <div>
-        This is the very beginning of the <strong>#{channelID}</strong> channel.
+        This is the very beginning of the <strong>#{channel.id}</strong>{' '}
+        channel.
       </div>
     </Root>
   );

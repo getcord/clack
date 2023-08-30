@@ -45,10 +45,12 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const openPanel = location.pathname.split('/')[1];
-  const channelID = openPanel === 'channel' ? channelIDParam || 'general' : '';
+  const channel = {
+    id: openPanel === 'channel' ? channelIDParam || 'general' : '',
+  };
 
   const onOpenThread = (threadID: string) => {
-    navigate(`/channel/${channelID}/thread/${threadID}`);
+    navigate(`/channel/${channel.id}/thread/${threadID}`);
   };
 
   const onCordNavigate: NavigateFn = React.useCallback(
@@ -65,16 +67,16 @@ export function App() {
 
   const translations = useMemo(
     () => ({
-      en: { composer: { add_a_comment: `Message #${channelID}` } },
+      en: { composer: { add_a_comment: `Message #${channel.id}` } },
     }),
-    [channelID],
+    [channel.id],
   );
 
   return (
     <>
       <GlobalStyle />
       <Helmet>
-        <title>#{channelID} - Clack</title>
+        <title>#{channel.id} - Clack</title>
       </Helmet>
       <CordProvider
         clientAuthToken={cordToken}
@@ -93,7 +95,7 @@ export function App() {
             >
               <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
               <Sidebar
-                channelID={channelID}
+                channel={channel}
                 openPanel={openPanel}
                 setShowSidebar={setShowSidebar}
               />
@@ -101,8 +103,8 @@ export function App() {
                 <ResponsiveContent>
                   {openPanel === 'channel' && (
                     <Chat
-                      key={channelID}
-                      channel={channelID}
+                      key={channel.id}
+                      channel={channel}
                       onOpenThread={onOpenThread}
                     />
                   )}
@@ -113,9 +115,9 @@ export function App() {
                 </ResponsiveContent>
                 {threadID && (
                   <ThreadDetails
-                    channelID={channelID}
+                    channel={channel}
                     threadID={threadID}
-                    onClose={() => navigate(`/channel/${channelID}`)}
+                    onClose={() => navigate(`/channel/${channel.id}`)}
                   />
                 )}
               </MessageProvider>

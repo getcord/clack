@@ -2,11 +2,12 @@ import React from 'react';
 import { ThreadList } from '@cord-sdk/react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
 
 interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
-  channel: string;
+  channel: Channel;
 }
 export function PinnedMessages({
   channel,
@@ -19,10 +20,10 @@ export function PinnedMessages({
       <Box>
         <CloseButton onClick={onClose} />
         <StyledThreadList
-          location={{ channel }}
+          location={{ channel: channel.id }}
           filter={{ metadata: { pinned: true } }}
           onThreadClick={(threadId) =>
-            navigate(`/channel/${channel}/thread/${threadId}`)
+            navigate(`/channel/${channel.id}/thread/${threadId}`)
           }
         />
       </Box>

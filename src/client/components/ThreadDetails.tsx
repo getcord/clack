@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
+import type { Channel } from 'src/client/consts/Channel';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Colors } from 'src/client/consts/Colors';
 import {
@@ -68,14 +69,14 @@ export type ThreadDetailsProps = {
   className?: string;
   threadID: string;
   onClose: () => void;
-  channelID: string;
+  channel: Channel;
 };
 
 export function ThreadDetails({
   className,
   threadID,
   onClose,
-  channelID,
+  channel,
 }: ThreadDetailsProps) {
   const { messages, loading, hasMore, fetchMore } =
     thread.useThreadData(threadID);
@@ -93,7 +94,7 @@ export function ThreadDetails({
     <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
         <span style={{ gridArea: 'thread' }}>Thread</span>
-        <ChannelName># {channelID}</ChannelName>
+        <ChannelName># {channel.id}</ChannelName>
         <CloseButton onClick={onClose}>
           <StyledXMarkIcon />
         </CloseButton>
