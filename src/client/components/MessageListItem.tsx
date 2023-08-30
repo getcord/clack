@@ -172,6 +172,7 @@ export function MessageListItem({
       )}
       <StyledMessage
         threadId={thread.id}
+        organizationId={thread.organizationID}
         messageId={thread.firstMessage?.id}
         onRender={() => {
           setAvatarElement(

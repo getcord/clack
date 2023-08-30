@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
 
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
@@ -45,12 +46,23 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const openPanel = location.pathname.split('/')[1];
-  const channel = {
-    id: openPanel === 'channel' ? channelIDParam || 'general' : '',
-  };
 
   const allChannelsToOrg =
-    useAPIFetch<Record<string, unknown>>('/channels') ?? {};
+    useAPIFetch<Record<string, string | null>>('/channels') ?? {};
+
+  const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
+    (acc, [key, value]) => {
+      acc.push({ id: key, org: value ?? undefined });
+      return acc;
+    },
+    [] as Channel[],
+  );
+
+  const channelID = channelIDParam ?? 'general';
+  const channel: Channel =
+    openPanel === 'channel'
+      ? { id: channelID, org: allChannelsToOrg[channelID] ?? undefined }
+      : { id: '', org: undefined };
 
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
@@ -99,7 +111,7 @@ export function App() {
               <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
               <Sidebar
                 channel={channel}
-                allChannels={Object.keys(allChannelsToOrg)}
+                allChannels={allChannelsArray}
                 openPanel={openPanel}
                 setShowSidebar={setShowSidebar}
               />
