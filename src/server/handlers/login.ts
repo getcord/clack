@@ -73,6 +73,7 @@ export function enforceLoginMiddleware(
 ) {
   const loginTokenData = getAndVerifyLoginTokenCookie(req);
   if (loginTokenData) {
+    (req as any).loginTokenData = loginTokenData;
     next();
   } else {
     res.sendStatus(401);
