@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
+import type { Channel } from 'src/client/consts/Channel';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
@@ -12,7 +13,7 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 
 interface ChatProps {
-  channel: string;
+  channel: Channel;
   onOpenThread: (threadID: string) => void;
 }
 
@@ -20,7 +21,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
   const usersInChannel = useAPIFetch<(string | number)[]>('/users');
 
   const { threads: pinnedThreads } = thread.useLocationData(
-    { channel },
+    { channel: channel.id },
     {
       filter: {
         metadata: {
@@ -39,7 +40,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeaderWrapper>
-          <PageHeader># {channel}</PageHeader>
+          <PageHeader># {channel.id}</PageHeader>
           {usersInChannel && (
             <PageUsersLabel users={usersInChannel} channel={channel} />
           )}
@@ -71,8 +72,8 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         onOpenThread={onOpenThread}
       />
       <StyledComposer
-        location={{ channel }}
-        threadName={`#${channel}`}
+        location={{ channel: channel.id }}
+        threadName={`#${channel.id}`}
         showExpanded
       />
     </Wrapper>

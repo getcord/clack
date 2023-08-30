@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { NotificationListLauncher } from '@cord-sdk/react';
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { ChannelButton, Channels } from 'src/client/components/Channels';
@@ -11,14 +12,14 @@ import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 type SidebarProps = {
   className?: string;
-  channelID: string;
+  channel: Channel;
   openPanel: string | null;
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function Sidebar({
   className,
-  channelID,
+  channel,
   openPanel,
   setShowSidebar,
 }: SidebarProps) {
@@ -50,11 +51,11 @@ export function Sidebar({
         </Panel>
         <Divider />
         <Channels
-          setCurrentChannel={(channel) => {
-            navigate(`/channel/${channel}`);
+          setCurrentChannelID={(channelID) => {
+            navigate(`/channel/${channelID}`);
             setShowSidebar?.(false);
           }}
-          currentChannel={channelID}
+          currentChannel={channel}
           channels={channelsOptions}
         />
       </ScrollableContent>

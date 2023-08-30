@@ -3,6 +3,7 @@ import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
+import type { Channel } from 'src/client/consts/Channel';
 import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 import { MessageListItem } from 'src/client/components/MessageListItem';
 import { EmptyChannel } from 'src/client/components/EmptyChannel';
@@ -11,7 +12,7 @@ import { Colors } from 'src/client/consts/Colors';
 import { MessageContext } from 'src/client/context/MessageContext';
 
 type ThreadsProps = {
-  channel: string;
+  channel: Channel;
   onOpenThread: (threadID: string) => void;
   onScrollUp: () => void;
   onScrollToBottom: () => void;
@@ -24,7 +25,7 @@ export function Threads({
   onScrollUp,
 }: ThreadsProps) {
   const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
-    { channel },
+    { channel: channel.id },
     {
       sortDirection: 'descending',
     },
@@ -120,7 +121,7 @@ export function Threads({
           {firstMessageTimestamp && (
             <DateDivider timestamp={firstMessageTimestamp} />
           )}
-          <EmptyChannel channelID={channel} />
+          <EmptyChannel channel={channel} />
         </>
       ) : null}
       {unseenMessages.length && !isAtBottomOfThreads() ? (

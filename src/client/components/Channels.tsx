@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
@@ -39,12 +40,12 @@ export function ChannelButton({
 }
 
 export function Channels({
-  setCurrentChannel,
+  setCurrentChannelID,
   currentChannel,
   channels,
 }: {
-  setCurrentChannel: (channel: string) => void;
-  currentChannel: string;
+  setCurrentChannelID: (channel: string) => void;
+  currentChannel: Channel;
   channels: string[];
 }) {
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -60,9 +61,9 @@ export function Channels({
       <ChannelsList>
         {channels.map((option, index) => (
           <ChannelButton
-            isActive={currentChannel === option}
+            isActive={currentChannel.id === option}
             key={index}
-            onClick={() => setCurrentChannel(option)}
+            onClick={() => setCurrentChannelID(option)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
               setContextMenuPosition({
