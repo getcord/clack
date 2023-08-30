@@ -51,7 +51,9 @@ type LoginTokenData = {
   picture: string;
 };
 
-function getAndVerifyLoginTokenCookie(req: Request): LoginTokenData | null {
+export function getAndVerifyLoginTokenCookie(
+  req: Request,
+): LoginTokenData | null {
   const loginToken = getCookie(req, LOGIN_TOKEN_COOKIE_NAME);
   if (!loginToken) {
     return null;
