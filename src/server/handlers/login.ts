@@ -51,7 +51,9 @@ type LoginTokenData = {
   picture: string;
 };
 
-function getAndVerifyLoginTokenCookie(req: Request): LoginTokenData | null {
+export function getAndVerifyLoginTokenCookie(
+  req: Request,
+): LoginTokenData | null {
   const loginToken = getCookie(req, LOGIN_TOKEN_COOKIE_NAME);
   if (!loginToken) {
     return null;
@@ -71,6 +73,7 @@ export function enforceLoginMiddleware(
 ) {
   const loginTokenData = getAndVerifyLoginTokenCookie(req);
   if (loginTokenData) {
+    (req as any).loginTokenData = loginTokenData;
     next();
   } else {
     res.sendStatus(401);

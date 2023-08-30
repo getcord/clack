@@ -1,4 +1,7 @@
+import type { ServerGetUser } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
+import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
+import { getAndVerifyLoginTokenCookie } from 'src/server/handlers/login';
 
 /**
  * Map of channel name to the org that determines the channel's membership (or
@@ -31,6 +34,8 @@ const allChannels: Record<string, string | null> = {
   'pets-of-cord': null,
   random: null,
   sdk: null,
+  'super-fake-secret-channel': 'org-that-doesnt-exist',
+  'super-secret-channel': 'super-secret-org',
   'the-cordially-book-club': null,
   til: null,
   website: null,
@@ -40,7 +45,21 @@ const allChannels: Record<string, string | null> = {
   'what-the-quack': null,
 };
 
-export function handleGetChannels(_: Request, res: Response) {
-  // TODO: do a REST API call and filter this down based on your orgs.
-  res.send(allChannels);
+export async function handleGetChannels(req: Request, res: Response) {
+  const { user_id } = (req as any).loginTokenData;
+  const { organizations } = await fetchCordRESTApi<ServerGetUser>(
+    `users/${user_id}`,
+  );
+
+  const availableChannels = Object.entries(allChannels).reduce(
+    (acc, [key, value]) => {
+      if (value === null || organizations.includes(value)) {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {} as Record<string, string | null>,
+  );
+
+  res.send(availableChannels);
 }
