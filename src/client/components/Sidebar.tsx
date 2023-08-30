@@ -8,11 +8,11 @@ import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { ChannelButton, Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 type SidebarProps = {
   className?: string;
   channel: Channel;
+  allChannels: string[];
   openPanel: string | null;
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -20,13 +20,11 @@ type SidebarProps = {
 export function Sidebar({
   className,
   channel,
+  allChannels,
   openPanel,
   setShowSidebar,
 }: SidebarProps) {
   const navigate = useNavigate();
-
-  // API call here so it doesn't rerun when context menu is opened
-  const channelsOptions = useAPIFetch<string[]>('/channels') ?? [];
 
   return (
     <SidebarWrap className={className}>
@@ -56,7 +54,7 @@ export function Sidebar({
             setShowSidebar?.(false);
           }}
           currentChannel={channel}
-          channels={channelsOptions}
+          channels={allChannels}
         />
       </ScrollableContent>
       <NotificationsRequestBanner />
