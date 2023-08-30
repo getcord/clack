@@ -131,7 +131,7 @@ export function App() {
 // hence why ResponsiveLayout is a separate component.
 const Layout = styled.div({
   display: 'grid',
-  height: '100%',
+  height: '100vh',
   maxHeight: '100vh',
   gridTemplateAreas: `
     "topbar topbar"
