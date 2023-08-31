@@ -96,7 +96,10 @@ export function App() {
       >
         <UsersProvider>
           <BrowserNotificationBridge />
-          <PresenceObserver location={{ page: 'clack', durable: true }}>
+          <PresenceObserver
+            location={{ page: 'clack', durable: true }}
+            style={{ height: '100%' }}
+          >
             <ResponsiveLayout
               className={cx({ openThread: threadID, openSidebar: showSidebar })}
             >
