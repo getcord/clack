@@ -1,7 +1,6 @@
 import type { ServerGetUser } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
-import { getAndVerifyLoginTokenCookie } from 'src/server/handlers/login';
 
 /**
  * Map of channel name to the org that determines the channel's membership (or
@@ -46,7 +45,7 @@ const allChannels: Record<string, string | null> = {
 };
 
 export async function handleGetChannels(req: Request, res: Response) {
-  const { user_id } = getAndVerifyLoginTokenCookie(req)!;
+  const { user_id } = (req as any).loginTokenData;
   const { organizations } = await fetchCordRESTApi<ServerGetUser>(
     `users/${user_id}`,
   );
