@@ -3,10 +3,11 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { NotificationListLauncher } from '@cord-sdk/react';
+import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
-import { ChannelButton, Channels } from 'src/client/components/Channels';
+import { Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
 
 type SidebarProps = {
@@ -34,7 +35,7 @@ export function Sidebar({
       </SidebarHeader>
       <ScrollableContent>
         <Panel>
-          <SidebarNavButton
+          <ThreadsButton
             option={'Threads'}
             onClick={() => {
               navigate('/threads/');
@@ -45,6 +46,7 @@ export function Sidebar({
               />
             }
             isActive={openPanel === 'threads'}
+            hasUnread={false}
           />
         </Panel>
         <Divider />
@@ -92,7 +94,7 @@ const StyledNotifLauncher = styled(NotificationListLauncher)({
   padding: '0 16px',
 });
 
-const SidebarNavButton = styled(ChannelButton)`
+const ThreadsButton = styled(SidebarButton)`
   width: 100%;
   margin: 20px 8px;
 `;

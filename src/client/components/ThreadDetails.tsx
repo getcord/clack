@@ -135,7 +135,7 @@ export function ThreadDetails({
           ))}
         </MessageListWrapper>
         <StyledComposer autofocus threadId={threadID} showExpanded />
-        <TypingIndicator threadID={threadID} />
+        <TypingIndicator threadID={threadID} organizationId={channel.org} />
       </ScrollableContainer>
     </ThreadDetailsWrapper>
   );
