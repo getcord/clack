@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { HashtagIcon } from '@heroicons/react/20/solid';
+import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
@@ -46,7 +46,7 @@ export function Channels({
 }: {
   setCurrentChannelID: (channel: string) => void;
   currentChannel: Channel;
-  channels: string[];
+  channels: Channel[];
 }) {
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -59,21 +59,21 @@ export function Channels({
   return (
     <>
       <ChannelsList>
-        {channels.map((option, index) => (
+        {channels.map((channel, index) => (
           <ChannelButton
-            isActive={currentChannel.id === option}
+            isActive={currentChannel.id === channel.id}
             key={index}
-            onClick={() => setCurrentChannelID(option)}
+            onClick={() => setCurrentChannelID(channel.id)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
               setContextMenuPosition({
                 x: e.clientX,
                 y: e.clientY,
               });
-              setContextMenuOpenForChannel(option);
+              setContextMenuOpenForChannel(channel.id);
             }}
-            option={option}
-            icon={<ChannelIcon />}
+            option={channel.id}
+            icon={channel.org ? <PrivateChannelIcon /> : <ChannelIcon />}
           />
         ))}
         {contextMenuOpenForChannel && (
@@ -134,6 +134,12 @@ const ChannelButtonStyled = styled.button<{
 `;
 
 export const ChannelIcon = styled(HashtagIcon)`
+  grid-area: hash;
+  width: 16px;
+  height: 16px;
+`;
+
+export const PrivateChannelIcon = styled(LockClosedIcon)`
   grid-area: hash;
   width: 16px;
   height: 16px;

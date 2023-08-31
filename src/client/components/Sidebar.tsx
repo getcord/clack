@@ -12,7 +12,7 @@ import { NotificationsRequestBanner } from 'src/client/components/NotificationsR
 type SidebarProps = {
   className?: string;
   channel: Channel;
-  allChannels: string[];
+  allChannels: Channel[];
   openPanel: string | null;
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 };
