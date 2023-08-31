@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
+import type { Channel } from 'src/client/consts/Channel';
 import { ReactPortal } from 'src/client/components/ReactPortal';
 
 export function ChannelsRightClickMenu({
@@ -9,15 +10,19 @@ export function ChannelsRightClickMenu({
   closeMenu,
 }: {
   position: { x: number; y: number };
-  channel: string;
+  channel: Channel;
   closeMenu: () => void;
 }) {
   const [threadIDs, setThreadIDs] = useState<Set<string>>(new Set());
   const [shouldMarkAsUnread, setShouldMarkAsUnread] = useState(false);
 
   const { threads, hasMore, fetchMore, loading } = thread.useLocationData(
-    { channel },
-    { sortBy: 'first_message_timestamp', sortDirection: 'descending' },
+    { channel: channel.id },
+    {
+      sortBy: 'first_message_timestamp',
+      sortDirection: 'descending',
+      filter: { organizationId: channel.org },
+    },
   );
 
   // Don't currently have a way to load just unread threads, so load a fair chunk

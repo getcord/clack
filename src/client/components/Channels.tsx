@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { HashtagIcon } from '@heroicons/react/20/solid';
+import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
+import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
-import { Colors } from 'src/client/consts/Colors';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
 
@@ -14,28 +14,27 @@ export function ChannelButton({
   isActive,
   icon,
 }: {
-  option: string;
+  option: Channel;
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
   icon: React.ReactNode;
 }) {
   const summary = thread.useLocationSummary(
-    { channel: option },
-    { partialMatch: true },
+    { channel: option.id },
+    { partialMatch: true, filter: { organizationId: option.org } },
   );
   const hasUnread = !!summary?.new;
 
   return (
-    <ChannelButtonStyled
-      $activePage={isActive}
+    <SidebarButton
+      option={option.id}
+      isActive={isActive}
       onClick={onClick}
       onContextMenu={onContextMenu}
-      $hasUnread={hasUnread}
-    >
-      {icon}
-      <ChannelName>{option}</ChannelName>
-    </ChannelButtonStyled>
+      hasUnread={hasUnread}
+      icon={icon}
+    />
   );
 }
 
@@ -46,34 +45,34 @@ export function Channels({
 }: {
   setCurrentChannelID: (channel: string) => void;
   currentChannel: Channel;
-  channels: string[];
+  channels: Channel[];
 }) {
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
   });
   const [contextMenuOpenForChannel, setContextMenuOpenForChannel] = useState<
-    string | undefined
+    Channel | undefined
   >(undefined);
 
   return (
     <>
       <ChannelsList>
-        {channels.map((option, index) => (
+        {channels.map((channel, index) => (
           <ChannelButton
-            isActive={currentChannel.id === option}
+            isActive={currentChannel.id === channel.id}
             key={index}
-            onClick={() => setCurrentChannelID(option)}
+            onClick={() => setCurrentChannelID(channel.id)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
               setContextMenuPosition({
                 x: e.clientX,
                 y: e.clientY,
               });
-              setContextMenuOpenForChannel(option);
+              setContextMenuOpenForChannel(channel);
             }}
-            option={option}
-            icon={<ChannelIcon />}
+            option={channel}
+            icon={channel.org ? <PrivateChannelIcon /> : <ChannelIcon />}
           />
         ))}
         {contextMenuOpenForChannel && (
@@ -98,42 +97,13 @@ const ChannelsList = styled.div`
   margin: 20px 8px;
 `;
 
-const ChannelName = styled.span`
-  grid-area: channel-name;
-  text-align: left;
-`;
-
-const ChannelButtonStyled = styled.button<{
-  $activePage?: boolean;
-  $hasUnread?: boolean;
-}>`
-  display: grid;
-  align-items: center;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas: 'hash channel-name';
-  grid-gap: 8px;
-  padding: 0 10px 0 16px;
-
-  font-size: 15px;
-  line-height: 28px;
-  min-height: 28px;
-  font-weight: ${({ $hasUnread }) => ($hasUnread ? '900' : '400')};
-
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-
-  color: ${({ $activePage, $hasUnread }) =>
-    $activePage || $hasUnread ? 'white' : `${Colors.inactive_channel}`};
-  background: ${(props) =>
-    props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
-  &:hover {
-    background: ${(props) =>
-      props.$activePage ? `${Colors.blue_active}` : `${Colors.purple_hover}`};
-  }
-`;
-
 export const ChannelIcon = styled(HashtagIcon)`
+  grid-area: hash;
+  width: 16px;
+  height: 16px;
+`;
+
+export const PrivateChannelIcon = styled(LockClosedIcon)`
   grid-area: hash;
   width: 16px;
   height: 16px;

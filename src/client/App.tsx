@@ -50,6 +50,14 @@ export function App() {
   const allChannelsToOrg =
     useAPIFetch<Record<string, string | null>>('/channels') ?? {};
 
+  const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
+    (acc, [key, value]) => {
+      acc.push({ id: key, org: value ?? undefined });
+      return acc;
+    },
+    [] as Channel[],
+  );
+
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
     openPanel === 'channel'
@@ -106,7 +114,7 @@ export function App() {
               <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
               <Sidebar
                 channel={channel}
-                allChannels={Object.keys(allChannelsToOrg)}
+                allChannels={allChannelsArray}
                 openPanel={openPanel}
                 setShowSidebar={setShowSidebar}
               />
