@@ -46,7 +46,7 @@ const allChannels: Record<string, string | null> = {
 };
 
 export async function handleGetChannels(req: Request, res: Response) {
-  const { user_id } = getAndVerifyLoginTokenCookie(req)!;
+  const { user_id } = (req as any).loginTokenData;
   const { organizations } = await fetchCordRESTApi<ServerGetUser>(
     `users/${user_id}`,
   );
