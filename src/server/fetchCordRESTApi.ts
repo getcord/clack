@@ -19,5 +19,13 @@ export async function fetchCordRESTApi<T>(
       'Content-Type': 'application/json',
     },
   });
-  return response.json();
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    const responseText = await response.text();
+    throw new Error(
+      `Error making Cord API call: ${response.status} ${response.statusText} ${responseText}`,
+    );
+  }
 }
