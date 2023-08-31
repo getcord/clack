@@ -1,7 +1,6 @@
 import type { ServerGetUser } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
-import { getAndVerifyLoginTokenCookie } from 'src/server/handlers/login';
 
 /**
  * Map of channel name to the org that determines the channel's membership (or
