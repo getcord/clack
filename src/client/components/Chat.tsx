@@ -27,6 +27,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         metadata: {
           pinned: true,
         },
+        organizationId: channel.org,
       },
     },
   );
@@ -74,6 +75,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
       <StyledComposer
         location={{ channel: channel.id }}
         threadName={`#${channel.id}`}
+        organizationId={channel.org}
         showExpanded
       />
     </Wrapper>

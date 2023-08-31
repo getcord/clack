@@ -15,17 +15,23 @@ export function PinnedMessages({
   onClose,
 }: PinnedMessagesProps) {
   const navigate = useNavigate();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Box>
         <CloseButton onClick={onClose} />
-        <StyledThreadList
-          location={{ channel: channel.id }}
-          filter={{ metadata: { pinned: true } }}
-          onThreadClick={(threadId) =>
-            navigate(`/channel/${channel.id}/thread/${threadId}`)
-          }
-        />
+        {channel.org ? (
+          // ThreadList does not yet have an organizationId prop.
+          <div>Not yet implemented for private channels</div>
+        ) : (
+          <StyledThreadList
+            location={{ channel: channel.id }}
+            filter={{ metadata: { pinned: true } }}
+            onThreadClick={(threadId) =>
+              navigate(`/channel/${channel.id}/thread/${threadId}`)
+            }
+          />
+        )}
       </Box>
     </Modal>
   );
