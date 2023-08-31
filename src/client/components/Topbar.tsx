@@ -77,9 +77,16 @@ export const Topbar = ({
       </ChannelsList>
       <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
-        {userID && <Avatar userId={userID} enableTooltip />}
+        {userID && (
+          <>
+            <Avatar userId={userID} enableTooltip />
+            <ActiveBadge
+              className={className}
+              $isActive={isActive === 'active'}
+            />
+          </>
+        )}
       </AvatarWrapper>
-      <ActiveBadge className={className} $isActive={isActive === 'active'} />
       <Modal
         isOpen={modalState === 'PREFERENCES'}
         onClose={() => setModalState(null)}
@@ -182,7 +189,12 @@ const DarkBGModal = styled(Modal)`
   justify-content: center;
 `;
 
-const AvatarWrapper = styled.div({});
+const AvatarWrapper = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  width: 'min-content',
+});
 
 const Avatar = styled(DefaultAvatar)`
   .cord-avatar-container {
