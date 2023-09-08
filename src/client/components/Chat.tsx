@@ -27,7 +27,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         metadata: {
           pinned: true,
         },
-        organizationId: channel.org,
+        organizationID: channel.org,
       },
     },
   );

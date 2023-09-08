@@ -4,16 +4,16 @@ import { keyframes, styled } from 'styled-components';
 
 export function TypingIndicator({
   threadID,
-  // TODO: passing in the organizationId as a prop like this is incredibly ugly.
+  // TODO: passing in the organizationID as a prop like this is incredibly ugly.
   // This is a Cord issue, not a Clack issue -- we need to support passing
   // `null` for the org ID, since Cord should be able to "figure it out" from
   // the thread ID. We don't support that yet, but it's planned.
-  organizationId,
+  organizationID,
 }: {
   threadID: string;
-  organizationId: string | undefined;
+  organizationID: string | undefined;
 }) {
-  const summary = thread.useThreadSummary(threadID, { organizationId });
+  const summary = thread.useThreadSummary(threadID, { organizationID });
   const typingUsers = summary?.typing ?? [];
 
   return (

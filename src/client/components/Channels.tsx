@@ -22,7 +22,7 @@ export function ChannelButton({
 }) {
   const summary = thread.useLocationSummary(
     { channel: option.id },
-    { partialMatch: true, filter: { organizationId: option.org } },
+    { partialMatch: true, filter: { organizationID: option.org } },
   );
   const hasUnread = !!summary?.new;
 

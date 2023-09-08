@@ -81,11 +81,11 @@ export function ThreadDetails({
 }: ThreadDetailsProps) {
   const { messages, loading, hasMore, fetchMore } = thread.useThreadData(
     threadID,
-    { organizationId: channel.org },
+    { organizationID: channel.org },
   );
 
   const threadSummary = thread.useThreadSummary(threadID, {
-    organizationId: channel.org,
+    organizationID: channel.org,
   });
 
   if (!threadSummary || messages.length === 0) {
@@ -135,7 +135,7 @@ export function ThreadDetails({
           ))}
         </MessageListWrapper>
         <StyledComposer autofocus threadId={threadID} showExpanded />
-        <TypingIndicator threadID={threadID} organizationId={channel.org} />
+        <TypingIndicator threadID={threadID} organizationID={channel.org} />
       </ScrollableContainer>
     </ThreadDetailsWrapper>
   );
