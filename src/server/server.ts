@@ -53,7 +53,12 @@ function main() {
   app.use(express.json());
   app.use(cors({ origin: FRONT_END_HOST, credentials: true }));
   app.use((req, _, next) => {
-    console.log('Request:', req.method, req.originalUrl);
+    console.log(
+      new Date().toISOString(),
+      'Request:',
+      req.method,
+      req.originalUrl,
+    );
     return next();
   });
 
