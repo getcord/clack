@@ -80,10 +80,7 @@ export const Topbar = ({
         {userID && (
           <>
             <Avatar userId={userID} enableTooltip />
-            <ActiveBadge
-              className={className}
-              $isActive={isActive === 'active'}
-            />
+            <ActiveBadge $isActive={isActive === 'active'} />
           </>
         )}
       </AvatarWrapper>
@@ -194,6 +191,7 @@ const AvatarWrapper = styled.div({
   flexDirection: 'row',
   alignItems: 'center',
   width: 'min-content',
+  backgroundColor: 'inherit',
 });
 
 const Avatar = styled(DefaultAvatar)`
