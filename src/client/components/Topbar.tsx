@@ -189,8 +189,6 @@ const DarkBGModal = styled(Modal)`
 const AvatarWrapper = styled.div({
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center',
-  width: 'min-content',
   backgroundColor: 'inherit',
 });
 
