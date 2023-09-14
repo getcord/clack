@@ -21,6 +21,7 @@ export function SetStatusMenu({
 }: SetStatusMenuProps) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [input, setInput] = useState(status);
+  const [isDirty, setIsDirty] = useState(false);
 
   const onSubmit = () => {
     updateStatus(input);
@@ -48,6 +49,7 @@ export function SetStatusMenu({
                 emojiUnified: emoji.unified,
                 emojiUrl: emoji.getImageUrl(EmojiStyle.APPLE),
               }));
+              setIsDirty(true);
               setShowEmojiPicker(false);
             }}
           />
@@ -77,9 +79,10 @@ export function SetStatusMenu({
           name="status"
           placeholder="What's your status?"
           value={input?.text ?? undefined}
-          onChange={(e) =>
-            setInput((prev) => ({ ...prev, text: e.target.value }))
-          }
+          onChange={(e) => {
+            setInput((prev) => ({ ...prev, text: e.target.value }));
+            setIsDirty(true);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               onSubmit();
@@ -96,11 +99,7 @@ export function SetStatusMenu({
         <Button $variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          $variant="primary"
-          disabled={input?.text === status?.text}
-          onClick={onSubmit}
-        >
+        <Button $variant="primary" disabled={!isDirty} onClick={onSubmit}>
           Save
         </Button>
       </Footer>
