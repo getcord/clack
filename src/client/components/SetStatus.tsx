@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
+import EmojiPicker, { Emoji, EmojiStyle } from 'emoji-picker-react';
+import { CloseButton } from 'src/client/components/Buttons';
+import type { UserStatus } from 'src/client/hooks/useUserStatus';
 import { Colors } from 'src/client/consts/Colors';
 import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
 
 interface SetStatusMenuProps {
   onCancel: () => void;
   onClose: () => void;
-  status: string | null;
-  updateStatus: (newStatus: string | null) => void;
+  status: UserStatus | null;
+  updateStatus: (newStatus: UserStatus | null) => void;
 }
 
 export function SetStatusMenu({
@@ -16,19 +19,20 @@ export function SetStatusMenu({
   status,
   updateStatus,
 }: SetStatusMenuProps) {
-  const [input, setInput] = useState<string | undefined>(status ?? undefined);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [input, setInput] = useState(status);
+  const [isDirty, setIsDirty] = useState(false);
 
   const onSubmit = () => {
-    updateStatus(input || null);
+    updateStatus(input);
     onClose();
   };
 
-  useEffect(() => {
-    setInput(status ?? undefined);
-  }, [status]);
-
   return (
     <Box
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           onClose();
@@ -36,31 +40,66 @@ export function SetStatusMenu({
       }}
     >
       <Heading>Set a status</Heading>
+      {showEmojiPicker && (
+        <div style={{ position: 'absolute' }}>
+          <EmojiPicker
+            onEmojiClick={(emoji) => {
+              setInput((prev) => ({
+                ...prev,
+                emojiUnified: emoji.unified,
+                emojiUrl: emoji.getImageUrl(EmojiStyle.APPLE),
+              }));
+              setIsDirty(true);
+              setShowEmojiPicker(false);
+            }}
+          />
+        </div>
+      )}
       <InputBox htmlFor="status-input" onClick={(e) => e.stopPropagation()}>
-        {/* TODO: Trigger emoji picker */}
-        <SmileyFace />
+        <button
+          style={{
+            all: 'unset',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowEmojiPicker(true);
+          }}
+        >
+          {input?.emojiUnified ? (
+            <Emoji size={20} unified={input.emojiUnified} />
+          ) : (
+            <StyledSmiley />
+          )}
+        </button>
         <Input
           id="status-input"
           name="status"
           placeholder="What's your status?"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={input?.text ?? undefined}
+          onChange={(e) => {
+            setInput((prev) => ({ ...prev, text: e.target.value }));
+            setIsDirty(true);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               onSubmit();
             }
           }}
         />
+        <CloseButton
+          onClick={() =>
+            setInput({ emojiUnified: null, emojiUrl: null, text: '' })
+          }
+        />
       </InputBox>
       <Footer>
         <Button $variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          $variant="primary"
-          disabled={input === status || !!(input && input.length < 1)}
-          onClick={onSubmit}
-        >
+        <Button $variant="primary" disabled={!isDirty} onClick={onSubmit}>
           Save
         </Button>
       </Footer>
@@ -104,6 +143,7 @@ const Button = styled.button<{
 }));
 
 const Box = styled.div({
+  position: 'relative',
   width: '50%',
   maxWidth: '520px',
   borderRadius: '8px',
@@ -139,8 +179,8 @@ const Input = styled.input({
   flex: 1,
 });
 
-const SmileyFace = styled(SmileyFaceSvg)`
-  cursor: pointer;
+const StyledSmiley = styled(SmileyFaceSvg)`
   height: 20px;
   width: 20px;
+  cursor: pointer;
 `;

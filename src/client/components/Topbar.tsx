@@ -3,6 +3,8 @@ import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
+import { Emoji } from 'emoji-picker-react';
+import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { SetStatusMenu } from 'src/client/components/SetStatus';
@@ -77,9 +79,23 @@ export const Topbar = ({
       </ChannelsList>
       <SearchBar />
       <AvatarWrapper onClick={onAvatarClick}>
+        {status?.emojiUnified && (
+          <EmojiBackground
+            onClick={(e) => {
+              e.stopPropagation();
+              setModalState('SET_STATUS');
+            }}
+          >
+            <Emoji size={16} unified={status?.emojiUnified}></Emoji>
+          </EmojiBackground>
+        )}
         {userID && (
           <>
-            <Avatar userId={userID} enableTooltip />
+            <Avatar
+              $withStatus={!!status?.emojiUnified}
+              userId={userID}
+              enableTooltip
+            />
             <ActiveBadge $isActive={isActive === 'active'} />
           </>
         )}
@@ -93,7 +109,10 @@ export const Topbar = ({
             e.stopPropagation();
             setModalState('SET_STATUS');
           }}
-          status={status}
+          status={{
+            text: status?.text,
+            emojiUnified: status?.emojiUnified,
+          }}
           activity={isActive}
           setActivity={setIsActive}
           onClose={() => setModalState(null)}
@@ -192,11 +211,26 @@ const AvatarWrapper = styled.div({
   backgroundColor: 'inherit',
 });
 
-const Avatar = styled(DefaultAvatar)`
+const EmojiBackground = styled.div({
+  cursor: 'pointer',
+  backgroundColor: Colors.purple_hover,
+  padding: '6px',
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: '4px 0 0 4px',
+  height: '14px',
+  '&:hover': {
+    backgroundColor: Colors.purple_light,
+  },
+});
+
+const Avatar = styled(DefaultAvatar)<{ $withStatus: boolean }>`
   .cord-avatar-container {
     width: 26px;
     height: 26px;
     position: relative;
+    border-radius: ${({ $withStatus }) =>
+      $withStatus ? '0 4px 4px 0' : '4px'};
     &:after {
       content: '';
       position: absolute;

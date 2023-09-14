@@ -1,6 +1,8 @@
 import React from 'react';
 import { user, Avatar as DefaultAvatar } from '@cord-sdk/react';
 import styled from 'styled-components';
+import { Emoji } from 'emoji-picker-react';
+import type { UserStatus } from 'src/client/hooks/useUserStatus';
 import { SmileyFaceSvg } from 'src/client/components/svg/SmileyFaceSVG';
 import type { SetActivity, Activity } from 'src/client/hooks/useUserActivity';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
@@ -10,11 +12,11 @@ import { capitalize } from 'src/client/utils';
 interface UserPreferencesDropdownProps {
   activity: Activity;
   setActivity: SetActivity;
-  status: string | null;
+  status: UserStatus | null;
   onClose: () => void;
   className?: string;
   openStatusModal: React.MouseEventHandler<HTMLButtonElement>;
-  updateStatus: (newStatus: string | null) => void;
+  updateStatus: (newStatus: UserStatus | null) => void;
 }
 
 export function UserPreferencesDropdown({
@@ -45,8 +47,12 @@ export function UserPreferencesDropdown({
             <Status>{capitalize(activity)}</Status>
           </StatusWrapper>
           <UpdateStatusButton onClick={openStatusModal}>
-            <StyledSmiley />
-            {status || 'Update your status'}
+            {status?.emojiUnified ? (
+              <Emoji size={20} unified={status.emojiUnified} />
+            ) : (
+              <StyledSmiley />
+            )}
+            {status?.text || 'Update your status'}
           </UpdateStatusButton>
         </UserInfo>
         {status && (
