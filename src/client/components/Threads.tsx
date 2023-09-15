@@ -67,6 +67,12 @@ export function Threads({
     return () => el.removeEventListener('scroll', scrollHandler);
   }, [scrollHandler, threadListRef]);
 
+  const markAsRead = useCallback(() => {
+    threads.forEach((thread) => {
+      void window.CordSDK!.thread.setSeen(thread.id, true);
+    });
+  }, [threads]);
+
   const scrollToBottom = () => {
     if (threadListRef.current) {
       threadListRef.current.scrollTop = 0;
@@ -132,7 +138,7 @@ export function Threads({
             scrollToBottom();
             setUnseenMessages([]);
           }}
-          onClose={() => setUnseenMessages([])}
+          onClose={() => markAsRead()}
         />
       ) : null}
     </Root>
