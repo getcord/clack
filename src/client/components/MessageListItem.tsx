@@ -16,7 +16,7 @@ import { Colors } from 'src/client/consts/Colors';
 import { Options } from 'src/client/components/Options';
 import { ProfileDetails } from 'src/client/components/ProfileDetails';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
-import { Modal } from 'src/client/components/Modal';
+import { Modal as DefaultModal } from 'src/client/components/Modal';
 import { MessageContext } from 'src/client/context/MessageContext';
 
 const backgroundFadeToNone = keyframes`
@@ -76,11 +76,11 @@ export function MessageListItem({
   const [authorStatus] = useUserStatus(thread.firstMessage?.authorID);
   const [hovered, setHovered] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
-  const [hoveredProfileDetails, setHoveredProfileDetails] = useState(false);
   const [profileDetailsPosition, setProfileDetailsPosition] = useState({
     top: 0,
     left: 0,
   });
+  const profileDetailsShouldBeShowingRef = useRef(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const onMouseEnter = useCallback(() => {
@@ -92,60 +92,43 @@ export function MessageListItem({
 
   const [avatarElement, setAvatarElement] = useState<Element | null>(null);
 
-  const showProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
-  const hideProfileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
+  const profileDetailsTimeoutID = useRef<NodeJS.Timeout | null>(null);
 
-  const queueHideProfileDetails = useCallback(
-    (timeoutID: NodeJS.Timeout | null) => {
-      if (timeoutID) {
-        clearTimeout(timeoutID);
+  const queueProfileHoverChange = useCallback(() => {
+    if (profileDetailsTimeoutID.current) {
+      clearTimeout(profileDetailsTimeoutID.current);
+      profileDetailsTimeoutID.current = null;
+    }
+    profileDetailsTimeoutID.current = setTimeout(() => {
+      if (avatarElement) {
+        setProfileDetailsPosition({
+          top: avatarElement.getBoundingClientRect().top,
+          left: avatarElement.getBoundingClientRect().left,
+        });
+        setShowProfileDetails(profileDetailsShouldBeShowingRef.current);
+        profileDetailsTimeoutID.current = null;
       }
-      hideProfileDetailsTimeoutID.current = setTimeout(() => {
-        if (avatarElement) {
-          setShowProfileDetails(false);
-        }
-      }, 500);
-    },
-    [avatarElement],
-  );
-
-  const queueShowProfileDetails = useCallback(
-    (timeoutID: NodeJS.Timeout | null) => {
-      if (timeoutID) {
-        clearTimeout(timeoutID);
-      }
-      showProfileDetailsTimeoutID.current = setTimeout(() => {
-        if (avatarElement) {
-          setProfileDetailsPosition({
-            top: avatarElement.getBoundingClientRect().top,
-            left: avatarElement.getBoundingClientRect().left,
-          });
-          setShowProfileDetails(true);
-        }
-      }, 500);
-    },
-    [avatarElement],
-  );
+    }, 500);
+  }, [avatarElement]);
 
   useLayoutEffect(() => {
-    const onMouseEnter = () =>
-      queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
+    const onMouseEnter = () => {
+      profileDetailsShouldBeShowingRef.current = true;
+      queueProfileHoverChange();
+    };
     avatarElement?.addEventListener('mouseenter', onMouseEnter);
 
-    const onMouseLeave = () =>
-      queueHideProfileDetails(showProfileDetailsTimeoutID.current);
+    const onMouseLeave = () => {
+      profileDetailsShouldBeShowingRef.current = false;
+      queueProfileHoverChange();
+    };
     avatarElement?.addEventListener('mouseleave', onMouseLeave);
 
     return () => {
       avatarElement?.removeEventListener('mouseenter', onMouseEnter);
       avatarElement?.removeEventListener('mouseleave', onMouseLeave);
     };
-  }, [
-    avatarElement,
-    hoveredProfileDetails,
-    queueHideProfileDetails,
-    queueShowProfileDetails,
-  ]);
+  }, [avatarElement, queueProfileHoverChange]);
 
   const isMessageBeingEdited =
     editingMessage &&
@@ -195,12 +178,14 @@ export function MessageListItem({
       >
         <PositionedProfileDetails
           onMouseLeave={() => {
-            queueHideProfileDetails(null);
-            setHoveredProfileDetails(false);
+            profileDetailsShouldBeShowingRef.current = false;
+            queueProfileHoverChange();
           }}
           onMouseEnter={() => {
-            queueShowProfileDetails(hideProfileDetailsTimeoutID.current);
+            profileDetailsShouldBeShowingRef.current = true;
+            queueProfileHoverChange();
           }}
+          onClick={(e) => e.stopPropagation()}
           $top={profileDetailsPosition.top}
           $left={profileDetailsPosition.left}
           userID={thread.firstMessage?.authorID || ''}
@@ -218,6 +203,10 @@ export function MessageListItem({
     </MessageListItemStyled>
   );
 }
+
+const Modal = styled(DefaultModal)`
+  pointer-events: none;
+`;
 
 const PositionedProfileDetails = styled(ProfileDetails)<{
   $top: number;
