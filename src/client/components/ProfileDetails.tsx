@@ -11,11 +11,13 @@ export function ProfileDetails({
   className,
   onMouseEnter,
   onMouseLeave,
+  onClick,
 }: {
   userID: string;
   className?: string;
   onMouseEnter: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave: React.MouseEventHandler<HTMLDivElement>;
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }) {
   const userData = user.useUserData(userID);
   const [status] = useUserStatus(userID);
@@ -33,6 +35,7 @@ export function ProfileDetails({
       className={className}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       <Banner>
         <span>Workspace Admin</span>
