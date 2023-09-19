@@ -10,7 +10,13 @@ export function useAPIFetch<T extends object = object>(
     fetch(`${API_HOST}${path}`, {
       credentials: 'include',
     })
-      .then((resp) => resp.json())
+      .then((resp) =>
+        resp.ok
+          ? resp.json()
+          : resp.text().then((text) => {
+              throw new Error(`Response is not okay: ${text}`);
+            }),
+      )
       .then((data) => {
         setData(data);
       })
