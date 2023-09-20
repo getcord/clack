@@ -22,6 +22,7 @@ const allChannels: Record<string, string | null> = {
   ecosystem: null,
   epicquotes: null,
   impromptutor: null,
+  'infected-gems': null,
   'launch-team': null,
   'life-snaps': null,
   marketing: null,
