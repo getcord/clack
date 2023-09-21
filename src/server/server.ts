@@ -20,6 +20,10 @@ import {
 } from 'src/server/handlers/getUsersInOrg';
 import { FRONT_END_HOST } from 'src/server/consts';
 import { handleRoot } from 'src/server/handlers/root';
+import {
+  handleAddOrgMember,
+  handleRemoveOrgMember,
+} from 'src/server/handlers/orgMembers';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -74,6 +78,12 @@ function main() {
   app.put('/users/:userID', wrapAsyncHandler(handleUpdateUserStatus));
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
   app.get('/usersData', wrapAsyncHandler(handleGetCordUsersData));
+
+  app.post('/orgMember/:orgID/:userID', wrapAsyncHandler(handleAddOrgMember));
+  app.delete(
+    '/orgMember/:orgID/:userID',
+    wrapAsyncHandler(handleRemoveOrgMember),
+  );
 
   // Catch errors and log them
   app.use(
