@@ -3,12 +3,14 @@ import { API_HOST } from 'src/client/consts/consts';
 
 export function useAPIFetch<T extends object = object>(
   path: string,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
 ): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);
 
   useEffect(() => {
     fetch(`${API_HOST}${path}`, {
       credentials: 'include',
+      method,
     })
       .then((resp) =>
         resp.ok
@@ -21,7 +23,7 @@ export function useAPIFetch<T extends object = object>(
         setData(data);
       })
       .catch((error) => console.error('useAPIFetch error', error));
-  }, [path]);
+  }, [method, path]);
 
   return data;
 }
