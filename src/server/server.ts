@@ -79,9 +79,12 @@ function main() {
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
   app.get('/usersData', wrapAsyncHandler(handleGetCordUsersData));
 
-  app.post('/orgMember/:orgID/:userID', wrapAsyncHandler(handleAddOrgMember));
+  app.put(
+    '/channels/:channelName/:userID',
+    wrapAsyncHandler(handleAddOrgMember),
+  );
   app.delete(
-    '/orgMember/:orgID/:userID',
+    '/channels/:channelName/:userID',
     wrapAsyncHandler(handleRemoveOrgMember),
   );
 
