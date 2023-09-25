@@ -17,7 +17,6 @@ export function PageUsersLabel({
   channel: Channel;
 }) {
   const [showModal, setShowModal] = React.useState(false);
-  // skip ernest the bot
 
   const userIDs = useMemo(() => users.map((u) => u.id), [users]);
   const previewUsers = userIDs.slice(1, 4);
