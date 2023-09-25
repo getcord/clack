@@ -8,7 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import {
   CORD_APP_ID,
   CORD_SIGNING_SECRET,
-  ORG_ID,
+  EVERYONE_ORG_ID,
   ORG_NAME,
 } from 'src/server/consts';
 
@@ -89,7 +89,7 @@ export function handleGetToken(req: Request, res: Response) {
 
   const token = getClientAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET, {
     user_id,
-    organization_id: ORG_ID,
+    organization_id: EVERYONE_ORG_ID,
     user_details: {
       name,
       email,
