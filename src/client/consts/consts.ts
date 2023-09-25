@@ -10,3 +10,5 @@ export const BREAKPOINTS_PX = {
   FULLSCREEN_THREADS: 1200,
   COLLAPSE_SIDEBAR: 768,
 };
+
+export const EVERYONE_ORG_ID = 'clack_all';

@@ -10,7 +10,7 @@ import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { StyledComposer } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
-import { EVERYONE_ORG_ID } from 'src/server/consts';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 interface ChatProps {
   channel: Channel;
