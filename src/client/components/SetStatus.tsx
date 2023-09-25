@@ -90,9 +90,10 @@ export function SetStatusMenu({
           }}
         />
         <CloseButton
-          onClick={() =>
-            setInput({ emojiUnified: null, emojiUrl: null, text: '' })
-          }
+          onClick={() => {
+            setInput({ emojiUnified: null, emojiUrl: null, text: '' });
+            setIsDirty(true);
+          }}
         />
       </InputBox>
       <Footer>
