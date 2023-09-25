@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
-import { Facepile, user } from '@cord-sdk/react';
+import { Facepile } from '@cord-sdk/react';
+import type { ClientUserData } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { combine } from 'src/client/utils';
@@ -12,13 +13,14 @@ export function PageUsersLabel({
   users,
   channel,
 }: {
-  users: (string | number)[];
+  users: ClientUserData[];
   channel: Channel;
 }) {
   const [showModal, setShowModal] = React.useState(false);
   // skip ernest the bot
-  const previewUsers = users.slice(1, 4) as string[];
-  const userData = previewUsers.map((id) => user.useUserData(id));
+
+  const userIDs = useMemo(() => users.map((u) => u.id), [users]);
+  const previewUsers = userIDs.slice(1, 4);
 
   return (
     <>
@@ -33,7 +35,7 @@ export function PageUsersLabel({
           <span>View all members of this channel.</span>
           <span>{`Includes ${combine(
             'and',
-            userData.map((user) => user?.name ?? ''),
+            users.map((user) => user?.name ?? ''),
           )}`}</span>
         </TooltipText>
       </Tooltip>
