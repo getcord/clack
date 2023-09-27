@@ -100,6 +100,8 @@ export function App() {
         enableTasks={false}
         enableAnnotations={false}
         navigate={onCordNavigate}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         translations={translations}
       >
         <UsersProvider>
