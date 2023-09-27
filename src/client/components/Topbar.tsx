@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
 import { Emoji } from 'emoji-picker-react';
 import { Colors } from 'src/client/consts/Colors';
-import { Modal } from 'src/client/components/Modal';
+import { Modal as PrimitiveModal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
 import { SetStatusMenu } from 'src/client/components/SetStatus';
 import { useUserActivity } from 'src/client/hooks/useUserActivity';
@@ -144,6 +144,10 @@ export const Topbar = ({
   );
 };
 
+const Modal = styled(PrimitiveModal)`
+  pointer-events: auto;
+`;
+
 const Button = styled.button`
   align-items: center;
   background: none;
@@ -198,7 +202,7 @@ const Container = styled.div({
   zIndex: 3,
 });
 
-const DarkBGModal = styled(Modal)`
+const DarkBGModal = styled(PrimitiveModal)`
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
