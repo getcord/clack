@@ -1,25 +1,22 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { Facepile } from '@cord-sdk/react';
-import type { ClientUserData } from '@cord-sdk/types';
+import type { OrgMembersData } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
-import { combine } from 'src/client/utils';
+import { combine, isDefined } from 'src/client/utils';
 import { UsersInChannelModal } from 'src/client/components/UsersInChannelModal';
 
 export function PageUsersLabel({
-  users,
+  orgMembers,
   channel,
 }: {
-  users: ClientUserData[];
+  orgMembers: OrgMembersData;
   channel: Channel;
 }) {
   const [showModal, setShowModal] = React.useState(false);
-
-  const userIDs = useMemo(() => users.map((u) => u.id), [users]);
-  const previewUsers = userIDs.slice(1, 4);
 
   return (
     <>
@@ -34,7 +31,10 @@ export function PageUsersLabel({
           <span>View all members of this channel.</span>
           <span>{`Includes ${combine(
             'and',
-            users.map((user) => user?.name ?? ''),
+            [
+              ...orgMembers.orgMembers.map((user) => user?.name),
+              orgMembers.hasMore ? 'others' : null,
+            ].filter(isDefined),
           )}`}</span>
         </TooltipText>
       </Tooltip>
@@ -47,15 +47,21 @@ export function PageUsersLabel({
         {/* notes: type of users coming from cord 
         api not matching what is expected by cord component
          */}
-        <StyledFacepile users={previewUsers} enableTooltip={false} />
+        <StyledFacepile
+          users={orgMembers.orgMembers.slice(1, 4).map((u) => u.id)}
+          enableTooltip={false}
+        />
         <StyledUserIcon width={18} height={18} />
-        <UserCount>{users.length}</UserCount>
+        <UserCount>
+          {orgMembers.orgMembers.length}
+          {orgMembers.hasMore ? '+' : ''}
+        </UserCount>
       </UsersLabel>
       {showModal && (
         <UsersInChannelModal
           onClose={() => setShowModal(false)}
           channel={channel}
-          users={users}
+          orgMembers={orgMembers}
         />
       )}
     </>
