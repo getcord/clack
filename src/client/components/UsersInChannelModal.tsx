@@ -4,8 +4,8 @@ import {
   CordContext,
   Avatar as DefaultAvatar,
   presence,
-  user,
 } from '@cord-sdk/react';
+import type { ClientUserData } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
@@ -15,7 +15,7 @@ import { XIcon } from 'src/client/components/Buttons';
 interface UsersInChannelModalProps {
   onClose: () => void;
   channel: Channel;
-  users: (string | number)[];
+  users: ClientUserData[];
 }
 
 export function UsersInChannelModal({
@@ -40,25 +40,20 @@ export function UsersInChannelModal({
         </Header>
 
         <UsersList>
-          {users.map((userID) => {
-            const id = userID.toString();
+          {users.map((user) => {
             const isUserPresent = usersPresent?.some(
-              (presence) => presence.id === id,
+              (presence) => presence.id === user.id,
             );
-            const userData = user.useUserData(id);
-            if (!userData) {
-              return <></>;
-            }
             return (
-              <UserDetails key={id}>
-                <Avatar userId={id} enableTooltip />
+              <UserDetails key={user.id}>
+                <Avatar userId={user.id} enableTooltip />
                 {/* //todo: fill short name values in db console? */}
                 <Name $variant="main">
-                  {userData?.shortName || userData?.name}
-                  {cordUserID === id ? ' (you)' : ''}
+                  {user.shortName || user.name}
+                  {cordUserID === user.id ? ' (you)' : ''}
                 </Name>
                 <ActiveBadge $isActive={!!isUserPresent} />
-                <Name $variant="simple">{userData?.name}</Name>
+                <Name $variant="simple">{user?.name}</Name>
               </UserDetails>
             );
           })}
