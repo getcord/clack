@@ -58,14 +58,9 @@ export function ThreadReplies({ summary, onOpenThread }: ThreadRepliesProps) {
     return null;
   }
 
-  // ignoring ts here as lastMessage hasn't been deployed to types packages yet! (27/07)
   const lastReplyTime =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    summary.lastMessage.updatedTimestamp ??
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    summary.lastMessage.createdTimestamp;
+    summary.lastMessage?.updatedTimestamp ??
+    summary.lastMessage?.createdTimestamp;
 
   const replyWord = numReplies === 1 ? 'reply' : 'replies';
   return (

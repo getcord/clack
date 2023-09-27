@@ -141,7 +141,6 @@ const UpdateStatusButton = styled.button({
   },
   '&:hover svg > #mouth': {
     // unfortunately styled components doesn't like the d property :(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     d: 'path("M12 18C14.2091 18 16 16.2091 16 14H8C8 16.2091 9.79086 18 12 18Z")',
     fill: 'black',
