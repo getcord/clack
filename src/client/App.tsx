@@ -82,7 +82,13 @@ export function App() {
 
   const translations = useMemo(
     () => ({
-      en: { composer: { add_a_comment: `Message #${channel.id}` } },
+      en: {
+        composer: {
+          // TODO(flooey): Remove add_a_comment once we upgrade the NPM package
+          add_a_comment: `Message #${channel.id}`,
+          send_message_placeholder: `Message #${channel.id}`,
+        },
+      },
     }),
     [channel.id],
   );
