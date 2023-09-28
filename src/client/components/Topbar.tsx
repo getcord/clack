@@ -203,7 +203,6 @@ const DarkBGModal = styled(Modal)`
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
 `;
 
 const AvatarWrapper = styled.div({
@@ -253,7 +252,6 @@ const ActiveBadge = styled(DefaultActiveBadge)`
 `;
 
 const PreferencesDropdown = styled(UserPreferencesDropdown)`
-  pointer-events: auto;
   top: 40px;
   right: 10px;
 `;
