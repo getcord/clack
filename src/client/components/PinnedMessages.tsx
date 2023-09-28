@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
-import { Modal as PrimitiveModal } from 'src/client/components/Modal';
+import { Modal } from 'src/client/components/Modal';
 
-interface PinnedMessagesProps
-  extends React.ComponentProps<typeof PrimitiveModal> {
+interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
   channel: Channel;
 }
 export function PinnedMessages({
@@ -37,10 +36,6 @@ export function PinnedMessages({
     </Modal>
   );
 }
-
-const Modal = styled(PrimitiveModal)`
-  pointer-events: auto;
-`;
 
 const Box = styled.div({
   position: 'absolute',
