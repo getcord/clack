@@ -1,7 +1,7 @@
 import React from 'react';
 import { css, styled } from 'styled-components';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
-import type { Channel } from 'src/client/context/ChannelsProvider';
+import type { Channel } from 'src/client/consts/Channel';
 
 interface EmptyChannelProps {
   channel: Channel;
