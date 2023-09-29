@@ -19,8 +19,7 @@ import { ThreadsList } from 'src/client/components/ThreadsList';
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
-import { BREAKPOINTS_PX } from 'src/client/consts/consts';
-import { EVERYONE_ORG_ID } from 'src/server/consts';
+import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
