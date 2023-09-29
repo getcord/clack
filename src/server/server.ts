@@ -24,6 +24,7 @@ import {
   handleAddOrgMember,
   handleRemoveOrgMember,
 } from 'src/server/handlers/orgMembers';
+import { handleAddChannel } from 'src/server/handlers/updateChannels';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -87,6 +88,8 @@ function main() {
     '/channels/:channelName/:userID',
     wrapAsyncHandler(handleRemoveOrgMember),
   );
+
+  app.put('/channels/:channelName', wrapAsyncHandler(handleAddChannel));
 
   // Catch errors and log them
   app.use(
