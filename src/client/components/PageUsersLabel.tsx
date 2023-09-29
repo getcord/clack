@@ -19,7 +19,7 @@ export function PageUsersLabel({
   const [showModal, setShowModal] = React.useState(false);
 
   const userIDs = useMemo(() => users.map((u) => u.id), [users]);
-  const previewUsers = userIDs.slice(1, 4);
+  const previewUsers = userIDs.slice(0, 3);
 
   return (
     <>
