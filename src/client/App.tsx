@@ -20,6 +20,7 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID } from 'src/server/consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -62,7 +63,7 @@ export function App() {
   const channel: Channel =
     openPanel === 'channel'
       ? { id: channelID, org: allChannelsToOrg[channelID] }
-      : { id: '', org: 'clack_all' };
+      : { id: '', org: EVERYONE_ORG_ID };
 
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
