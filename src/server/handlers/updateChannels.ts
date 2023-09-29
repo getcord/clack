@@ -41,7 +41,7 @@ export async function handleAddChannel(req: Request, res: Response) {
     'PUT',
     JSON.stringify({
       metadata: {
-        [channelName]: isPrivate ? channelName : '',
+        [channelName]: isPrivate ? channelName : 'clack_all',
         ...existingChannels,
       },
     }),
