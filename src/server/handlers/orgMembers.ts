@@ -5,6 +5,11 @@ import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 export async function handleAddOrgMember(req: Request, res: Response) {
   const { user_id: requesterID } = (req as any).loginTokenData;
   const { channelName } = req.params;
+  const { userIDs } = req.body;
+  if (!userIDs || !Array.isArray(userIDs)) {
+    res.status(400).send('Missing userIDs in body or is not an array');
+    return;
+  }
   const hasPermission = await isUserInChannel(requesterID, channelName);
 
   if (!hasPermission) {
@@ -19,7 +24,7 @@ export async function handleAddOrgMember(req: Request, res: Response) {
   >(
     `organizations/${req.params.channelName}/members`,
     'POST',
-    JSON.stringify({ add: [req.params.userID] }),
+    JSON.stringify({ add: userIDs }),
   );
 
   res.send({ success: response.success });
@@ -28,6 +33,11 @@ export async function handleAddOrgMember(req: Request, res: Response) {
 export async function handleRemoveOrgMember(req: Request, res: Response) {
   const { user_id: requesterID } = (req as any).loginTokenData;
   const { channelName } = req.params;
+  const { userIDs } = req.body;
+  if (!userIDs || !Array.isArray(userIDs)) {
+    res.status(400).send('Missing userIDs in body or is not an array');
+    return;
+  }
   const hasPermission = await isUserInChannel(requesterID, channelName);
 
   if (!hasPermission) {
@@ -42,7 +52,7 @@ export async function handleRemoveOrgMember(req: Request, res: Response) {
   >(
     `organizations/${req.params.channelName}/members`,
     'POST',
-    JSON.stringify({ remove: [req.params.userID] }),
+    JSON.stringify({ remove: userIDs }),
   );
   res.send({ success: response.success });
 }

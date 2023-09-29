@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import {
   CordContext,
   Avatar as DefaultAvatar,
   presence,
+  user,
 } from '@cord-sdk/react';
+import { UserPlusIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon, HashtagIcon } from '@heroicons/react/24/solid';
 import type { ClientUserData } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
+import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 interface UsersInChannelModalProps {
   onClose: () => void;
@@ -27,41 +32,289 @@ export function UsersInChannelModal({
     { page: 'clack' },
     { exclude_durable: true, partial_match: true },
   );
-  const { userID: cordUserID } = React.useContext(CordContext);
+  const [showAddUsersModal, setShowAddUsersModal] = React.useState(false);
 
   return (
-    <Modal>
+    <>
+      <Modal $order={1}>
+        <Box>
+          <Header>
+            <Heading>
+              {channel.org ? (
+                <LockClosedIcon
+                  width={20}
+                  style={{ padding: '1px', marginRight: '2px' }}
+                />
+              ) : (
+                <HashtagIcon width={20} style={{ padding: '1px' }} />
+              )}
+              {channel.id}
+            </Heading>
+            <CloseButton onClick={onClose}>
+              <XIcon />
+            </CloseButton>
+          </Header>
+          <UsersList>
+            {/* Show the Add People modal option if this is a private org 
+            (public channels have an undefined channel.org, and are visible to 
+            everyone in the clack_all org) */}
+            {channel.org && (
+              <UserDetails onClick={() => setShowAddUsersModal(true)}>
+                <AddPeopleIconWrapper>
+                  <UserPlusIcon
+                    width={32}
+                    height={32}
+                    style={{
+                      backgroundColor: '#e8f5fa',
+                      color: 'rgba(18,100,163,1)',
+                    }}
+                  />
+                </AddPeopleIconWrapper>
+                <Name $variant="main">Add people</Name>
+              </UserDetails>
+            )}
+            {users.map((user) => {
+              const isUserPresent = usersPresent?.some(
+                (presence) => presence.id === user.id,
+              );
+              return (
+                <UserRow
+                  key={user.id}
+                  org={channel.org}
+                  isUserPresent={!!isUserPresent}
+                  user={user}
+                />
+              );
+            })}
+          </UsersList>
+        </Box>
+      </Modal>
+      {showAddUsersModal && (
+        <AddUsersToChannelModal
+          channel={channel}
+          onClose={() => setShowAddUsersModal(false)}
+          existingUsers={users.map((u) => u.id)}
+        />
+      )}
+    </>
+  );
+}
+
+function UserRow({
+  org,
+  isUserPresent,
+  user,
+}: {
+  org: string | undefined;
+  isUserPresent: boolean;
+  user: ClientUserData;
+}) {
+  const { userID: cordUserID } = React.useContext(CordContext);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const update = useAPIUpdateFetch();
+
+  return (
+    <>
+      <UserDetails
+        key={user.id}
+        onMouseEnter={() => setShowDelete(true)}
+        onMouseLeave={() => setShowDelete(false)}
+      >
+        <Avatar userId={user.id} enableTooltip />
+        {/* //todo: fill short name values in db console? */}
+        <Name $variant="main">
+          {user.shortName || user.name}
+          {cordUserID === user.id ? ' (you)' : ''}
+        </Name>
+        <ActiveBadge $isActive={isUserPresent} />
+        <Name $variant="simple">{user?.name}</Name>
+        {showDelete && org && (
+          // TODO: the org members API currently doesn't have subscriptions, so
+          // it looks like nothing's happened in the FE atm
+          <DeleteButton
+            onClick={() => {
+              void update(`/channels/${org}`, 'DELETE', {
+                userIDs: [user.id],
+              });
+            }}
+          >
+            Remove
+          </DeleteButton>
+        )}
+      </UserDetails>
+    </>
+  );
+}
+
+interface AddUsersToChannelModalProps {
+  onClose: () => void;
+  channel: Channel;
+  existingUsers: string[];
+}
+
+export function AddUsersToChannelModal({
+  onClose,
+  existingUsers,
+  channel,
+}: AddUsersToChannelModalProps) {
+  const {
+    orgMembers: allOrgMembers,
+    loading,
+    hasMore,
+    fetchMore,
+  } = user.useOrgMembers({
+    organizationID: EVERYONE_ORG_ID,
+  });
+
+  useEffect(() => {
+    if (!loading && hasMore) {
+      void fetchMore(50);
+    }
+  }, [hasMore, loading, fetchMore]);
+
+  const addableUsers = useMemo(() => {
+    return allOrgMembers
+      .filter((om) => !existingUsers.includes(om.id))
+      .sort(
+        (a, b) =>
+          (a.shortName ?? a.name ?? 'Unknown')?.localeCompare(
+            b.shortName ?? b.name ?? 'Unknown',
+          ),
+      );
+  }, [allOrgMembers, existingUsers]);
+
+  const [usersToAdd, setUsersToAdd] = useState<string[]>([]);
+
+  const update = useAPIUpdateFetch();
+
+  // TODO: the org members API currently doesn't have subscriptions, so
+  // it looks like nothing's happened in the FE atm
+  const addUsers = useCallback(() => {
+    void update(`/channels/${channel.org}`, 'PUT', {
+      userIDs: usersToAdd,
+    }).then(() => onClose());
+  }, [channel.org, onClose, update, usersToAdd]);
+
+  return (
+    // This is a modal stacked on top of another modal
+    <Modal $order={2}>
       <Box>
         <Header>
-          <Heading># {channel.id}</Heading>
+          <Heading>
+            Add people to{' '}
+            {channel.org ? (
+              <LockClosedIcon
+                width={20}
+                style={{ padding: '1px', marginRight: '2px' }}
+              />
+            ) : (
+              <HashtagIcon width={20} style={{ padding: '1px' }} />
+            )}{' '}
+            {channel.id}
+          </Heading>
           <CloseButton onClick={onClose}>
             <XIcon />
           </CloseButton>
         </Header>
-
         <UsersList>
-          {users.map((user) => {
-            const isUserPresent = usersPresent?.some(
-              (presence) => presence.id === user.id,
-            );
+          {addableUsers.map((user) => {
             return (
-              <UserDetails key={user.id}>
-                <Avatar userId={user.id} enableTooltip />
-                {/* //todo: fill short name values in db console? */}
-                <Name $variant="main">
-                  {user.shortName || user.name}
-                  {cordUserID === user.id ? ' (you)' : ''}
-                </Name>
-                <ActiveBadge $isActive={!!isUserPresent} />
-                <Name $variant="simple">{user?.name}</Name>
-              </UserDetails>
+              <Label key={user.id}>
+                <UserDetails>
+                  <Checkbox
+                    id={`add-${user.id}`}
+                    type="checkbox"
+                    value={user.id}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setUsersToAdd((prevState) => [...prevState, user.id]);
+                      } else {
+                        setUsersToAdd((prevState) =>
+                          prevState.filter((u) => u !== user.id),
+                        );
+                      }
+                    }}
+                  />
+                  <Avatar userId={user.id} enableTooltip />
+                  <Name $variant="main">{user.shortName || user.name}</Name>
+                  <Name $variant="simple">{user.name}</Name>
+                </UserDetails>
+              </Label>
             );
           })}
         </UsersList>
+        <Footer>
+          <AddButton onClick={addUsers}>Add</AddButton>
+        </Footer>
       </Box>
     </Modal>
   );
 }
+const AddButton = styled.button({
+  border: 'none',
+  borderRadius: '4px',
+  backgroundColor: '#007a5a',
+  color: '#ffffff',
+  padding: '0 12px 1px',
+  fontSize: '15px',
+  height: '36px',
+  minWidth: '80px',
+  boxShadow: 'none',
+  fontWeight: '700',
+  transition: 'all 80ms linear',
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#148567',
+    boxShadow: '0 1px 4px #0000004d',
+  },
+});
+
+const DeleteButton = styled.button({
+  backgroundColor: 'rgba(224,30,90)',
+  border: 'none',
+  borderRadius: '4px',
+  boxShadow: 'none',
+  color: '#ffffff',
+  cursor: 'pointer',
+  fontSize: '15px',
+  fontWeight: '700',
+  height: '36px',
+  marginLeft: 'auto',
+  minWidth: '80px',
+  padding: '0 12px 1px',
+  transition: 'all 80ms linear',
+  '&:hover': {
+    background: '#e23067',
+    boxShadow: '0 1px 4px #0000004d',
+  },
+});
+
+const AddPeopleIconWrapper = styled.div({
+  alignItems: 'center',
+  backgroundColor: '#e8f5fa',
+  display: 'flex',
+  height: '36px',
+  justifyContent: 'center',
+  width: '36px',
+});
+
+const Checkbox = styled.input({
+  marginRight: '16px',
+  cursor: 'pointer',
+});
+
+const Label = styled.label({
+  cursor: 'pointer',
+});
+
+const Footer = styled.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+  backgroundColor: 'transparent',
+  padding: '24px 24px',
+  borderTop: `1px solid ${Colors.gray_light}`,
+});
 
 const Avatar = styled(DefaultAvatar)`
   grid-area: avatar;
@@ -71,16 +324,16 @@ const Avatar = styled(DefaultAvatar)`
   }
 `;
 
-const Modal = styled.div({
+const Modal = styled.div<{ $order: number }>(({ $order }) => ({
   position: 'absolute',
   height: '100vh',
   inset: 0,
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  zIndex: 999,
+  zIndex: $order * 999,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-});
+}));
 
 const Box = styled.div({
   backgroundColor: 'white',
@@ -101,6 +354,7 @@ const Header = styled.div({
 });
 
 const Heading = styled.h2({
+  display: 'flex',
   marginTop: 0,
 });
 
@@ -120,6 +374,7 @@ const UserDetails = styled.div({
   },
   // todo: update once we have profile details like role
   alignItems: 'center',
+  cursor: 'pointer',
 });
 
 const CloseButton = styled.button({
