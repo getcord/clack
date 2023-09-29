@@ -21,14 +21,14 @@ export function EmptyChannel({ channel }: EmptyChannelProps) {
         {icon('title')}
         {channel.id}
       </ChannelName>
-      <div>
-        This is the very beginning of the{' '}
+      <TextContainer>
+        <span>This is the very beginning of the </span>
         <Emphasis>
           {icon('text')}
           {channel.id}
         </Emphasis>{' '}
-        channel.
-      </div>
+        <span> channel.</span>
+      </TextContainer>
     </Root>
   );
 }
@@ -76,4 +76,9 @@ const PrivateChannelIcon = styled(LockClosedIcon)<{ $type: 'title' | 'text' }>`
 const Emphasis = styled.strong({
   display: 'inline-flex',
   alignItems: 'center',
+});
+
+const TextContainer = styled.div({
+  display: 'flex',
+  whiteSpace: 'pre-wrap',
 });
