@@ -5,7 +5,6 @@ import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 export async function handleGetChannels(req: Request, res: Response) {
   const { user_id } = (req as any).loginTokenData;
 
-  // why couldnt i get promise.all to work? do i need to do () => {?} no.
   const { organizations } = await fetchCordRESTApi<ServerGetUser>(
     `users/${user_id}`,
   );
