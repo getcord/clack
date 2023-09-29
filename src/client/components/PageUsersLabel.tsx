@@ -19,7 +19,7 @@ export function PageUsersLabel({
   const [showModal, setShowModal] = React.useState(false);
 
   const userIDs = useMemo(() => users.map((u) => u.id), [users]);
-  const previewUsers = userIDs.slice(1, 4);
+  const previewUsers = userIDs.slice(0, 3);
 
   return (
     <>
@@ -64,6 +64,7 @@ export function PageUsersLabel({
 
 export const UsersLabel = styled.button`
   display: flex;
+  align-items: center;
   margin: 10px;
   padding: 8px 12px;
   gap: 8px;
