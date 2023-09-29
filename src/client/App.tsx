@@ -61,7 +61,7 @@ export function App() {
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
     openPanel === 'channel'
-      ? { id: channelID, org: allChannelsToOrg[channelID] ?? undefined }
+      ? { id: channelID, org: allChannelsToOrg[channelID] || undefined }
       : { id: '', org: undefined };
 
   const onOpenThread = (threadID: string) => {

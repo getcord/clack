@@ -19,7 +19,7 @@ interface ChatProps {
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
   const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
-    organizationID: channel.org ?? EVERYONE_ORG_ID,
+    organizationID: channel.org || EVERYONE_ORG_ID,
   });
 
   useEffect(() => {
