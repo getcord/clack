@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
   channel: Channel;
@@ -20,10 +21,7 @@ export function PinnedMessages({
     <Modal isOpen={isOpen} onClose={onClose}>
       <Box>
         <CloseButton onClick={onClose} />
-        {channel.org ? (
-          // ThreadList does not yet have an organizationId prop.
-          <div>Not yet implemented for private channels</div>
-        ) : (
+        {channel.org === EVERYONE_ORG_ID ? (
           <StyledThreadList
             location={{ channel: channel.id }}
             filter={{ metadata: { pinned: true } }}
@@ -31,6 +29,9 @@ export function PinnedMessages({
               navigate(`/channel/${channel.id}/thread/${threadId}`)
             }
           />
+        ) : (
+          // ThreadList does not yet have an organizationId prop.
+          <div>Not yet implemented for private channels</div>
         )}
       </Box>
     </Modal>
