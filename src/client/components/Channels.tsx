@@ -6,6 +6,7 @@ import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 export function ChannelButton({
   option,
@@ -72,7 +73,13 @@ export function Channels({
               setContextMenuOpenForChannel(channel);
             }}
             option={channel}
-            icon={channel.org ? <PrivateChannelIcon /> : <ChannelIcon />}
+            icon={
+              channel.org === EVERYONE_ORG_ID ? (
+                <ChannelIcon />
+              ) : (
+                <PrivateChannelIcon />
+              )
+            }
           />
         ))}
         {contextMenuOpenForChannel && (

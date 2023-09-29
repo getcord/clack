@@ -64,6 +64,7 @@ export function PageUsersLabel({
 
 export const UsersLabel = styled.button`
   display: flex;
+  align-items: center;
   margin: 10px;
   padding: 8px 12px;
   gap: 8px;

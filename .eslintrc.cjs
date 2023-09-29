@@ -48,6 +48,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
+    "@typescript-eslint/ban-ts-comment": "off",
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',

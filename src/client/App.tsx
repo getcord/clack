@@ -48,11 +48,11 @@ export function App() {
   const openPanel = location.pathname.split('/')[1];
 
   const allChannelsToOrg =
-    useAPIFetch<Record<string, string | null>>('/channels') ?? {};
+    useAPIFetch<Record<string, string>>('/channels') ?? {};
 
   const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
     (acc, [key, value]) => {
-      acc.push({ id: key, org: value ?? undefined });
+      acc.push({ id: key, org: value });
       return acc;
     },
     [] as Channel[],
@@ -61,8 +61,8 @@ export function App() {
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
     openPanel === 'channel'
-      ? { id: channelID, org: allChannelsToOrg[channelID] ?? undefined }
-      : { id: '', org: undefined };
+      ? { id: channelID, org: allChannelsToOrg[channelID] }
+      : { id: '', org: 'clack_all' };
 
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
@@ -82,7 +82,13 @@ export function App() {
 
   const translations = useMemo(
     () => ({
-      en: { composer: { add_a_comment: `Message #${channel.id}` } },
+      en: {
+        composer: {
+          // TODO(flooey): Remove add_a_comment once we upgrade the NPM package
+          add_a_comment: `Message #${channel.id}`,
+          send_message_placeholder: `Message #${channel.id}`,
+        },
+      },
     }),
     [channel.id],
   );
@@ -100,7 +106,6 @@ export function App() {
         enableTasks={false}
         enableAnnotations={false}
         navigate={onCordNavigate}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         translations={translations}
       >
