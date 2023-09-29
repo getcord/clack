@@ -17,18 +17,18 @@ export async function handleGetChannels(req: Request, res: Response) {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (acc, [key, value]) => {
-        if (value === '' || organizations.includes(value)) {
+        if (organizations.includes(value)) {
           acc[key] = value;
         }
         return acc;
       },
       // Special channel: everyone starts with general in their list
-      { general: '' } as Record<string, string | null>,
+      { general: 'clack_all' } as Record<string, string | null>,
     );
 
   // Special channels: everyone gets these testing channels at the end of their list
-  availableChannels['noise'] = '';
-  availableChannels['what-the-quack'] = '';
+  availableChannels['noise'] = 'clack_all';
+  availableChannels['what-the-quack'] = 'clack_all';
 
   res.send(availableChannels);
 }

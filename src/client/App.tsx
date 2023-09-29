@@ -48,11 +48,11 @@ export function App() {
   const openPanel = location.pathname.split('/')[1];
 
   const allChannelsToOrg =
-    useAPIFetch<Record<string, string | null>>('/channels') ?? {};
+    useAPIFetch<Record<string, string>>('/channels') ?? {};
 
   const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
     (acc, [key, value]) => {
-      acc.push({ id: key, org: value ?? undefined });
+      acc.push({ id: key, org: value });
       return acc;
     },
     [] as Channel[],
@@ -61,8 +61,8 @@ export function App() {
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
     openPanel === 'channel'
-      ? { id: channelID, org: allChannelsToOrg[channelID] || undefined }
-      : { id: '', org: undefined };
+      ? { id: channelID, org: allChannelsToOrg[channelID] }
+      : { id: '', org: 'clack_all' };
 
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
