@@ -17,11 +17,11 @@ import { XIcon } from 'src/client/components/Buttons';
 import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
-interface UsersInChannelModalProps {
+type UsersInChannelModalProps = {
   onClose: () => void;
   channel: Channel;
   users: ClientUserData[];
-}
+};
 
 export function UsersInChannelModal({
   onClose,
@@ -147,13 +147,13 @@ function UserRow({
   );
 }
 
-interface AddUsersToChannelModalProps {
+type AddUsersToChannelModalProps = {
   onClose: () => void;
   channel: Channel;
   existingUsers: string[];
-}
+};
 
-export function AddUsersToChannelModal({
+function AddUsersToChannelModal({
   onClose,
   existingUsers,
   channel,
