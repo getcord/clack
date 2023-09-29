@@ -5,22 +5,23 @@ import {
   Avatar as DefaultAvatar,
   presence,
 } from '@cord-sdk/react';
-import type { ClientUserData } from '@cord-sdk/types';
+import type { OrgMembersData } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
+import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 
 interface UsersInChannelModalProps {
   onClose: () => void;
   channel: Channel;
-  users: ClientUserData[];
+  orgMembers: OrgMembersData;
 }
 
 export function UsersInChannelModal({
   onClose,
-  users,
+  orgMembers,
   channel,
 }: UsersInChannelModalProps) {
   const usersPresent = presence.useLocationData(
@@ -40,7 +41,7 @@ export function UsersInChannelModal({
         </Header>
 
         <UsersList>
-          {users.map((user) => {
+          {orgMembers.orgMembers.map((user) => {
             const isUserPresent = usersPresent?.some(
               (presence) => presence.id === user.id,
             );
@@ -57,6 +58,9 @@ export function UsersInChannelModal({
               </UserDetails>
             );
           })}
+          <UserDetails>
+            <PaginationTrigger {...orgMembers} />
+          </UserDetails>
         </UsersList>
       </Box>
     </Modal>

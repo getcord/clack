@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import { thread, user } from '@cord-sdk/react';
 import type { Channel } from 'src/client/consts/Channel';
@@ -18,15 +18,9 @@ interface ChatProps {
 }
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
-  const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
+  const orgMembers = user.useOrgMembers({
     organizationID: channel.org ?? EVERYONE_ORG_ID,
   });
-
-  useEffect(() => {
-    if (!loading && hasMore) {
-      void fetchMore(50);
-    }
-  }, [orgMembers, hasMore, loading, fetchMore]);
 
   const { threads: pinnedThreads } = thread.useLocationData(
     { channel: channel.id },
@@ -50,8 +44,8 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
       <ChannelDetailsBar>
         <PageHeaderWrapper>
           <PageHeader># {channel.id}</PageHeader>
-          {orgMembers && (
-            <PageUsersLabel users={orgMembers} channel={channel} />
+          {orgMembers.orgMembers && (
+            <PageUsersLabel orgMembers={orgMembers} channel={channel} />
           )}
         </PageHeaderWrapper>
       </ChannelDetailsBar>
