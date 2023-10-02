@@ -66,6 +66,7 @@ export function AddChannelModals({
               <FooterText>Step {step} of 2</FooterText>
               <ActionButton
                 $variant={newChannelName ? 'primary' : 'secondary'}
+                disabled={!newChannelName}
                 onClick={() => setStep(2)}
               >
                 Next
