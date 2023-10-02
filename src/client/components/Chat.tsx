@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { thread, user } from '@cord-sdk/react';
+import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import type { Channel } from 'src/client/consts/Channel';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
@@ -10,6 +11,7 @@ import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { StyledComposer } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 interface ChatProps {
   channel: Channel;
@@ -48,7 +50,14 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeaderWrapper>
-          <PageHeader># {channel.id}</PageHeader>
+          <PageHeader>
+            {channel.org === EVERYONE_ORG_ID ? (
+              <ChannelIcon />
+            ) : (
+              <PrivateChannelIcon />
+            )}{' '}
+            {channel.id}
+          </PageHeader>
           {orgMembers && (
             <PageUsersLabel users={orgMembers} channel={channel} />
           )}
@@ -126,4 +135,16 @@ const ChannelDetailsBar = styled.div({
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;
+`;
+
+export const ChannelIcon = styled(HashtagIcon)`
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+`;
+
+export const PrivateChannelIcon = styled(LockClosedIcon)`
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
 `;

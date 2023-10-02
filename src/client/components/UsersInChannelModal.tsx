@@ -40,7 +40,7 @@ export function UsersInChannelModal({
         <Box>
           <Header>
             <Heading>
-              {channel.org ? (
+              {channel.org === EVERYONE_ORG_ID ? (
                 <LockClosedIcon
                   width={20}
                   style={{ padding: '1px', marginRight: '2px' }}
@@ -203,7 +203,7 @@ function AddUsersToChannelModal({
         <Header>
           <Heading>
             Add people to{' '}
-            {channel.org ? (
+            {channel.org === EVERYONE_ORG_ID ? (
               <LockClosedIcon
                 width={20}
                 style={{ padding: '1px', marginRight: '2px' }}
