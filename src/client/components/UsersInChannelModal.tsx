@@ -41,12 +41,12 @@ export function UsersInChannelModal({
           <Header>
             <Heading>
               {channel.org === EVERYONE_ORG_ID ? (
+                <HashtagIcon width={20} style={{ padding: '1px' }} />
+              ) : (
                 <LockClosedIcon
                   width={20}
                   style={{ padding: '1px', marginRight: '2px' }}
                 />
-              ) : (
-                <HashtagIcon width={20} style={{ padding: '1px' }} />
               )}
               {channel.id}
             </Heading>
@@ -55,10 +55,8 @@ export function UsersInChannelModal({
             </CloseButton>
           </Header>
           <UsersList>
-            {/* Show the Add People modal option if this is a private org 
-            (public channels have an undefined channel.org, and are visible to 
-            everyone in the clack_all org) */}
-            {channel.org && (
+            {/* Show the Add People modal option if this is a private org */}
+            {channel.org !== EVERYONE_ORG_ID && (
               <UserDetails onClick={() => setShowAddUsersModal(true)}>
                 <AddPeopleIconWrapper>
                   <UserPlusIcon
@@ -204,12 +202,12 @@ function AddUsersToChannelModal({
           <Heading>
             Add people to{' '}
             {channel.org === EVERYONE_ORG_ID ? (
+              <HashtagIcon width={20} style={{ padding: '1px' }} />
+            ) : (
               <LockClosedIcon
                 width={20}
                 style={{ padding: '1px', marginRight: '2px' }}
               />
-            ) : (
-              <HashtagIcon width={20} style={{ padding: '1px' }} />
             )}{' '}
             {channel.id}
           </Heading>

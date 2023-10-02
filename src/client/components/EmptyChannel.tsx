@@ -11,9 +11,9 @@ interface EmptyChannelProps {
 export function EmptyChannel({ channel }: EmptyChannelProps) {
   const icon = (type: 'title' | 'text') =>
     channel.org === EVERYONE_ORG_ID ? (
-      <PrivateChannelIcon $type={type} />
-    ) : (
       <ChannelIcon $type={type} />
+    ) : (
+      <PrivateChannelIcon $type={type} />
     );
   return (
     <Root>
