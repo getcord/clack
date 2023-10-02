@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { HashtagIcon } from '@heroicons/react/20/solid';
@@ -20,7 +20,7 @@ export function AddChannelModals({
   const update = useAPIUpdateFetch();
   const navigate = useNavigate();
 
-  const createChannel = () => {
+  const createChannel = useCallback(() => {
     void update(`/channels/${newChannelName}`, 'PUT', {
       isPrivate,
     }).then(() => {
@@ -30,7 +30,7 @@ export function AddChannelModals({
       setIsPrivate(false);
       navigate(`/channel/${newChannelName}`);
     });
-  };
+  }, [isPrivate, navigate, newChannelName, setModalOpen, update]);
 
   return (
     <>

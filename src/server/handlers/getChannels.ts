@@ -1,5 +1,6 @@
 import type { ServerGetUser, ServerUserData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
+import { EVERYONE_ORG_ID } from 'src/server/consts';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
 export async function handleGetChannels(req: Request, res: Response) {
@@ -23,12 +24,12 @@ export async function handleGetChannels(req: Request, res: Response) {
         return acc;
       },
       // Special channel: everyone starts with general in their list
-      { general: 'clack_all' } as Record<string, string | null>,
+      { general: EVERYONE_ORG_ID } as Record<string, string | null>,
     );
 
   // Special channels: everyone gets these testing channels at the end of their list
-  availableChannels['noise'] = 'clack_all';
-  availableChannels['what-the-quack'] = 'clack_all';
+  availableChannels['noise'] = EVERYONE_ORG_ID;
+  availableChannels['what-the-quack'] = EVERYONE_ORG_ID;
 
   res.send(availableChannels);
 }

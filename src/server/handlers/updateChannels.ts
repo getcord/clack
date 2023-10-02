@@ -1,5 +1,6 @@
 import type { ServerUserData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
+import { EVERYONE_ORG_ID } from 'src/server/consts';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
 export async function handleAddChannel(req: Request, res: Response) {
@@ -41,7 +42,7 @@ export async function handleAddChannel(req: Request, res: Response) {
     'PUT',
     JSON.stringify({
       metadata: {
-        [channelName]: isPrivate ? channelName : '',
+        [channelName]: isPrivate ? channelName : EVERYONE_ORG_ID,
         ...existingChannels,
       },
     }),
