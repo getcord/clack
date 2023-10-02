@@ -134,7 +134,7 @@ function UserRow({
           // it looks like nothing's happened in the FE atm
           <DeleteButton
             onClick={() => {
-              void update(`/channels/${org}`, 'DELETE', {
+              void update(`/channelMembers/${org}`, 'DELETE', {
                 userIDs: [user.id],
               });
             }}
@@ -191,7 +191,7 @@ function AddUsersToChannelModal({
   // TODO: the org members API currently doesn't have subscriptions, so
   // it looks like nothing's happened in the FE atm
   const addUsers = useCallback(() => {
-    void update(`/channels/${channel.org}`, 'PUT', {
+    void update(`/channelMembers/${channel.org}`, 'PUT', {
       userIDs: usersToAdd,
     }).then(() => onClose());
   }, [channel.org, onClose, update, usersToAdd]);

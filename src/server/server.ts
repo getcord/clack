@@ -80,8 +80,11 @@ function main() {
   app.get('/users', wrapAsyncHandler(handleGetCordUsers));
   app.get('/usersData', wrapAsyncHandler(handleGetCordUsersData));
 
-  app.put('/channels/:channelName', wrapAsyncHandler(handleAddOrgMember));
-  app.delete('/channels/:channelName', wrapAsyncHandler(handleRemoveOrgMember));
+  app.put('/channelMembers/:channelName', wrapAsyncHandler(handleAddOrgMember));
+  app.delete(
+    '/channelMembers/:channelName',
+    wrapAsyncHandler(handleRemoveOrgMember),
+  );
 
   app.put('/channels/:channelName', wrapAsyncHandler(handleAddChannel));
 
