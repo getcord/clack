@@ -2,6 +2,7 @@ import React from 'react';
 import { css, styled } from 'styled-components';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import type { Channel } from 'src/client/consts/Channel';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 interface EmptyChannelProps {
   channel: Channel;
@@ -9,10 +10,10 @@ interface EmptyChannelProps {
 
 export function EmptyChannel({ channel }: EmptyChannelProps) {
   const icon = (type: 'title' | 'text') =>
-    channel.org ? (
-      <PrivateChannelIcon $type={type} />
-    ) : (
+    channel.org === EVERYONE_ORG_ID ? (
       <ChannelIcon $type={type} />
+    ) : (
+      <PrivateChannelIcon $type={type} />
     );
   return (
     <Root>

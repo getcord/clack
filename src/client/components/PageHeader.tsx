@@ -8,4 +8,6 @@ export const PageHeader = styled.h1({
   padding: '16px',
   backgroundColor: 'inherit',
   zIndex: 2,
+  display: 'flex',
+  alignItems: 'center',
 });
