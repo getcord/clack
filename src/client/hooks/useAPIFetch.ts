@@ -38,7 +38,13 @@ export function useAPIUpdateFetch() {
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' },
     })
-      .then((resp) => resp.json())
+      .then((resp) =>
+        resp.ok
+          ? resp.json()
+          : resp.text().then((text) => {
+              throw new Error(`Response is not okay: ${text}`);
+            }),
+      )
       .catch((error) => console.error('useAPIFetch error', error));
   };
 }
