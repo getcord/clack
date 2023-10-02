@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import {
+  HashtagIcon,
+  LockClosedIcon,
+  PlusIcon,
+} from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
 import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { Colors } from 'src/client/consts/Colors';
+import { AddChannelModals } from 'src/client/components/AddChannelModals';
 
 export function ChannelButton({
   option,
@@ -55,6 +61,7 @@ export function Channels({
   const [contextMenuOpenForChannel, setContextMenuOpenForChannel] = useState<
     Channel | undefined
   >(undefined);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <>
@@ -82,6 +89,13 @@ export function Channels({
             }
           />
         ))}
+        <AddChannelsButton onClick={() => setModalOpen(true)}>
+          <PlusIconWrapper>
+            <PlusIcon width={12} />
+          </PlusIconWrapper>
+          <AddChannelsButtonText>Add channels</AddChannelsButtonText>
+        </AddChannelsButton>
+        <AddChannelModals isOpen={modalOpen} setModalOpen={setModalOpen} />
         {contextMenuOpenForChannel && (
           <ChannelsRightClickMenu
             position={contextMenuPosition}
@@ -97,6 +111,42 @@ export function Channels({
     </>
   );
 }
+
+const AddChannelsButtonText = styled.span`
+  grid-area: channel-name;
+  text-align: left;
+`;
+
+const PlusIconWrapper = styled.div({
+  alignItems: 'center',
+  backgroundColor: 'rgba(255,255,255,0.1)',
+  borderRadius: '4px',
+  display: 'flex',
+  height: '20px',
+  justifyContent: 'center',
+  width: '20px',
+});
+
+const AddChannelsButton = styled.button`
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'hash channel-name';
+  grid-gap: 8px;
+  padding: 0 10px 0 16px;
+
+  font-size: 15px;
+  line-height: 28px;
+  min-height: 28px;
+  font-weight: 400;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  color: #ffffffb3;
+  background: ${Colors.purple};
+`;
 
 const ChannelsList = styled.div`
   display: flex;
