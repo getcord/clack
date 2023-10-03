@@ -9,7 +9,7 @@ import {
 import { UserPlusIcon } from '@heroicons/react/24/outline';
 import { LockClosedIcon, HashtagIcon } from '@heroicons/react/24/solid';
 import type { ClientUserData } from '@cord-sdk/types';
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsProvider';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';

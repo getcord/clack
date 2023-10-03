@@ -29,9 +29,9 @@ export function useAPIFetch<T extends object = object>(
 export function useAPIUpdateFetch() {
   return (
     path: string,
-    method: 'PUT' | 'POST' | 'DELETE' = 'POST',
+    method: 'PUT' | 'POST' | 'DELETE' | 'GET' = 'POST',
     body?: { [key: string]: any },
-  ): Promise<Response> => {
+  ) => {
     return fetch(`${API_HOST}${path}`, {
       method,
       credentials: 'include',

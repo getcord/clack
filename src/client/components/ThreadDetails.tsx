@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsProvider';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Colors } from 'src/client/consts/Colors';
 import {

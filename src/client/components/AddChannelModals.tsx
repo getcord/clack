@@ -1,11 +1,12 @@
 import type { Dispatch, SetStateAction } from 'react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { ActionButton, CloseButton } from 'src/client/components/Buttons';
 import { Modal as DefaultModal } from 'src/client/components/Modal';
 import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
+import { ChannelsContext } from 'src/client/context/ChannelsProvider';
 
 export function AddChannelModals({
   isOpen,
@@ -20,6 +21,8 @@ export function AddChannelModals({
   const update = useAPIUpdateFetch();
   const navigate = useNavigate();
 
+  const { refetch: refetchChannels } = useContext(ChannelsContext);
+
   const createChannel = useCallback(() => {
     void update(`/channels/${newChannelName}`, 'PUT', {
       isPrivate,
@@ -28,9 +31,17 @@ export function AddChannelModals({
       setStep(1);
       setNewChannelName('');
       setIsPrivate(false);
+      refetchChannels();
       navigate(`/channel/${newChannelName}`);
     });
-  }, [isPrivate, navigate, newChannelName, setModalOpen, update]);
+  }, [
+    isPrivate,
+    navigate,
+    newChannelName,
+    refetchChannels,
+    setModalOpen,
+    update,
+  ]);
 
   return (
     <>

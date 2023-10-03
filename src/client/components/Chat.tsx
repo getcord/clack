@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { thread, user } from '@cord-sdk/react';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsProvider';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
