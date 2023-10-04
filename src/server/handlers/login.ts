@@ -5,12 +5,7 @@ import * as cookie from 'cookie';
 import { nanoid } from 'nanoid';
 import * as Slack from '@slack/web-api';
 import * as jwt from 'jsonwebtoken';
-import {
-  CORD_APP_ID,
-  CORD_SIGNING_SECRET,
-  EVERYONE_ORG_ID,
-  ORG_NAME,
-} from 'src/server/consts';
+import { CORD_APP_ID, CORD_SIGNING_SECRET } from 'src/server/consts';
 
 const slackClient = new Slack.WebClient();
 
@@ -89,14 +84,10 @@ export function handleGetToken(req: Request, res: Response) {
 
   const token = getClientAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET, {
     user_id,
-    organization_id: EVERYONE_ORG_ID,
     user_details: {
       name,
       email,
       profilePictureURL: picture,
-    },
-    organization_details: {
-      name: ORG_NAME,
     },
   });
 
