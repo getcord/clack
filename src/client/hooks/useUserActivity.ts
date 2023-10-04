@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 export const localStorageKey = 'activity';
 
@@ -30,6 +31,7 @@ export function useUserActivity(): [
       },
       {
         absent: updatedActivity !== 'active',
+        organizationID: EVERYONE_ORG_ID,
       },
     );
     window.localStorage.setItem(localStorageKey, newState);

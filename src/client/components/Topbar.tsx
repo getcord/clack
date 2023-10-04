@@ -13,7 +13,7 @@ import { ActiveBadge as DefaultActiveBadge } from 'src/client/components/ActiveB
 import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
 import { SearchBar } from 'src/client/components/SearchBar';
-import { BREAKPOINTS_PX } from 'src/client/consts/consts';
+import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 
@@ -60,7 +60,10 @@ export const Topbar = ({
     e.stopPropagation();
     setIsActive('active');
     setShouldShowActiveModal(false);
-    void window.CordSDK?.presence.setPresent({ page: 'clack' });
+    void window.CordSDK?.presence.setPresent(
+      { page: 'clack' },
+      { organizationID: EVERYONE_ORG_ID },
+    );
   };
 
   const onAvatarClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
