@@ -29,7 +29,7 @@ export function ChannelButton({
 }) {
   const summary = thread.useLocationSummary(
     { channel: option.id },
-    { partialMatch: true, filter: { organizationID: option.org } },
+    { partialMatch: true },
   );
   const hasUnread = !!summary?.new;
 
