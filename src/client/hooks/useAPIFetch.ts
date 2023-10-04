@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_HOST } from 'src/client/consts/consts';
 
 export function useAPIFetch<T extends object = object>(
@@ -26,25 +26,28 @@ export function useAPIFetch<T extends object = object>(
   return data;
 }
 
-export function useAPIUpdateFetch() {
-  return (
-    path: string,
-    method: 'PUT' | 'POST' | 'DELETE' = 'POST',
-    body?: { [key: string]: any },
-  ): Promise<Response> => {
-    return fetch(`${API_HOST}${path}`, {
-      method,
-      credentials: 'include',
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((resp) =>
-        resp.ok
-          ? resp.json()
-          : resp.text().then((text) => {
-              throw new Error(`Response is not okay: ${text}`);
-            }),
-      )
-      .catch((error) => console.error('useAPIFetch error', error));
-  };
+export function useLazyAPIFetch() {
+  return useCallback(
+    (
+      path: string,
+      method: 'PUT' | 'POST' | 'DELETE' | 'GET' = 'POST',
+      body?: { [key: string]: any },
+    ) => {
+      return fetch(`${API_HOST}${path}`, {
+        method,
+        credentials: 'include',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((resp) =>
+          resp.ok
+            ? resp.json()
+            : resp.text().then((text) => {
+                throw new Error(`Response is not okay: ${text}`);
+              }),
+        )
+        .catch((error) => console.error('useAPIFetch error', error));
+    },
+    [],
+  );
 }

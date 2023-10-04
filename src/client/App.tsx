@@ -7,9 +7,9 @@ import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
 
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
-import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { useAPIFetch, useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
 import { Chat } from 'src/client/components/Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/components/ThreadDetails';
@@ -20,6 +20,7 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { ChannelsContext } from 'src/client/context/ChannelsContext';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -42,26 +43,52 @@ export function App() {
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
   const [showSidebar, setShowSidebar] = React.useState(false);
+  const [allChannelsObj, setAllChannelsObj] = React.useState<
+    Record<string, string>
+  >({});
+  const [allChannelsArray, setAllChannelsArray] = React.useState<Channel[]>([]);
 
   const navigate = useNavigate();
   const location = useLocation();
   const openPanel = location.pathname.split('/')[1];
 
-  const allChannelsToOrg =
-    useAPIFetch<Record<string, string>>('/channels') ?? {};
+  const fetch = useLazyAPIFetch();
 
-  const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
-    (acc, [key, value]) => {
-      acc.push({ id: key, org: value });
-      return acc;
-    },
-    [] as Channel[],
+  const fetchChannels = React.useCallback(
+    () =>
+      void fetch('/channels', 'GET')
+        .then((allChannelsToOrg: { string: string }) => {
+          setAllChannelsObj(allChannelsToOrg);
+          const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
+            (acc, [key, value]) => {
+              acc.push({ id: key, org: value });
+              return acc;
+            },
+            [] as Channel[],
+          );
+          setAllChannelsArray(allChannelsArray);
+        })
+        .catch((e) => console.error(e)),
+    [fetch],
   );
+
+  React.useEffect(() => {
+    fetchChannels();
+    // Refetch channels every 5 mins in case someone else added one
+    const int = setInterval(
+      () => {
+        void fetchChannels();
+      },
+      1000 * 60 * 5,
+    );
+
+    return () => clearInterval(int);
+  }, [fetchChannels]);
 
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
     openPanel === 'channel'
-      ? { id: channelID, org: allChannelsToOrg[channelID] }
+      ? { id: channelID, org: allChannelsObj[channelID] }
       : { id: '', org: EVERYONE_ORG_ID };
 
   const onOpenThread = (threadID: string) => {
@@ -110,45 +137,55 @@ export function App() {
         translations={translations}
       >
         <UsersProvider>
-          <BrowserNotificationBridge />
-          <PresenceObserver
-            location={{ page: 'clack', durable: true }}
-            style={{ height: '100%' }}
+          <ChannelsContext.Provider
+            value={{
+              channels: allChannelsArray,
+              refetch: fetchChannels,
+            }}
           >
-            <ResponsiveLayout
-              className={cx({ openThread: threadID, openSidebar: showSidebar })}
+            <BrowserNotificationBridge />
+            <PresenceObserver
+              location={{ page: 'clack', durable: true }}
+              style={{ height: '100%' }}
             >
-              <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
-              <Sidebar
-                channel={channel}
-                allChannels={allChannelsArray}
-                openPanel={openPanel}
-                setShowSidebar={setShowSidebar}
-              />
-              <MessageProvider>
-                <ResponsiveContent>
-                  {openPanel === 'channel' && (
-                    <Chat
-                      key={channel.id}
+              <ResponsiveLayout
+                className={cx({
+                  openThread: threadID,
+                  openSidebar: showSidebar,
+                })}
+              >
+                <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
+                <Sidebar
+                  channel={channel}
+                  allChannels={allChannelsArray}
+                  openPanel={openPanel}
+                  setShowSidebar={setShowSidebar}
+                />
+                <MessageProvider>
+                  <ResponsiveContent>
+                    {openPanel === 'channel' && (
+                      <Chat
+                        key={channel.id}
+                        channel={channel}
+                        onOpenThread={onOpenThread}
+                      />
+                    )}
+
+                    {openPanel === 'threads' && (
+                      <ThreadsList cordUserID={cordUserID} />
+                    )}
+                  </ResponsiveContent>
+                  {threadID && (
+                    <ThreadDetails
                       channel={channel}
-                      onOpenThread={onOpenThread}
+                      threadID={threadID}
+                      onClose={() => navigate(`/channel/${channel.id}`)}
                     />
                   )}
-
-                  {openPanel === 'threads' && (
-                    <ThreadsList cordUserID={cordUserID} />
-                  )}
-                </ResponsiveContent>
-                {threadID && (
-                  <ThreadDetails
-                    channel={channel}
-                    threadID={threadID}
-                    onClose={() => navigate(`/channel/${channel.id}`)}
-                  />
-                )}
-              </MessageProvider>
-            </ResponsiveLayout>
-          </PresenceObserver>
+                </MessageProvider>
+              </ResponsiveLayout>
+            </PresenceObserver>
+          </ChannelsContext.Provider>
         </UsersProvider>
       </CordProvider>
     </>
