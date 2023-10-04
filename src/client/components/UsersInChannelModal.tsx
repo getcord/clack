@@ -9,12 +9,12 @@ import {
 import { UserPlusIcon } from '@heroicons/react/24/outline';
 import { LockClosedIcon, HashtagIcon } from '@heroicons/react/24/solid';
 import type { ClientUserData } from '@cord-sdk/types';
-import type { Channel } from 'src/client/context/ChannelsProvider';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
-import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
+import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 
 type UsersInChannelModalProps = {
@@ -110,7 +110,7 @@ function UserRow({
   const { userID: cordUserID } = React.useContext(CordContext);
   const [showDelete, setShowDelete] = useState(false);
 
-  const update = useAPIUpdateFetch();
+  const update = useLazyAPIFetch();
 
   return (
     <>
@@ -184,7 +184,7 @@ function AddUsersToChannelModal({
 
   const [usersToAdd, setUsersToAdd] = useState<string[]>([]);
 
-  const update = useAPIUpdateFetch();
+  const update = useLazyAPIFetch();
 
   // TODO: the org members API currently doesn't have subscriptions, so
   // it looks like nothing's happened in the FE atm

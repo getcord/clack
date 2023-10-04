@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { HashtagIcon } from '@heroicons/react/20/solid';
 import { ActionButton, CloseButton } from 'src/client/components/Buttons';
 import { Modal as DefaultModal } from 'src/client/components/Modal';
-import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
-import { ChannelsContext } from 'src/client/context/ChannelsProvider';
+import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { ChannelsContext } from 'src/client/context/ChannelsContext';
 
 export function AddChannelModals({
   isOpen,
@@ -18,7 +18,7 @@ export function AddChannelModals({
   const [step, setStep] = useState(1);
   const [newChannelName, setNewChannelName] = useState<string>('');
   const [isPrivate, setIsPrivate] = useState(false);
-  const update = useAPIUpdateFetch();
+  const update = useLazyAPIFetch();
   const navigate = useNavigate();
 
   const { refetch: refetchChannels } = useContext(ChannelsContext);

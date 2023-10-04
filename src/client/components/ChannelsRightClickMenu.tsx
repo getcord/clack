@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
-import type { Channel } from 'src/client/context/ChannelsProvider';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { ReactPortal } from 'src/client/components/ReactPortal';
 
 export function ChannelsRightClickMenu({

@@ -1,6 +1,6 @@
 import { user } from '@cord-sdk/react';
 import { useEffect, useState } from 'react';
-import { useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
+import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 export type UserStatus = {
   /**
@@ -46,7 +46,7 @@ export function useUserStatus(
     }
   }, [metadata]);
 
-  const updateUser = useAPIUpdateFetch();
+  const updateUser = useLazyAPIFetch();
 
   const updateUserStatus: UpdateUserStatus = (newStatus) => {
     const body = {

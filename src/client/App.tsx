@@ -7,9 +7,9 @@ import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
 
-import type { Channel } from 'src/client/context/ChannelsProvider';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
-import { useAPIFetch, useAPIUpdateFetch } from 'src/client/hooks/useAPIFetch';
+import { useAPIFetch, useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
 import { Chat } from 'src/client/components/Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/components/ThreadDetails';
@@ -20,7 +20,7 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
-import { ChannelsContext } from 'src/client/context/ChannelsProvider';
+import { ChannelsContext } from 'src/client/context/ChannelsContext';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -47,31 +47,43 @@ export function App() {
     Record<string, string>
   >({});
   const [allChannelsArray, setAllChannelsArray] = React.useState<Channel[]>([]);
-  const [channelFetch, setChannelFetch] = React.useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();
   const openPanel = location.pathname.split('/')[1];
 
-  const fetch = useAPIUpdateFetch();
+  const fetch = useLazyAPIFetch();
+
+  const fetchChannels = React.useCallback(
+    () =>
+      void fetch('/channels', 'GET')
+        .then((allChannelsToOrg: { string: string }) => {
+          setAllChannelsObj(allChannelsToOrg);
+          const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
+            (acc, [key, value]) => {
+              acc.push({ id: key, org: value });
+              return acc;
+            },
+            [] as Channel[],
+          );
+          setAllChannelsArray(allChannelsArray);
+        })
+        .catch((e) => console.error(e)),
+    [fetch],
+  );
 
   React.useEffect(() => {
-    fetch('/channels', 'GET')
-      .then((allChannelsToOrg: { string: string }) => {
-        setAllChannelsObj(allChannelsToOrg);
-        const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
-          (acc, [key, value]) => {
-            acc.push({ id: key, org: value });
-            return acc;
-          },
-          [] as Channel[],
-        );
-        setAllChannelsArray(allChannelsArray);
-      })
-      .catch((e) => console.error(e));
-    // Adding fetch means it infinitely loops
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channelFetch]);
+    fetchChannels();
+    // Refetch channels every 5 mins in case someone else added one
+    const int = setInterval(
+      () => {
+        void fetchChannels();
+      },
+      1000 * 60 * 5,
+    );
+
+    return () => clearInterval(int);
+  }, [fetchChannels]);
 
   const channelID = channelIDParam ?? 'general';
   const channel: Channel =
@@ -128,7 +140,7 @@ export function App() {
           <ChannelsContext.Provider
             value={{
               channels: allChannelsArray,
-              refetch: () => setChannelFetch((prevState) => prevState + 1),
+              refetch: fetchChannels,
             }}
           >
             <BrowserNotificationBridge />

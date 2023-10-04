@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { NotificationListLauncher } from '@cord-sdk/react';
 import { SidebarButton } from 'src/client/components/SidebarButton';
-import type { Channel } from 'src/client/context/ChannelsProvider';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Channels } from 'src/client/components/Channels';
