@@ -2,7 +2,7 @@ import React from 'react';
 import { ThreadList } from '@cord-sdk/react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
