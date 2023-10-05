@@ -3,7 +3,7 @@ import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
-import type { Channel } from 'src/client/consts/Channel';
+import type { Channel } from 'src/client/context/ChannelsContext';
 import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 import { MessageListItem } from 'src/client/components/MessageListItem';
 import { EmptyChannel } from 'src/client/components/EmptyChannel';
