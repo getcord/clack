@@ -59,15 +59,17 @@ export function App() {
     () =>
       void fetch('/channels', 'GET')
         .then((allChannelsToOrg: { string: string }) => {
-          setAllChannelsObj(allChannelsToOrg);
-          const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
-            (acc, [key, value]) => {
-              acc.push({ id: key, org: value });
-              return acc;
-            },
-            [] as Channel[],
-          );
-          setAllChannelsArray(allChannelsArray);
+          if (allChannelsToOrg) {
+            setAllChannelsObj(allChannelsToOrg);
+            const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
+              (acc, [key, value]) => {
+                acc.push({ id: key, org: value });
+                return acc;
+              },
+              [] as Channel[],
+            );
+            setAllChannelsArray(allChannelsArray);
+          }
         })
         .catch((e) => console.error(e)),
     [fetch],
