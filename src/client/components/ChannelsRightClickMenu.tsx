@@ -21,7 +21,6 @@ export function ChannelsRightClickMenu({
     {
       sortBy: 'first_message_timestamp',
       sortDirection: 'descending',
-      filter: { organizationID: channel.org },
     },
   );
 

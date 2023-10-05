@@ -28,7 +28,6 @@ export function Threads({
     { channel: channel.id },
     {
       sortDirection: 'descending',
-      filter: { organizationID: channel.org },
     },
   );
   const [unseenMessages, setUnseenMessages] = useState<ThreadSummary[]>([]);

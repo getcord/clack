@@ -36,7 +36,6 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         metadata: {
           pinned: true,
         },
-        organizationID: channel.org,
       },
     },
   );

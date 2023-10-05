@@ -46,7 +46,6 @@ function Message({ message, thread }: MessageProps) {
       <div>
         <StyledMessage
           threadId={thread.id}
-          organizationId={thread.organizationID}
           messageId={message.id}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
@@ -79,14 +78,10 @@ export function ThreadDetails({
   onClose,
   channel,
 }: ThreadDetailsProps) {
-  const { messages, loading, hasMore, fetchMore } = thread.useThreadData(
-    threadID,
-    { organizationID: channel.org },
-  );
+  const { messages, loading, hasMore, fetchMore } =
+    thread.useThreadData(threadID);
 
-  const threadSummary = thread.useThreadSummary(threadID, {
-    organizationID: channel.org,
-  });
+  const threadSummary = thread.useThreadSummary(threadID);
 
   if (!threadSummary || messages.length === 0) {
     return <div>Loading messages...</div>;
