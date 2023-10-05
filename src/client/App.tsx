@@ -42,6 +42,7 @@ function useCordToken(): [string | undefined, string | undefined] {
 export function App() {
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
+  // We only hide the sidebar on mobile, to regain some space.
   const [showSidebar, setShowSidebar] = React.useState(false);
   const [allChannelsObj, setAllChannelsObj] = React.useState<
     Record<string, string>
@@ -94,6 +95,15 @@ export function App() {
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
   };
+
+  // TODO: This should happen onNotificationClick.
+  // Remove this code once that's available.
+  React.useEffect(() => {
+    if (threadID) {
+      // If there's a thread open, hide the sidebar.
+      setShowSidebar(false);
+    }
+  }, [threadID]);
 
   const onCordNavigate: NavigateFn = React.useCallback(
     (_url, location, { threadID }) => {
