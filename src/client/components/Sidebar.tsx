@@ -35,7 +35,7 @@ export function Sidebar({
       </SidebarHeader>
       <ScrollableContent>
         <Panel>
-          <ThreadsButton
+          {/* <ThreadsButton
             option={'Threads'}
             onClick={() => {
               navigate('/threads/');
@@ -47,7 +47,7 @@ export function Sidebar({
             }
             isActive={openPanel === 'threads'}
             hasUnread={false}
-          />
+          /> */}
         </Panel>
         <Divider />
         <Channels
