@@ -90,7 +90,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
       <StyledComposer
         location={{ channel: channel.id }}
         threadName={`#${channel.id}`}
-        organizationId={channel.org}
+        groupId={channel.org}
         showExpanded
       />
     </Wrapper>

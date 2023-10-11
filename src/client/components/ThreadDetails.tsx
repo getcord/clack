@@ -133,9 +133,12 @@ export function ThreadDetails({
           autofocus
           threadId={threadID}
           showExpanded
-          organizationId={channel.org}
+          // This group ID shouldn't be necessary and is here to temporarily
+          // work around a Cord bug, see
+          // https://github.com/getcord/clack/pull/84
+          groupId={channel.org}
         />
-        <TypingIndicator threadID={threadID} organizationID={channel.org} />
+        <TypingIndicator threadID={threadID} />
       </ScrollableContainer>
     </ThreadDetailsWrapper>
   );

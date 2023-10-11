@@ -159,7 +159,7 @@ export function App() {
             <PresenceObserver
               location={{ page: 'clack', durable: true }}
               style={{ height: '100%' }}
-              organizationId={EVERYONE_ORG_ID}
+              groupId={EVERYONE_ORG_ID}
             >
               <ResponsiveLayout
                 className={cx({

@@ -31,7 +31,7 @@ export function useUserActivity(): [
       },
       {
         absent: updatedActivity !== 'active',
-        organizationID: EVERYONE_ORG_ID,
+        groupID: EVERYONE_ORG_ID,
       },
     );
     window.localStorage.setItem(localStorageKey, newState);
