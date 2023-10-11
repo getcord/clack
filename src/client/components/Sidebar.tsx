@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { NotificationListLauncher } from '@cord-sdk/react';
-import { SidebarButton } from 'src/client/components/SidebarButton';
+// import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
@@ -22,7 +21,7 @@ export function Sidebar({
   className,
   channel,
   allChannels,
-  openPanel,
+  // openPanel,
   setShowSidebar,
 }: SidebarProps) {
   const navigate = useNavigate();
@@ -94,10 +93,10 @@ const StyledNotifLauncher = styled(NotificationListLauncher)({
   padding: '0 16px',
 });
 
-const ThreadsButton = styled(SidebarButton)`
-  width: 100%;
-  margin: 20px 8px;
-`;
+// const ThreadsButton = styled(SidebarButton)`
+//   width: 100%;
+//   margin: 20px 8px;
+// `;
 
 const Panel = styled.div({
   display: 'flex',
