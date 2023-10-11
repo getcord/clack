@@ -170,7 +170,6 @@ export function App() {
                 <Sidebar
                   channel={channel}
                   allChannels={allChannelsArray}
-                  openPanel={openPanel}
                   setShowSidebar={setShowSidebar}
                 />
                 <MessageProvider>
@@ -182,10 +181,6 @@ export function App() {
                         onOpenThread={onOpenThread}
                       />
                     )}
-
-                    {/* {openPanel === 'threads' && (
-                      <ThreadsList cordUserID={cordUserID} />
-                    )} */}
                   </ResponsiveContent>
                   {threadID && (
                     <ThreadDetails
