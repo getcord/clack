@@ -27,8 +27,7 @@ export function ChannelButton({
   isActive: boolean;
   icon: React.ReactNode;
 }) {
-  /* 
-    const counts = thread.useUseThreadCounts({
+  const counts = thread.useThreadCounts({
     filter: {
       location: {
         matcher: { channel: option.id },
@@ -37,15 +36,6 @@ export function ChannelButton({
     },
   });
   const hasUnread = !!counts?.new;
-
-  
-  
-  */
-  const summary = thread.useLocationSummary(
-    { channel: option.id },
-    { partialMatch: true },
-  );
-  const hasUnread = !!summary?.new;
 
   return (
     <SidebarButton
