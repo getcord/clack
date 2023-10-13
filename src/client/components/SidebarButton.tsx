@@ -9,6 +9,7 @@ export function SidebarButton({
   isActive,
   hasUnread,
   icon,
+  count,
 }: {
   option: string;
   onClick: () => void;
@@ -16,6 +17,7 @@ export function SidebarButton({
   isActive: boolean;
   hasUnread: boolean;
   icon: React.ReactNode;
+  count?: number;
 }) {
   return (
     <SidebarButtonStyled
@@ -26,6 +28,7 @@ export function SidebarButton({
     >
       {icon}
       <SidebarButtonName>{option}</SidebarButtonName>
+      <SidebarButtonCount>{count}</SidebarButtonCount>
     </SidebarButtonStyled>
   );
 }
@@ -33,6 +36,9 @@ export function SidebarButton({
 const SidebarButtonName = styled.span`
   grid-area: channel-name;
   text-align: left;
+`;
+const SidebarButtonCount = styled.span`
+  grid-area: channel-count;
 `;
 
 const SidebarButtonStyled = styled.button<{
@@ -42,7 +48,7 @@ const SidebarButtonStyled = styled.button<{
   display: grid;
   align-items: center;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: 'hash channel-name';
+  grid-template-areas: 'hash channel-name channel-count';
   grid-gap: 8px;
   padding: 0 10px 0 16px;
 
