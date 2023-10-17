@@ -64,10 +64,7 @@ export function ThreadsList({ cordUserID }: { cordUserID?: string }) {
                       borderRadius: '12px',
                     }}
                   />
-                  <TypingIndicator
-                    threadID={thread.id}
-                    organizationID={thread.organizationID}
-                  />
+                  <TypingIndicator threadID={thread.id} />
                 </ThreadWrapper>
               );
             })
