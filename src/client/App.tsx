@@ -15,7 +15,6 @@ import { Chat } from 'src/client/components/Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/components/ThreadDetails';
 import { Sidebar as DefaultSidebar } from 'src/client/components/Sidebar';
 import { BrowserNotificationBridge } from 'src/client/components/BrowserNotificationBridge';
-import { ThreadsList } from 'src/client/components/ThreadsList';
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
@@ -171,7 +170,6 @@ export function App() {
                 <Sidebar
                   channel={channel}
                   allChannels={allChannelsArray}
-                  openPanel={openPanel}
                   setShowSidebar={setShowSidebar}
                 />
                 <MessageProvider>
@@ -182,10 +180,6 @@ export function App() {
                         channel={channel}
                         onOpenThread={onOpenThread}
                       />
-                    )}
-
-                    {openPanel === 'threads' && (
-                      <ThreadsList cordUserID={cordUserID} />
                     )}
                   </ResponsiveContent>
                   {threadID && (

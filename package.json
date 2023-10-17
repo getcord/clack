@@ -18,8 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cord-sdk/react": "^1.17.0",
-    "@cord-sdk/server": "^1.17.0",
+    "@cord-sdk/react": "^1.20.1",
+    "@cord-sdk/server": "^1.20.1",
     "@heroicons/react": "^2.0.18",
     "@slack/web-api": "^6.8.1",
     "dotenv": "^16.3.1",
@@ -35,8 +35,8 @@
     "styled-components": "^6.0.5"
   },
   "devDependencies": {
-    "@cord-sdk/api-types": "^1.17.0",
-    "@cord-sdk/types": "^1.17.0",
+    "@cord-sdk/api-types": "^1.20.1",
+    "@cord-sdk/types": "^1.20.1",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/react": "^18.2.16",
