@@ -62,7 +62,7 @@ export const Topbar = ({
     setShouldShowActiveModal(false);
     void window.CordSDK?.presence.setPresent(
       { page: 'clack' },
-      { organizationID: EVERYONE_ORG_ID },
+      { groupID: EVERYONE_ORG_ID },
     );
   };
 
