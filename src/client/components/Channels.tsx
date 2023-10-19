@@ -27,10 +27,14 @@ export function ChannelButton({
   isActive: boolean;
   icon: React.ReactNode;
 }) {
-  const summary = thread.useLocationSummary(
-    { channel: option.id },
-    { partialMatch: true },
-  );
+  const summary = thread.useThreadCounts({
+    filter: {
+      location: {
+        value: { channel: option.id },
+        partialMatch: true,
+      },
+    },
+  });
   const hasUnread = !!summary?.new;
 
   return (

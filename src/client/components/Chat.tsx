@@ -29,16 +29,14 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     }
   }, [orgMembers, hasMore, loading, fetchMore]);
 
-  const { threads: pinnedThreads } = thread.useLocationData(
-    { channel: channel.id },
-    {
-      filter: {
-        metadata: {
-          pinned: true,
-        },
+  const { threads: pinnedThreads } = thread.useThreads({
+    filter: {
+      location: { channel: channel.id },
+      metadata: {
+        pinned: true,
       },
     },
-  );
+  });
 
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
   const [isAtBottomOfThreads, setIsAtBottomOfThreads] = useState(false);
