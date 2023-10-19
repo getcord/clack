@@ -24,12 +24,10 @@ export function Threads({
   onScrollToBottom,
   onScrollUp,
 }: ThreadsProps) {
-  const { threads, loading, hasMore, fetchMore } = thread.useLocationData(
-    { channel: channel.id },
-    {
-      sortDirection: 'descending',
-    },
-  );
+  const { threads, loading, hasMore, fetchMore } = thread.useThreads({
+    filter: { location: { channel: channel.id } },
+    sortDirection: 'descending',
+  });
   const [unseenMessages, setUnseenMessages] = useState<ThreadSummary[]>([]);
   const threadListRef = useRef<HTMLDivElement>(null);
 

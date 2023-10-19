@@ -16,13 +16,13 @@ export function ChannelsRightClickMenu({
   const [threadIDs, setThreadIDs] = useState<Set<string>>(new Set());
   const [shouldMarkAsUnread, setShouldMarkAsUnread] = useState(false);
 
-  const { threads, hasMore, fetchMore, loading } = thread.useLocationData(
-    { channel: channel.id },
-    {
-      sortBy: 'first_message_timestamp',
-      sortDirection: 'descending',
+  const { threads, hasMore, fetchMore, loading } = thread.useThreads({
+    filter: {
+      location: { channel: channel.id },
     },
-  );
+    sortBy: 'first_message_timestamp',
+    sortDirection: 'descending',
+  });
 
   // Don't currently have a way to load just unread threads, so load a fair chunk
   // of recent threads, since presumably newer ones are the ones showing as unread
