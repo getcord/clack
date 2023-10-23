@@ -97,15 +97,6 @@ export function App() {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
   };
 
-  // TODO: This should happen onNotificationClick.
-  // Remove this code once that's available.
-  React.useEffect(() => {
-    if (threadID) {
-      // If there's a thread open, hide the sidebar.
-      setShowSidebar(false);
-    }
-  }, [threadID]);
-
   const onCordNavigate: NavigateFn = React.useCallback(
     (_url, location, { threadID }) => {
       if (!(location && 'channel' in location)) {
