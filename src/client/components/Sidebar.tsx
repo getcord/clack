@@ -27,7 +27,9 @@ export function Sidebar({
     <SidebarWrap className={className}>
       <SidebarHeader>
         <PageHeader>Clack</PageHeader>
-        <StyledNotifLauncher />
+        <StyledNotifLauncher
+          onClickNotification={() => setShowSidebar?.(false)}
+        />
       </SidebarHeader>
       <ScrollableContent>
         <Channels
