@@ -7,6 +7,7 @@ export function SidebarButton({
   onClick,
   onContextMenu,
   isActive,
+  isMuted,
   hasUnread,
   icon,
 }: {
@@ -14,6 +15,7 @@ export function SidebarButton({
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
+  isMuted: boolean;
   hasUnread: boolean;
   icon: React.ReactNode;
 }) {
@@ -22,6 +24,7 @@ export function SidebarButton({
       $activePage={isActive}
       onClick={onClick}
       onContextMenu={onContextMenu}
+      $isMuted={isMuted}
       $hasUnread={hasUnread}
     >
       {icon}
@@ -37,6 +40,7 @@ const SidebarButtonName = styled.span`
 
 const SidebarButtonStyled = styled.button<{
   $activePage?: boolean;
+  $isMuted?: boolean;
   $hasUnread?: boolean;
 }>`
   display: grid;
@@ -55,8 +59,12 @@ const SidebarButtonStyled = styled.button<{
   border-radius: 6px;
   cursor: pointer;
 
-  color: ${({ $activePage, $hasUnread }) =>
-    $activePage || $hasUnread ? 'white' : `${Colors.inactive_channel}`};
+  color: ${({ $activePage, $isMuted, $hasUnread }) =>
+    $activePage || $hasUnread
+      ? 'white'
+      : $isMuted
+      ? 'gray'
+      : `${Colors.inactive_channel}`};
   background: ${(props) =>
     props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
   &:hover {
