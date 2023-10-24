@@ -129,15 +129,7 @@ export function ThreadDetails({
             />
           ))}
         </MessageListWrapper>
-        <StyledComposer
-          autofocus
-          threadId={threadID}
-          showExpanded
-          // This group ID shouldn't be necessary and is here to temporarily
-          // work around a Cord bug, see
-          // https://github.com/getcord/clack/pull/84
-          groupId={channel.org}
-        />
+        <StyledComposer autofocus threadId={threadID} showExpanded />
         <TypingIndicator threadID={threadID} />
       </ScrollableContainer>
     </ThreadDetailsWrapper>
