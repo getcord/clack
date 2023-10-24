@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import {
   HashtagIcon,
@@ -13,6 +13,7 @@ import { Overlay } from 'src/client/components/MoreActionsButton';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { Colors } from 'src/client/consts/Colors';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
+import { ChannelsContext } from 'src/client/context/ChannelsContext';
 
 export function ChannelButton({
   option,
@@ -52,12 +53,11 @@ export function ChannelButton({
 export function Channels({
   setCurrentChannelID,
   currentChannel,
-  channels,
 }: {
   setCurrentChannelID: (channel: string) => void;
   currentChannel: Channel;
-  channels: Channel[];
 }) {
+  const { channels } = useContext(ChannelsContext);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
