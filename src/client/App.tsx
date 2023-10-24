@@ -158,11 +158,7 @@ export function App() {
                 })}
               >
                 <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
-                <Sidebar
-                  channel={channel}
-                  allChannels={allChannelsArray}
-                  setShowSidebar={setShowSidebar}
-                />
+                <Sidebar channel={channel} setShowSidebar={setShowSidebar} />
                 <MessageProvider>
                   <ResponsiveContent>
                     {openPanel === 'channel' && (
