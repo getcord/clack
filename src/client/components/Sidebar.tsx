@@ -11,16 +11,10 @@ import { NotificationsRequestBanner } from 'src/client/components/NotificationsR
 type SidebarProps = {
   className?: string;
   channel: Channel;
-  allChannels: Channel[];
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function Sidebar({
-  className,
-  channel,
-  allChannels,
-  setShowSidebar,
-}: SidebarProps) {
+export function Sidebar({ className, channel, setShowSidebar }: SidebarProps) {
   const navigate = useNavigate();
 
   return (
@@ -38,7 +32,6 @@ export function Sidebar({
             setShowSidebar?.(false);
           }}
           currentChannel={channel}
-          channels={allChannels}
         />
       </ScrollableContent>
       <NotificationsRequestBanner />
