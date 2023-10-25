@@ -68,7 +68,12 @@ export function ChannelsRightClickMenu({
             <MenuListItemButton onClick={() => setShouldMarkAsUnread(true)}>
               Mark all as read
             </MenuListItemButton>
-            <MenuListItemButton onClick={() => toggleMute(channel.id)}>
+            <MenuListItemButton
+              onClick={() => {
+                toggleMute(channel.id);
+                closeMenu();
+              }}
+            >
               {muted.has(channel.id) ? 'Unmute' : 'Mute'} channel
             </MenuListItemButton>
           </MenuListItem>
