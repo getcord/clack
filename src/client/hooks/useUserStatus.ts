@@ -51,6 +51,7 @@ export function useUserStatus(
   const updateUserStatus: UpdateUserStatus = (newStatus) => {
     const body = {
       metadata: {
+        ...viewerData?.metadata,
         statusText: newStatus?.text ?? undefined,
         statusEmojiUrl: newStatus?.emojiUrl ?? undefined,
         statusEmojiUnified: newStatus?.emojiUnified ?? undefined,

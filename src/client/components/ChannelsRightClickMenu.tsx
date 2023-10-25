@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { ReactPortal } from 'src/client/components/ReactPortal';
+import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 
 export function ChannelsRightClickMenu({
   position,
@@ -15,6 +16,7 @@ export function ChannelsRightClickMenu({
 }) {
   const [threadIDs, setThreadIDs] = useState<Set<string>>(new Set());
   const [shouldMarkAsUnread, setShouldMarkAsUnread] = useState(false);
+  const [muted, toggleMute] = useMutedChannels();
 
   const { threads, hasMore, fetchMore, loading } = thread.useThreads({
     filter: {
@@ -54,6 +56,10 @@ export function ChannelsRightClickMenu({
     closeMenu();
   }, [closeMenu, hasMore, loading, shouldMarkAsUnread, threadIDs]);
 
+  if (muted === undefined) {
+    return null;
+  }
+
   return (
     <ReactPortal wrapperID={'channels-right-click-menu'}>
       <Menu $x={position.x} $y={position.y}>
@@ -61,6 +67,9 @@ export function ChannelsRightClickMenu({
           <MenuListItem>
             <MenuListItemButton onClick={() => setShouldMarkAsUnread(true)}>
               Mark all as read
+            </MenuListItemButton>
+            <MenuListItemButton onClick={() => toggleMute(channel.id)}>
+              {muted.has(channel.id) ? 'Unmute' : 'Mute'} channel
             </MenuListItemButton>
           </MenuListItem>
         </MenuList>

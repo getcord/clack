@@ -14,6 +14,9 @@ import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { Colors } from 'src/client/consts/Colors';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
+import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
+
+type ChannelWithMute = Channel & { muted: boolean };
 
 export function ChannelButton({
   option,
@@ -22,7 +25,7 @@ export function ChannelButton({
   isActive,
   icon,
 }: {
-  option: Channel;
+  option: ChannelWithMute;
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
@@ -36,12 +39,13 @@ export function ChannelButton({
       },
     },
   });
-  const hasUnread = !!summary?.new;
+  const hasUnread = !option.muted && !!summary?.new;
 
   return (
     <SidebarButton
       option={option.id}
       isActive={isActive}
+      isMuted={option.muted}
       onClick={onClick}
       onContextMenu={onContextMenu}
       hasUnread={hasUnread}
@@ -57,7 +61,7 @@ export function Channels({
   setCurrentChannelID: (channel: string) => void;
   currentChannel: Channel;
 }) {
-  const { channels } = useContext(ChannelsContext);
+  const { channels: unsortedChannels } = useContext(ChannelsContext);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
@@ -67,13 +71,30 @@ export function Channels({
   >(undefined);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [muted] = useMutedChannels();
+  if (muted === undefined) {
+    return null;
+  }
+
+  const unmutedChannels: ChannelWithMute[] = [];
+  const mutedChannels: ChannelWithMute[] = [];
+  unsortedChannels.forEach((channel) => {
+    if (muted.has(channel.id)) {
+      mutedChannels.push({ ...channel, muted: true });
+    } else {
+      unmutedChannels.push({ ...channel, muted: false });
+    }
+  });
+
+  const channels = [...unmutedChannels, ...mutedChannels];
+
   return (
     <>
       <ChannelsList>
-        {channels.map((channel, index) => (
+        {channels.map((channel) => (
           <ChannelButton
             isActive={currentChannel.id === channel.id}
-            key={index}
+            key={channel.id}
             onClick={() => setCurrentChannelID(channel.id)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
