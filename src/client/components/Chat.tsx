@@ -43,17 +43,20 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
+  const channelIcon =
+    channel.org === EVERYONE_ORG_ID ? <ChannelIcon /> : <PrivateChannelIcon />;
+
   return (
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeaderWrapper>
           <PageHeader>
-            {channel.org === EVERYONE_ORG_ID ? (
-              <ChannelIcon />
-            ) : (
-              <PrivateChannelIcon />
-            )}{' '}
-            {channel.id}
+            {channel.org && (
+              <>
+                {channelIcon}
+                {channel.id}
+              </>
+            )}
           </PageHeader>
           {orgMembers && (
             <PageUsersLabel users={orgMembers} channel={channel} />
