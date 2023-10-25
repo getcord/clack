@@ -106,7 +106,7 @@ const OptionsStyled = styled.div`
   padding: 4px;
   z-index: 1;
 
-  .cord-reaction-list {
+  .cord-reaction-list .cord-pill {
     display: none;
   }
 
