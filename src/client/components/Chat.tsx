@@ -88,14 +88,12 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
-      {channel.org && (
-        <StyledComposer
-          location={{ channel: channel.id }}
-          threadName={`#${channel.id}`}
-          groupId={channel.org}
-          showExpanded
-        />
-      )}
+      <StyledComposer
+        location={{ channel: channel.id }}
+        threadName={`#${channel.id}`}
+        groupId={channel.org}
+        showExpanded
+      />
     </Wrapper>
   );
 }
