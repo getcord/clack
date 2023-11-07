@@ -161,7 +161,7 @@ export function App() {
                 <Sidebar channel={channel} setShowSidebar={setShowSidebar} />
                 <MessageProvider>
                   <ResponsiveContent>
-                    {openPanel === 'channel' && (
+                    {openPanel === 'channel' && channel.org && (
                       <Chat
                         key={channel.id}
                         channel={channel}
