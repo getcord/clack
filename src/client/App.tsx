@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import type { NavigateFn, Translations } from '@cord-sdk/types';
+import type { NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
 
 import type { Channel } from 'src/client/context/ChannelsContext';
@@ -20,19 +20,7 @@ import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
-
-export const LANGS = [
-  {
-    lang: 'en',
-    name: 'Clack',
-  },
-  {
-    lang: 'fr',
-    name: 'Claque',
-  },
-] as const;
-
-export type Language = (typeof LANGS)[number]['lang'];
+import { LANGS, getTranslations, type Language } from 'src/client/l10n';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -123,106 +111,7 @@ export function App() {
     [navigate],
   );
 
-  const translations = useMemo(
-    (): Translations => ({
-      en: {
-        composer: {
-          send_message_placeholder: `Message #${channel.id}`,
-        },
-      },
-      fr: {
-        composer: {
-          send_message_placeholder: `Message #${channel.id}`,
-          reply_placeholder: 'Répondre...',
-          mention_someone_tooltip: "Mentionner quelqu'un",
-          replace_annotation_tooltip: "Remplacer l'annotation",
-          add_emoji_tooltip: 'Ajouter des emoji',
-          remove_task_tooltip: 'Supprimer la tâche',
-          create_task_tooltip: 'Créer une tâche',
-          attach_file_tooltip: 'Pièce jointe',
-          start_video_msg_tooltip: 'Enregistrer une vidéo',
-          remove_file_action: 'Retirer',
-          connect_to_slack_action: 'Connectez votre équipe Slack',
-          slack_follow_instructions: 'Suivez les instructions',
-          editing_status: 'Édition',
-          cancel_editing_action: 'Annuler',
-          resolved_status: 'Résolue',
-          unresolve_action: 'Rouvrir pour répondre',
-          annotation: 'Votre annotation',
-          remove_annotation_action: 'Retirer',
-        },
-        thread: {
-          new_status: 'Nouvelle',
-          reply_action: 'Répondre...',
-          new_replies_status_other: '{{count}} non lus',
-          replies_status_one: '1 réponse',
-          replies_status_other: '{{count}} réponses',
-          mark_as_read_action: 'Marquer comme lu',
-          share_via_slack_action: 'Partager avec Slack',
-          share_via_slack_action_not_connected: 'Connectez-vous pour partager',
-          share_via_slack_action_success: 'Partagé avec #{{slackChannel}}',
-          share_via_email_action: 'Partager par e-mail',
-          subscribe_action: "S'abonner",
-          subscribe_action_success: 'Vous êtes abonné à ce fil',
-          unsubscribe_action: 'Se désabonner',
-          unsubscribe_action_success: 'Vous vous êtes désabonné de ce fil',
-          resolve_action: 'Résoudre',
-          resolve_action_success: 'Vous avez résolu ce fil',
-          resolved_status: 'Résolue',
-          unresolve_action: 'Rouvrir',
-          unresolve_action_success: 'Vous avez rouvert ce fil',
-          collapse_action: 'Réduire le fil de discussion',
-        },
-        message: {
-          download_action: 'Télécharger',
-          unable_to_display_document: "Impossible d'afficher le document",
-          unable_to_display_image: "Impossible d'afficher l'image",
-          editing_status: '(Édition)',
-          edited_status: '(Édité)',
-          edit_action: 'Modifier',
-          edit_resolved_action: 'Rouvrir pour modifier',
-          delete_action: 'Supprimer',
-          deleted_message: '{{user.displayName}} a supprimé un message',
-          undo_delete_action: 'Annuler',
-          add_reaction_action: 'Ajouter une réaction',
-          show_more_other: 'Afficher {{count}} de plus',
-          message_options_tooltip: 'Possibilités',
-          screenshot_loading_status: 'Chargement',
-          screenshot_missing_status: "Aucune capture d'écran trouvée",
-          screenshot_expand_action: 'Image',
-          screenshot_expand_tooltip: 'Cliquez pour agrandir',
-          timestamp: {
-            in_less_than_a_minute: "en moins d'une minute",
-            just_now: "tout à l' heure",
-            in_minutes_one: 'en 1 minute',
-            in_minutes_other: 'en {{count}} minutes',
-            minutes_ago_one: 'il y a 1 minute',
-            minutes_ago_other: 'il y a {{count}} minutes',
-            in_hours_one: 'dans 1 heure',
-            in_hours_other: 'dans {{count}} heures',
-            hours_ago_one: 'il ya 1 heure',
-            hours_ago_other: 'il y a {{count}} heures',
-            yesterday_format: '[hier]',
-            last_week_format: 'dddd',
-            tomorrow_format: '[demain]',
-            next_week_format: 'dddd',
-            this_year_format: 'MMM D',
-            other_format: 'MMM D, YYYY',
-          },
-          absolute_timestamp: {
-            today_format: 'h:mm A',
-            yesterday_format: 'MMM D',
-            last_week_format: 'MMM D',
-            tomorrow_format: 'MMM D',
-            next_week_format: 'MMM D',
-            this_year_format: 'MMM D',
-            other_format: 'MMM D, YYYY',
-          },
-        },
-      },
-    }),
-    [channel.id],
-  );
+  const translations = useMemo(() => getTranslations(channel.id), [channel.id]);
 
   return (
     <>
@@ -234,7 +123,7 @@ export function App() {
       </Helmet>
       <CordProvider
         clientAuthToken={cordToken}
-        cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
+        cordScriptUrl="https://local.cord.com:8179/sdk/v1/sdk.latest.js"
         enableSlack={false}
         enableTasks={false}
         enableAnnotations={false}

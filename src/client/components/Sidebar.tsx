@@ -7,8 +7,8 @@ import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
-import type { Language } from 'src/client/App';
-import { LANGS } from 'src/client/App';
+import type { Language } from 'src/client/l10n';
+import { LANGS } from 'src/client/l10n';
 
 type SidebarProps = {
   className?: string;
