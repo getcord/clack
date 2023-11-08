@@ -7,20 +7,40 @@ import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
+import type { Language } from 'src/client/l10n';
+import { LANGS } from 'src/client/l10n';
 
 type SidebarProps = {
   className?: string;
   channel: Channel;
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
+  lang: Language;
+  setLang: React.Dispatch<React.SetStateAction<Language>>;
 };
 
-export function Sidebar({ className, channel, setShowSidebar }: SidebarProps) {
+export function Sidebar({
+  className,
+  channel,
+  setShowSidebar,
+  lang,
+  setLang,
+}: SidebarProps) {
   const navigate = useNavigate();
 
   return (
     <SidebarWrap className={className}>
       <SidebarHeader>
-        <PageHeader>Clack</PageHeader>
+        <ClackHeader>{LANGS.find((l) => l.lang === lang)?.name}</ClackHeader>
+        <LangSelector
+          value={lang}
+          onChange={(e) => setLang(e.target.value as Language)}
+        >
+          {LANGS.map((l) => (
+            <option key={l.lang} value={l.lang}>
+              {l.lang}
+            </option>
+          ))}
+        </LangSelector>
         <StyledNotifLauncher
           onClickNotification={() => setShowSidebar?.(false)}
         />
@@ -38,6 +58,10 @@ export function Sidebar({ className, channel, setShowSidebar }: SidebarProps) {
     </SidebarWrap>
   );
 }
+
+const ClackHeader = styled(PageHeader)({
+  flexGrow: 1,
+});
 
 const SidebarWrap = styled.div({
   background: Colors.purple,
@@ -67,4 +91,9 @@ const SidebarHeader = styled.div({
 
 const StyledNotifLauncher = styled(NotificationListLauncher)({
   padding: '0 16px',
+});
+
+const LangSelector = styled.select({
+  borderRadius: '4px',
+  padding: '6px 8px',
 });

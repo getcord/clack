@@ -1,6 +1,6 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -20,6 +20,7 @@ import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
+import { LANGS, getTranslations, type Language } from 'src/client/l10n';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -47,6 +48,7 @@ export function App() {
     Record<string, string>
   >({});
   const [allChannelsArray, setAllChannelsArray] = React.useState<Channel[]>([]);
+  const [lang, setLang] = useState<Language>('en');
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -109,33 +111,24 @@ export function App() {
     [navigate],
   );
 
-  const translations = useMemo(
-    () => ({
-      en: {
-        composer: {
-          // TODO(flooey): Remove add_a_comment once we upgrade the NPM package
-          add_a_comment: `Message #${channel.id}`,
-          send_message_placeholder: `Message #${channel.id}`,
-        },
-      },
-    }),
-    [channel.id],
-  );
+  const translations = useMemo(() => getTranslations(channel.id), [channel.id]);
 
   return (
     <>
       <GlobalStyle />
       <Helmet>
-        <title>#{channel.id} - Clack</title>
+        <title>
+          #{channel.id} - {LANGS.find((l) => l.lang === lang)?.name}
+        </title>
       </Helmet>
       <CordProvider
         clientAuthToken={cordToken}
-        cordScriptUrl="https://app.staging.cord.com/sdk/v1/sdk.latest.js"
+        cordScriptUrl="https://local.cord.com:8179/sdk/v1/sdk.latest.js"
         enableSlack={false}
         enableTasks={false}
         enableAnnotations={false}
         navigate={onCordNavigate}
-        // @ts-ignore
+        language={lang}
         translations={translations}
       >
         <UsersProvider>
@@ -158,7 +151,12 @@ export function App() {
                 })}
               >
                 <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
-                <Sidebar channel={channel} setShowSidebar={setShowSidebar} />
+                <Sidebar
+                  channel={channel}
+                  setShowSidebar={setShowSidebar}
+                  lang={lang}
+                  setLang={setLang}
+                />
                 <MessageProvider>
                   <ResponsiveContent>
                     {openPanel === 'channel' && channel.org && (
