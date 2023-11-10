@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 export function capitalize(string: string): string {
   return string
     .split(' ')
@@ -20,4 +22,41 @@ export function combine(combiner: string, items: string[]): string {
       items[items.length - 1]
     }`;
   }
+}
+
+// Shamelessly stolen from the testbed
+export function useStateWithLocalStoragePersistence<T>(
+  key: string,
+): readonly [
+  T | undefined,
+  React.Dispatch<React.SetStateAction<T | undefined>>,
+];
+
+export function useStateWithLocalStoragePersistence<T>(
+  key: string,
+  defaultValue: T,
+): readonly [T, React.Dispatch<React.SetStateAction<T>>];
+
+export function useStateWithLocalStoragePersistence<T>(
+  key: string,
+  defaultValue?: T,
+) {
+  const [value, setValue] = useState(() => {
+    const localStorageValue = localStorage.getItem(key);
+    if (localStorageValue === null) {
+      return defaultValue;
+    }
+
+    return JSON.parse(localStorageValue) as T;
+  });
+
+  useEffect(() => {
+    if (value !== null && value !== undefined) {
+      localStorage.setItem(key, JSON.stringify(value));
+    } else {
+      localStorage.removeItem(key);
+    }
+  }, [key, value]);
+
+  return [value, setValue] as const;
 }
