@@ -1,6 +1,6 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -21,6 +21,7 @@ import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { LANGS, getTranslations, type Language } from 'src/client/l10n';
+import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -48,7 +49,10 @@ export function App() {
     Record<string, string>
   >({});
   const [allChannelsArray, setAllChannelsArray] = React.useState<Channel[]>([]);
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useStateWithLocalStoragePersistence<Language>(
+    'clack-language',
+    'en',
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
