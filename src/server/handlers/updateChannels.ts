@@ -8,6 +8,15 @@ export async function handleAddChannel(req: Request, res: Response) {
   const { channelName } = req.params;
   const { isPrivate } = req.body;
 
+  const existingChannels = (
+    await fetchCordRESTApi<ServerUserData>(`users/all_channels_holder`, 'GET')
+  ).metadata;
+
+  if (channelName in existingChannels) {
+    res.status(403).send('Channel already exists');
+    return;
+  }
+
   // If userIDs is sent, it's a private channel, which means we need to create
   // an org for its participants.  If no userIDs are sent, it's a public channel
   // which means it will be associated with the clack_all org.
@@ -27,10 +36,6 @@ export async function handleAddChannel(req: Request, res: Response) {
       }),
     );
   }
-
-  const existingChannels = (
-    await fetchCordRESTApi<ServerUserData>(`users/all_channels_holder`, 'GET')
-  ).metadata;
 
   const response = await fetchCordRESTApi<
     Promise<{
