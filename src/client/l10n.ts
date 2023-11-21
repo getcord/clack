@@ -30,7 +30,6 @@ export function getTranslations(channel: string): Translations {
         remove_task_tooltip: 'Supprimer la tâche',
         create_task_tooltip: 'Créer une tâche',
         attach_file_tooltip: 'Pièce jointe',
-        start_video_msg_tooltip: 'Enregistrer une vidéo',
         remove_file_action: 'Retirer',
         connect_to_slack_action: 'Connectez votre équipe Slack',
         slack_follow_instructions: 'Suivez les instructions',
