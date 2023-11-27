@@ -15,6 +15,7 @@ import { Colors } from 'src/client/consts/Colors';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
+import { ChannelPicker } from 'src/client/components/ChannelPicker';
 
 type ChannelWithMute = Channel & { muted: boolean };
 
@@ -128,6 +129,10 @@ export function Channels({
             closeMenu={() => setContextMenuOpenForChannel(undefined)}
           ></ChannelsRightClickMenu>
         )}
+        <ChannelPicker
+          channels={channels}
+          onSelect={(id) => setCurrentChannelID(id)}
+        />
       </ChannelsList>
       <Overlay
         onClick={() => setContextMenuOpenForChannel(undefined)}
