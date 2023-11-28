@@ -35,8 +35,10 @@ export function ChannelPicker({
         if (event.key === 'Escape') {
           handleClose();
         } else if (event.key === 'Enter') {
-          onSelect(filteredChannels[selectedChannelIndex].id);
-          handleClose();
+          if (filteredChannels.length) {
+            onSelect(filteredChannels[selectedChannelIndex].id);
+            handleClose();
+          }
         } else if (event.key === 'ArrowDown') {
           if (filteredChannels.length) {
             setSelectedChannelIndex(
