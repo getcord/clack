@@ -1,8 +1,10 @@
 import React from 'react';
 import { styled } from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { Colors } from 'src/client/consts/Colors';
 
 export function DateDivider({ timestamp }: { timestamp: Date }) {
+  const { t, i18n } = useTranslation();
   const now = new Date();
   const isToday =
     now.getFullYear() === timestamp.getFullYear() &&
@@ -13,8 +15,8 @@ export function DateDivider({ timestamp }: { timestamp: Date }) {
       <Line />
       <Pill>
         {isToday
-          ? 'Today'
-          : timestamp.toLocaleDateString('en-GB', {
+          ? t('today')
+          : timestamp.toLocaleDateString(i18n.language, {
               weekday: 'short',
               month: 'long',
               day: 'numeric',

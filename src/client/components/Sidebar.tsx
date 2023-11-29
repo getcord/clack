@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { NotificationListLauncher } from '@cord-sdk/react';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
@@ -25,19 +26,20 @@ export function Sidebar({
   lang,
   setLang,
 }: SidebarProps) {
+  const { t } = useTranslation('translation');
   const navigate = useNavigate();
 
   return (
     <SidebarWrap className={className}>
       <SidebarHeader>
-        <ClackHeader>{LANGS.find((l) => l.lang === lang)?.name}</ClackHeader>
+        <ClackHeader>{t('name')}</ClackHeader>
         <LangSelector
           value={lang}
           onChange={(e) => setLang(e.target.value as Language)}
         >
           {LANGS.map((l) => (
-            <option key={l.lang} value={l.lang}>
-              {l.lang}
+            <option key={l} value={l}>
+              {l}
             </option>
           ))}
         </LangSelector>

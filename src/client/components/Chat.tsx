@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { thread, user } from '@cord-sdk/react';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
@@ -19,6 +20,7 @@ interface ChatProps {
 }
 
 export function Chat({ channel, onOpenThread }: ChatProps) {
+  const { t } = useTranslation();
   const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
     organizationID: channel.org,
   });
@@ -70,7 +72,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
           }}
           onClick={() => setShowPinnedMessages(true)}
         >
-          <PushPinIcon /> {pinnedThreads.length} Pinned
+          <PushPinIcon /> {t('pinned_threads', { count: pinnedThreads.length })}
         </span>
       </Toolbar>
       <PinnedMessages
