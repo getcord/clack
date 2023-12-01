@@ -5,7 +5,12 @@ import * as cookie from 'cookie';
 import { nanoid } from 'nanoid';
 import * as Slack from '@slack/web-api';
 import * as jwt from 'jsonwebtoken';
-import { CORD_APP_ID, CORD_SIGNING_SECRET } from 'src/server/consts';
+import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
+import {
+  CORD_APP_ID,
+  CORD_SIGNING_SECRET,
+  EVERYONE_ORG_ID,
+} from 'src/server/consts';
 
 const slackClient = new Slack.WebClient();
 
@@ -134,6 +139,8 @@ export async function handleGetSlackLogin(req: Request, res: Response) {
     return;
   }
 
+  await ensureMemberOfEveryoneOrg(user_id);
+
   const tokenData: LoginTokenData = {
     user_id,
     name,
@@ -180,4 +187,21 @@ function redirectToSlackLogin(req: Request, res: Response) {
 
   res.cookie(NONCE_COOKIE_NAME, nonce, COOKIE_OPTIONS);
   res.send({ redirect });
+}
+
+async function ensureMemberOfEveryoneOrg(userID: string) {
+  // Make sure the user exists. Their details are put into their token and get
+  // set that way, so we don't need to do actually set any fields here (which
+  // lets us do this unconditionally since it won't overwrite anything).
+  await fetchCordRESTApi(`users/${userID}`, 'PUT');
+
+  // Adding a user who is already a member is explicitly documented as not an
+  // error, so we can do this unconditionally.
+  await fetchCordRESTApi(
+    `groups/${EVERYONE_ORG_ID}/members`,
+    'POST',
+    JSON.stringify({
+      add: [userID],
+    }),
+  );
 }
