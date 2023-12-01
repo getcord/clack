@@ -1,11 +1,13 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { Colors } from 'src/client/consts/Colors';
@@ -20,7 +22,7 @@ import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
-import { LANGS, getTranslations, type Language } from 'src/client/l10n';
+import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 
 function useCordToken(): [string | undefined, string | undefined] {
@@ -41,6 +43,7 @@ function useCordToken(): [string | undefined, string | undefined] {
 }
 
 export function App() {
+  const { t } = useTranslation();
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
   // We only hide the sidebar on mobile, to regain some space.
@@ -115,14 +118,21 @@ export function App() {
     [navigate],
   );
 
-  const translations = useMemo(() => getTranslations(channel.id), [channel.id]);
+  const translations = useMemo(
+    () => getCordTranslations(channel.id),
+    [channel.id],
+  );
+
+  useEffect(() => {
+    void i18n.changeLanguage(lang);
+  }, [lang]);
 
   return (
     <>
       <GlobalStyle />
       <Helmet>
         <title>
-          #{channel.id} - {LANGS.find((l) => l.lang === lang)?.name}
+          #{channel.id} - {t('name')}
         </title>
       </Helmet>
       <CordProvider

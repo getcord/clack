@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { thread } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
+import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Colors } from 'src/client/consts/Colors';
@@ -78,22 +79,22 @@ export function ThreadDetails({
   onClose,
   channel,
 }: ThreadDetailsProps) {
+  const { t } = useTranslation();
   const { messages, loading, hasMore, fetchMore } =
     thread.useThreadData(threadID);
 
   const threadSummary = thread.useThreadSummary(threadID);
 
   if (!threadSummary || messages.length === 0) {
-    return <div>Loading messages...</div>;
+    return <div>{t('loading_messages')}</div>;
   }
 
   const numReplies = threadSummary.total - 1;
-  const replyWord = numReplies === 1 ? 'reply' : 'replies';
 
   return (
     <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
-        <span style={{ gridArea: 'thread' }}>Thread</span>
+        <span style={{ gridArea: 'thread' }}>{t('thread_header')}</span>
         <ChannelName># {channel.id}</ChannelName>
         <CloseButton onClick={onClose}>
           <StyledXMarkIcon />
@@ -110,7 +111,7 @@ export function ThreadDetails({
             {numReplies > 0 ? (
               <>
                 <SeparatorText>
-                  {numReplies} {replyWord}
+                  {t('replies', { count: numReplies })}
                 </SeparatorText>
                 <SeparatorLine />
               </>

@@ -6,6 +6,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/20/solid';
 import { thread } from '@cord-sdk/react';
+import { useTranslation } from 'react-i18next';
 import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
@@ -62,6 +63,7 @@ export function Channels({
   setCurrentChannelID: (channel: string) => void;
   currentChannel: Channel;
 }) {
+  const { t } = useTranslation();
   const { channels: unsortedChannels } = useContext(ChannelsContext);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -119,7 +121,7 @@ export function Channels({
           <PlusIconWrapper>
             <PlusIcon width={12} />
           </PlusIconWrapper>
-          <AddChannelsButtonText>Add channels</AddChannelsButtonText>
+          <AddChannelsButtonText>{t('add_channels')}</AddChannelsButtonText>
         </AddChannelsButton>
         <AddChannelModals isOpen={modalOpen} setModalOpen={setModalOpen} />
         {contextMenuOpenForChannel && (

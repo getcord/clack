@@ -1,23 +1,78 @@
 import type { Translations } from '@cord-sdk/types';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
-export const LANGS = [
-  {
-    lang: 'en',
-    name: 'Clack',
-  },
-  {
-    lang: 'fr',
-    name: 'Claque',
-  },
-  {
-    lang: 'he',
-    name: 'קלאק',
-  },
-] as const;
+export const LANGS = ['en', 'fr', 'he'] as const;
+export type Language = (typeof LANGS)[number];
 
-export type Language = (typeof LANGS)[number]['lang'];
+const resources = {
+  en: {
+    translation: {
+      name: 'Clack',
+      today: 'Today',
+      replies_one: '1 reply',
+      replies_other: '{{count}} replies',
+      thread_header: 'Thread',
+      loading_messages: 'Loading messages...',
+      add_channels: 'Add channels',
+      pinned_threads_one: '1 Pinned',
+      pinned_threads_other: '{{count}} Pinned',
+      last_reply: 'Last reply <timestamp>',
+    },
+  },
+  fr: {
+    translation: {
+      name: 'Claque',
+      today: "Aujourd'hui",
+      replies_one: '1 réponse',
+      replies_other: '{{count}} réponses',
+      thread_header: 'Fil de discussion',
+      loading_messages: 'Chargement en cours...',
+      add_channels: 'Ajouter des chaînes',
+      pinned_threads_one: '1 épinglé',
+      pinned_threads_other: '{{count}} épinglés',
+      last_reply: 'Dernière réponse <timestamp>',
+    },
+  },
+  he: {
+    translation: {
+      name: 'קלאק',
+      today: 'היום',
+      replies_one: 'תגובה אחת',
+      replies_two: '{{count}} תגובות',
+      replies_other: '{{count}} תגובות',
+      thread_header: 'שרשור',
+      loading_messages: 'טוען הודעות...',
+      add_channels: 'הוסף ערוצים',
+      pinned_threads_one: '1 מוצמד',
+      pinned_threads_two: '{{count}} מוצמדים',
+      pinned_threads_other: '{{count}} מוצמדים',
+      last_reply: 'תשובה אחרונה <timestamp>',
+    },
+  },
+} as const;
 
-export function getTranslations(channel: string): Translations {
+void i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: 'en',
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    },
+  });
+
+// This tells i18next what shape the resources file is, which then feeds into
+// the TypeScript types in a very clever way so that when you ask for a
+// translation key, it can check that you're using a key that exists.
+declare module 'i18next' {
+  export interface CustomTypeOptions {
+    resources: (typeof resources)['en'];
+  }
+}
+
+export function getCordTranslations(channel: string): Translations {
   return {
     en: {
       composer: {
