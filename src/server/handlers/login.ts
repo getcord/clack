@@ -191,8 +191,8 @@ function redirectToSlackLogin(req: Request, res: Response) {
 
 async function ensureMemberOfEveryoneOrg(userID: string) {
   // Make sure the user exists. Their details are put into their token and get
-  // set that way, so we don't need to do actually set any fields here (which
-  // lets us do this unconditionally since it won't overwrite anything).
+  // set that way, so we don't need to actually set any fields here (which lets
+  // us do this unconditionally since it won't overwrite anything).
   await fetchCordRESTApi(`users/${userID}`, 'PUT');
 
   // Adding a user who is already a member is explicitly documented as not an
