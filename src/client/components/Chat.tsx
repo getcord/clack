@@ -7,19 +7,21 @@ import type { Channel } from 'src/client/context/ChannelsContext';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
-import { Colors } from 'src/client/consts/Colors';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { StyledComposer } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { SnowFall } from 'src/client/components/SnowFall';
+import type { ClackTheme } from 'src/client/consts/theme';
 
 interface ChatProps {
   channel: Channel;
   onOpenThread: (threadID: string) => void;
+  clackTheme: ClackTheme;
 }
 
-export function Chat({ channel, onOpenThread }: ChatProps) {
+export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   const { t } = useTranslation();
   const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
     organizationID: channel.org,
@@ -52,14 +54,14 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
     <Wrapper>
       <ChannelDetailsBar>
         <PageHeaderWrapper>
-          <PageHeader>
+          <ChannelDetailsHeader>
             {channel.org && (
               <>
                 {channelIcon}
                 {channel.id}
               </>
             )}
-          </PageHeader>
+          </ChannelDetailsHeader>
           {orgMembers && (
             <PageUsersLabel users={orgMembers} channel={channel} />
           )}
@@ -96,6 +98,7 @@ export function Chat({ channel, onOpenThread }: ChatProps) {
         groupId={channel.org}
         showExpanded
       />
+      {clackTheme === 'winter' && <SnowFall />}
     </Wrapper>
   );
 }
@@ -127,13 +130,13 @@ const PageHeaderWrapper = styled.div({
   margin: 0,
 });
 
-const ChannelDetailsBar = styled.div({
-  gridArea: 'channel-details',
-  borderBottom: `1px solid ${Colors.gray_light}`,
-  position: 'relative',
-  backgroundColor: 'white',
-  zIndex: 2,
-});
+const ChannelDetailsBar = styled.div`
+  grid-area: channel-details;
+  border-bottom: ${(props) => `1px solid ${props.theme.chat.border}`};
+  position: relative;
+  background-color: ${(props) => props.theme.chat.details.bg};
+  z-index: 2;
+`;
 
 const StyledThreads = styled(Threads)`
   grid-area: threads;
@@ -149,4 +152,8 @@ export const PrivateChannelIcon = styled(LockClosedIcon)`
   margin-right: 4px;
   width: 16px;
   height: 16px;
+`;
+
+export const ChannelDetailsHeader = styled(PageHeader)`
+  color: ${(props) => props.theme.chat.details.header};
 `;

@@ -62,10 +62,12 @@ const SidebarButtonStyled = styled.button<{
   color: ${({ $activePage, $hasUnread }) =>
     $activePage || $hasUnread ? 'white' : `${Colors.inactive_channel}`};
   background: ${(props) =>
-    props.$activePage ? `${Colors.blue_active}` : `${Colors.purple}`};
+    props.$activePage ? props.theme.channel.active.bg : props.theme.channel.bg};
   ${({ $isMuted }) => $isMuted && 'opacity: 0.5;'}
   &:hover {
     background: ${(props) =>
-      props.$activePage ? `${Colors.blue_active}` : `${Colors.purple_hover}`};
+      props.$activePage
+        ? props.theme.channel.active.bg
+        : props.theme.channel.hover.bg};
   }
 `;

@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { NotificationListLauncher } from '@cord-sdk/react';
 import type { Channel } from 'src/client/context/ChannelsContext';
-import { Colors } from 'src/client/consts/Colors';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';
 import type { Language } from 'src/client/l10n';
 import { LANGS } from 'src/client/l10n';
+import { themeOptions, type ClackTheme } from 'src/client/consts/theme';
 
 type SidebarProps = {
   className?: string;
@@ -17,6 +17,8 @@ type SidebarProps = {
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
   lang: Language;
   setLang: React.Dispatch<React.SetStateAction<Language>>;
+  clackTheme: ClackTheme;
+  setClackTheme: React.Dispatch<React.SetStateAction<ClackTheme>>;
 };
 
 export function Sidebar({
@@ -25,6 +27,8 @@ export function Sidebar({
   setShowSidebar,
   lang,
   setLang,
+  clackTheme,
+  setClackTheme,
 }: SidebarProps) {
   const { t } = useTranslation('translation');
   const navigate = useNavigate();
@@ -43,6 +47,16 @@ export function Sidebar({
             </option>
           ))}
         </LangSelector>
+        <ThemeSelector
+          value={clackTheme}
+          onChange={(e) => setClackTheme(e.target.value as ClackTheme)}
+        >
+          {Object.entries(themeOptions).map(([theme, name]) => (
+            <option key={theme} value={theme}>
+              {name}
+            </option>
+          ))}
+        </ThemeSelector>
         <StyledNotifLauncher
           onClickNotification={() => setShowSidebar?.(false)}
         />
@@ -65,37 +79,40 @@ const ClackHeader = styled(PageHeader)({
   flexGrow: 1,
 });
 
-const SidebarWrap = styled.div({
-  background: Colors.purple,
-  display: 'grid',
-  gridTemplateRows: 'auto 1fr',
-  gridTemplateAreas: `
-  "header" 
-  "content"
-  `,
-  position: 'relative',
-  overflow: 'hidden',
-});
+const SidebarWrap = styled.div`
+  background: ${(props) => props.theme.sidebar.bg};
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header'
+    'content';
+  position: relative;
+  overflow: hidden;
+`;
 
 const ScrollableContent = styled.div({
   overflow: 'auto',
 });
 
-const SidebarHeader = styled.div({
-  gridArea: 'header',
-  display: 'flex',
-  justifyContent: 'space-between',
-  borderBottom: `1px solid ${Colors.purple_border}`,
-  borderTop: `1px solid ${Colors.purple_border}`,
-  color: 'white',
-  alignItems: 'center',
-});
+const SidebarHeader = styled.div`
+  grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: ${(props) => `1px solid ${props.theme.bordercolor}`};
+  color: white;
+  align-items: center;
+`;
 
 const StyledNotifLauncher = styled(NotificationListLauncher)({
   padding: '0 16px',
 });
 
 const LangSelector = styled.select({
+  borderRadius: '4px',
+  padding: '6px 8px',
+});
+
+const ThemeSelector = styled.select({
   borderRadius: '4px',
   padding: '6px 8px',
 });

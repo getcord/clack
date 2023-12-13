@@ -12,7 +12,6 @@ import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
-import { Colors } from 'src/client/consts/Colors';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
@@ -177,7 +176,7 @@ const AddChannelsButton = styled.button`
   cursor: pointer;
 
   color: #ffffffb3;
-  background: ${Colors.purple};
+  background: ${(props) => props.theme.channel.add.bg};
 `;
 
 const ChannelsList = styled.div`

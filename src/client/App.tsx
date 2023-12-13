@@ -1,7 +1,7 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
-import { styled } from 'styled-components';
+import { ThemeProvider, styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { NavigateFn } from '@cord-sdk/types';
@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
 import type { Channel } from 'src/client/context/ChannelsContext';
-import { Colors } from 'src/client/consts/Colors';
 import { useAPIFetch, useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
 import { Chat } from 'src/client/components/Chat';
@@ -24,6 +23,7 @@ import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
+import { theme } from 'src/client/consts/theme';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -56,6 +56,10 @@ export function App() {
     'clack-language',
     'en',
   );
+
+  const [clackTheme, setClackTheme] = useStateWithLocalStoragePersistence<
+    'default' | 'winter'
+  >('clack-theme', 'default');
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -128,7 +132,7 @@ export function App() {
   }, [lang]);
 
   return (
-    <>
+    <ThemeProvider theme={theme[clackTheme]}>
       <GlobalStyle />
       <Helmet>
         <title>
@@ -153,6 +157,7 @@ export function App() {
             }}
           >
             <BrowserNotificationBridge />
+
             <PresenceObserver
               location={{ page: 'clack', durable: true }}
               style={{ height: '100%' }}
@@ -170,6 +175,8 @@ export function App() {
                   setShowSidebar={setShowSidebar}
                   lang={lang}
                   setLang={setLang}
+                  clackTheme={clackTheme}
+                  setClackTheme={setClackTheme}
                 />
                 <MessageProvider>
                   <ResponsiveContent>
@@ -178,6 +185,7 @@ export function App() {
                         key={channel.id}
                         channel={channel}
                         onOpenThread={onOpenThread}
+                        clackTheme={clackTheme}
                       />
                     )}
                   </ResponsiveContent>
@@ -194,7 +202,7 @@ export function App() {
           </ChannelsContext.Provider>
         </UsersProvider>
       </CordProvider>
-    </>
+    </ThemeProvider>
   );
 }
 
@@ -283,13 +291,14 @@ const ResponsiveContent = styled(Content)`
   }
 `;
 
-const Topbar = styled(TopbarDefault)({
-  gridArea: 'topbar',
-  background: Colors.purple_dark,
-  color: 'white',
-  position: 'sticky',
-  top: 0,
-});
+const Topbar = styled(TopbarDefault)`
+  grid-area: topbar;
+  background: ${(props) => props.theme.topbar.bg};
+  color: white;
+  position: sticky;
+  top: 0;
+  border-bottom: ${(props) => `1px solid ${props.theme.bordercolor}`};
+`;
 
 const ThreadDetails = styled(ThreadDetailsDefault)`
   grid-area: thread;
