@@ -39,13 +39,13 @@ export const theme: Record<ClackTheme, object> = {
       bg: '#577899',
     },
     sidebar: {
-      bg: '#87A2BD',
+      bg: '#4B6285',
     },
     channel: {
       active: { bg: '#577899' },
-      bg: '#87A2BD',
+      bg: '#4B6285',
       hover: { bg: '#A9C2D6' },
-      add: { bg: '#87A2BD' },
+      add: { bg: '#4B6285' },
     },
     searchbar: {
       button: { fg: 'white' },
