@@ -177,7 +177,7 @@ const AddChannelsButton = styled.button`
   cursor: pointer;
 
   color: #ffffffb3;
-  background: ${Colors.purple};
+  background: ${(props) => props.theme.channel.add.bg};
 `;
 
 const ChannelsList = styled.div`

@@ -287,21 +287,21 @@ const ResponsiveSearchContainer = styled(SearchContainer)`
   }
 `;
 
-const SearchButton = styled.button({
-  backgroundColor: '#5C3D5E',
-  borderRadius: '4px',
-  borderStyle: 'none',
-  color: 'white',
-  cursor: 'pointer',
-  display: 'flex',
-  gap: '8px',
-  justifyContent: 'center',
-  padding: '4px',
-  width: '100%',
+const SearchButton = styled.button`
+  background-color: ${(props) => props.theme.searchbar.bg};
+  border-radius: 4px;
+  border-style: none;
+  color: ${(props) => props.theme.searchbar.button.fg};
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 4px;
+  width: 100%;
   '&:hover': {
-    backgroundColor: '#644665',
-  },
-});
+    background-color: '#644665';
+  }
+`;
 
 const CloseButton = styled.div({
   cursor: 'pointer',
