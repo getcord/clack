@@ -78,22 +78,24 @@ export function ChannelPicker({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const text = e.target.value.trim();
       setChannelText(text);
-      const newFilteredChannels = channels.filter((channel) =>
-        channel.id.includes(text),
-      );
-      setFilteredChannels(newFilteredChannels);
-      if (newFilteredChannels.length && filteredChannels.length) {
-        const currentID = filteredChannels[selectedChannelIndex].id;
-        let newSelectedChannelIndex = 0;
-        newFilteredChannels.forEach((channel, index) => {
-          if (channel.id === currentID) {
-            newSelectedChannelIndex = index;
+      const newFilteredChannels = channels
+        .filter((channel) => channel.id.includes(text))
+        .sort((a, b) => {
+          // Sort exact matches to the top
+          if (a.id === text) {
+            return -1;
           }
+          if (b.id === text) {
+            return 1;
+          }
+          // Otherwise prefer things that match earlier in the channel id
+          return a.id.indexOf(text) - b.id.indexOf(text);
         });
-        setSelectedChannelIndex(newSelectedChannelIndex);
-      }
+
+      setFilteredChannels(newFilteredChannels);
+      setSelectedChannelIndex(0);
     },
-    [channels, filteredChannels, selectedChannelIndex],
+    [channels],
   );
 
   return (
