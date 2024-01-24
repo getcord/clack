@@ -5,7 +5,6 @@ import {
   LockClosedIcon,
   PlusIcon,
 } from '@heroicons/react/20/solid';
-import { thread } from '@cord-sdk/react';
 import { useTranslation } from 'react-i18next';
 import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
@@ -16,6 +15,7 @@ import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 import { ChannelPicker } from 'src/client/components/ChannelPicker';
+import { ChannelThreadCountFetcher } from 'src/client/components/ChannelThreadCountFetcher';
 
 type ChannelWithMute = Channel & { muted: boolean };
 
@@ -32,26 +32,32 @@ export function ChannelButton({
   isActive: boolean;
   icon: React.ReactNode;
 }) {
-  const summary = thread.useThreadCounts({
-    filter: {
-      location: {
-        value: { channel: option.id },
-        partialMatch: true,
-      },
-    },
-  });
-  const hasUnread = !option.muted && !!summary?.new;
+  // Just show website-events as always unread. Lol.  Because we were having perf
+  // issues regarding subscriptions for its thread counts.
+  const [hasUnread, setHasUnread] = useState<boolean>(
+    option.id === 'website-events',
+  );
 
   return (
-    <SidebarButton
-      option={option.id}
-      isActive={isActive}
-      isMuted={option.muted}
-      onClick={onClick}
-      onContextMenu={onContextMenu}
-      hasUnread={hasUnread}
-      icon={icon}
-    />
+    <>
+      {/* See comment above.... don't fetch thread counts for website-events */}
+      {option.id !== 'website-events' && (
+        <ChannelThreadCountFetcher
+          setHasUnread={setHasUnread}
+          channelID={option.id}
+          isMuted={option.muted}
+        />
+      )}
+      <SidebarButton
+        option={option.id}
+        isActive={isActive}
+        isMuted={option.muted}
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+        hasUnread={hasUnread}
+        icon={icon}
+      />
+    </>
   );
 }
 
