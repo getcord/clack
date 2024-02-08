@@ -15,7 +15,7 @@ export function ChannelsRightClickMenu({
 }) {
   const [muted, toggleMute] = useMutedChannels();
 
-  const markAsUnread = useCallback(() => {
+  const markAsRead = useCallback(() => {
     void window.CordSDK!.thread.setSeen(
       {
         location: {
@@ -37,7 +37,7 @@ export function ChannelsRightClickMenu({
       <Menu $x={position.x} $y={position.y}>
         <MenuList>
           <MenuListItem>
-            <MenuListItemButton onClick={() => markAsUnread()}>
+            <MenuListItemButton onClick={() => markAsRead()}>
               Mark all as read
             </MenuListItemButton>
             <MenuListItemButton
