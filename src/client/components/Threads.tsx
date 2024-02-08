@@ -65,10 +65,16 @@ export function Threads({
   }, [scrollHandler, threadListRef]);
 
   const markAsRead = useCallback(() => {
-    threads.forEach((thread) => {
-      void window.CordSDK!.thread.setSeen(thread.id, true);
-    });
-  }, [threads]);
+    void window.CordSDK!.thread.setSeen(
+      {
+        location: {
+          value: { channel: channel.id },
+          partialMatch: false,
+        },
+      },
+      true,
+    );
+  }, [channel]);
 
   const scrollToBottom = () => {
     if (threadListRef.current) {
