@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
-import { thread } from '@cord-sdk/react';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { ReactPortal } from 'src/client/components/ReactPortal';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
@@ -14,47 +13,20 @@ export function ChannelsRightClickMenu({
   channel: Channel;
   closeMenu: () => void;
 }) {
-  const [threadIDs, setThreadIDs] = useState<Set<string>>(new Set());
-  const [shouldMarkAsUnread, setShouldMarkAsUnread] = useState(false);
   const [muted, toggleMute] = useMutedChannels();
 
-  const { threads, hasMore, fetchMore, loading } = thread.useThreads({
-    filter: {
-      location: { channel: channel.id },
-    },
-    sortBy: 'first_message_timestamp',
-    sortDirection: 'descending',
-  });
-
-  // Don't currently have a way to load just unread threads, so load a fair chunk
-  // of recent threads, since presumably newer ones are the ones showing as unread
-  // (NB the WHOLE thread has to be unread to make the channel title bold, so doesn't
-  // matter if old threads get new messages)
-  useEffect(() => {
-    threads.forEach((thread) => {
-      if (!threadIDs.has(thread.id)) {
-        setThreadIDs(new Set([...threadIDs, thread.id]));
-      }
-    });
-
-    if (hasMore && !loading && threadIDs.size < 25) {
-      void fetchMore(25);
-    }
-  }, [fetchMore, hasMore, loading, threadIDs, threads]);
-
-  // In case we haven't loaded the threads yet, don't actually carry out the
-  // action when the button is clicked, but after the button has been clicked and
-  // we think our loading is done
-  useEffect(() => {
-    if (!shouldMarkAsUnread || loading || (threadIDs.size < 25 && hasMore)) {
-      return;
-    }
-    threadIDs.forEach((id) => {
-      void window.CordSDK!.thread.setSeen(id, true);
-    });
-    setShouldMarkAsUnread(false);
+  const markAsUnread = useCallback(() => {
+    void window.CordSDK!.thread.setSeen(
+      {
+        location: {
+          value: { channel: channel.id },
+          partialMatch: false,
+        },
+      },
+      true,
+    );
     closeMenu();
-  }, [closeMenu, hasMore, loading, shouldMarkAsUnread, threadIDs]);
+  }, [channel, closeMenu]);
 
   if (muted === undefined) {
     return null;
@@ -65,7 +37,7 @@ export function ChannelsRightClickMenu({
       <Menu $x={position.x} $y={position.y}>
         <MenuList>
           <MenuListItem>
-            <MenuListItemButton onClick={() => setShouldMarkAsUnread(true)}>
+            <MenuListItemButton onClick={() => markAsUnread()}>
               Mark all as read
             </MenuListItemButton>
             <MenuListItemButton
