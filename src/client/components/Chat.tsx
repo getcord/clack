@@ -14,6 +14,7 @@ import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
+import { Spring } from 'src/client/components/SpringFall';
 
 interface ChatProps {
   channel: Channel;
@@ -99,6 +100,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
         showExpanded
       />
       {clackTheme === 'winter' && <SnowFall />}
+      {clackTheme === 'spring' && <Spring />}
     </Wrapper>
   );
 }
