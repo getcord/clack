@@ -8,11 +8,10 @@ export const themeOptions: { [k in ClackTheme]: string } = {
   spring: '🌼',
 };
 
-const yellow = '#F8DA72';
-const light_peach = '#FEDDCA';
-const grass_green = '#64864A';
-const very_light_green = '#E7EED6';
-const grey = '#8e8e8a';
+const peach = '#EF927B';
+const light_light_green = '#EEF9EE';
+const dark_green = '#42654D';
+const dark_dark_green = '#0C4532';
 
 export const theme: Record<ClackTheme, object> = {
   default: {
@@ -69,28 +68,28 @@ export const theme: Record<ClackTheme, object> = {
   },
   spring: {
     topbar: {
-      bg: yellow,
+      bg: dark_dark_green,
     },
     sidebar: {
-      bg: grass_green,
+      bg: dark_green,
     },
     channel: {
-      active: { bg: light_peach },
-      bg: grass_green,
-      hover: { bg: light_peach },
-      add: { bg: grass_green },
+      active: { bg: dark_dark_green },
+      bg: dark_green,
+      hover: { bg: peach },
+      add: { bg: dark_green },
     },
     searchbar: {
       button: { fg: 'white' },
-      bg: grey,
+      bg: peach,
     },
-    bordercolor: grass_green,
+    bordercolor: dark_green,
     chat: {
-      border: grass_green,
-      details: { bg: very_light_green, header: grass_green },
+      border: dark_green,
+      details: { bg: light_light_green, header: dark_green },
     },
     cord: {
-      colorbase: very_light_green,
+      colorbase: light_light_green,
     },
   },
 };
