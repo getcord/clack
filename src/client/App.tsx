@@ -58,7 +58,7 @@ export function App() {
   );
 
   const [clackTheme, setClackTheme] = useStateWithLocalStoragePersistence<
-    'default' | 'winter'
+    'default' | 'winter' | 'spring'
   >('clack-theme', 'default');
 
   const navigate = useNavigate();

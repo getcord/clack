@@ -1,11 +1,18 @@
 import { Colors } from 'src/client/consts/Colors';
 
-export type ClackTheme = 'default' | 'winter';
+export type ClackTheme = 'default' | 'winter' | 'spring';
 
 export const themeOptions: { [k in ClackTheme]: string } = {
   default: '👖',
   winter: '❄️',
+  spring: '🌼',
 };
+
+const yellow = '#F8DA72';
+const light_peach = '#FEDDCA';
+const grass_green = '#64864A';
+const very_light_green = '#E7EED6';
+const grey = '#8e8e8a';
 
 export const theme: Record<ClackTheme, object> = {
   default: {
@@ -58,6 +65,32 @@ export const theme: Record<ClackTheme, object> = {
     },
     cord: {
       colorbase: '#EAF3F9',
+    },
+  },
+  spring: {
+    topbar: {
+      bg: yellow,
+    },
+    sidebar: {
+      bg: grass_green,
+    },
+    channel: {
+      active: { bg: light_peach },
+      bg: grass_green,
+      hover: { bg: light_peach },
+      add: { bg: grass_green },
+    },
+    searchbar: {
+      button: { fg: 'white' },
+      bg: grey,
+    },
+    bordercolor: grass_green,
+    chat: {
+      border: grass_green,
+      details: { bg: very_light_green, header: grass_green },
+    },
+    cord: {
+      colorbase: very_light_green,
     },
   },
 };
