@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { styled } from 'styled-components';
-import { thread, user } from '@cord-sdk/react';
-import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import { thread, user, experimental } from '@cord-sdk/react';
+import {
+  HashtagIcon,
+  LockClosedIcon,
+  PaperAirplaneIcon,
+} from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
@@ -9,7 +13,10 @@ import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
-import { StyledComposer } from 'src/client/components/style/StyledCord';
+import {
+  StyledComposer,
+  StyledExperimentalComposer,
+} from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
@@ -50,6 +57,10 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const channelIcon =
     channel.org === EVERYONE_ORG_ID ? <ChannelIcon /> : <PrivateChannelIcon />;
+
+  const replace = useMemo(() => {
+    return { SendButton: MySendButton };
+  }, []);
 
   return (
     <Wrapper>
@@ -99,6 +110,16 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
         groupId={channel.org}
         showExpanded
       />
+      <experimental.Replace replace={replace}>
+        <StyledExperimentalComposer
+          createThread={{
+            name: `#${channel.id}`,
+            location: { channel: channel.id },
+            url: '',
+            groupID: channel.org,
+          }}
+        />
+      </experimental.Replace>
       {clackTheme === 'winter' && <SnowFall />}
       {clackTheme === 'spring' && <Spring />}
     </Wrapper>
@@ -159,3 +180,11 @@ export const PrivateChannelIcon = styled(LockClosedIcon)`
 export const ChannelDetailsHeader = styled(PageHeader)`
   color: ${(props) => props.theme.chat.details.header};
 `;
+
+function MySendButton(props: any) {
+  return (
+    <button disabled={props.disabled} onClick={props.onClick}>
+      <PaperAirplaneIcon style={{ color: 'black' }} />
+    </button>
+  );
+}
