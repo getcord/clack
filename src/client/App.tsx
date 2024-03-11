@@ -24,6 +24,7 @@ import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 import { theme } from 'src/client/consts/theme';
+import { CordVersionProvider } from 'src/client/context/CordVersionContext';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -156,49 +157,51 @@ export function App() {
               refetch: fetchChannels,
             }}
           >
-            <BrowserNotificationBridge />
+            <CordVersionProvider>
+              <BrowserNotificationBridge />
 
-            <PresenceObserver
-              location={{ page: 'clack', durable: true }}
-              style={{ height: '100%' }}
-              groupId={EVERYONE_ORG_ID}
-            >
-              <ResponsiveLayout
-                className={cx({
-                  openThread: threadID,
-                  openSidebar: showSidebar,
-                })}
+              <PresenceObserver
+                location={{ page: 'clack', durable: true }}
+                style={{ height: '100%' }}
+                groupId={EVERYONE_ORG_ID}
               >
-                <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
-                <Sidebar
-                  channel={channel}
-                  setShowSidebar={setShowSidebar}
-                  lang={lang}
-                  setLang={setLang}
-                  clackTheme={clackTheme}
-                  setClackTheme={setClackTheme}
-                />
-                <MessageProvider>
-                  <ResponsiveContent>
-                    {openPanel === 'channel' && channel.org && (
-                      <Chat
-                        key={channel.id}
+                <ResponsiveLayout
+                  className={cx({
+                    openThread: threadID,
+                    openSidebar: showSidebar,
+                  })}
+                >
+                  <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
+                  <Sidebar
+                    channel={channel}
+                    setShowSidebar={setShowSidebar}
+                    lang={lang}
+                    setLang={setLang}
+                    clackTheme={clackTheme}
+                    setClackTheme={setClackTheme}
+                  />
+                  <MessageProvider>
+                    <ResponsiveContent>
+                      {openPanel === 'channel' && channel.org && (
+                        <Chat
+                          key={channel.id}
+                          channel={channel}
+                          onOpenThread={onOpenThread}
+                          clackTheme={clackTheme}
+                        />
+                      )}
+                    </ResponsiveContent>
+                    {threadID && (
+                      <ThreadDetails
                         channel={channel}
-                        onOpenThread={onOpenThread}
-                        clackTheme={clackTheme}
+                        threadID={threadID}
+                        onClose={() => navigate(`/channel/${channel.id}`)}
                       />
                     )}
-                  </ResponsiveContent>
-                  {threadID && (
-                    <ThreadDetails
-                      channel={channel}
-                      threadID={threadID}
-                      onClose={() => navigate(`/channel/${channel.id}`)}
-                    />
-                  )}
-                </MessageProvider>
-              </ResponsiveLayout>
-            </PresenceObserver>
+                  </MessageProvider>
+                </ResponsiveLayout>
+              </PresenceObserver>
+            </CordVersionProvider>
           </ChannelsContext.Provider>
         </UsersProvider>
       </CordProvider>

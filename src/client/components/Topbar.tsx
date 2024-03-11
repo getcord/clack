@@ -2,8 +2,13 @@ import * as React from 'react';
 import { Avatar as DefaultAvatar, presence } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeftIcon, HashtagIcon } from '@heroicons/react/20/solid';
+import {
+  ChevronLeftIcon,
+  HashtagIcon,
+  ArrowPathIcon,
+} from '@heroicons/react/20/solid';
 import { Emoji } from 'emoji-picker-react';
+import { useContext } from 'react';
 import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
 import { useUserStatus } from 'src/client/hooks/useUserStatus';
@@ -14,6 +19,7 @@ import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
 import { SearchBar } from 'src/client/components/SearchBar';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { CordVersionContext } from 'src/client/context/CordVersionContext';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';
 
@@ -72,6 +78,8 @@ export const Topbar = ({
     setShouldShowActiveModal(false);
   };
 
+  const { version, toggleVersion } = useContext(CordVersionContext);
+
   return (
     <Container className={className}>
       <GoBack onClick={() => navigate(`/channel/${channelID}`)}>
@@ -81,28 +89,33 @@ export const Topbar = ({
         <HashtagIcon width={16} height={16} />
       </ChannelsList>
       <SearchBar />
-      <AvatarWrapper onClick={onAvatarClick}>
-        {status?.emojiUnified && (
-          <EmojiBackground
-            onClick={(e) => {
-              e.stopPropagation();
-              setModalState('SET_STATUS');
-            }}
-          >
-            <Emoji size={16} unified={status?.emojiUnified}></Emoji>
-          </EmojiBackground>
-        )}
-        {userID && (
-          <>
-            <Avatar
-              $withStatus={!!status?.emojiUnified}
-              userId={userID}
-              enableTooltip
-            />
-            <ActiveBadge $isActive={isActive === 'active'} />
-          </>
-        )}
-      </AvatarWrapper>
+      <AvatarContainer>
+        <VersionContainer onClick={toggleVersion}>
+          {version} <ArrowPathIcon height={16} />
+        </VersionContainer>
+        <AvatarWrapper onClick={onAvatarClick}>
+          {status?.emojiUnified && (
+            <EmojiBackground
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalState('SET_STATUS');
+              }}
+            >
+              <Emoji size={16} unified={status?.emojiUnified}></Emoji>
+            </EmojiBackground>
+          )}
+          {userID && (
+            <>
+              <Avatar
+                $withStatus={!!status?.emojiUnified}
+                userId={userID}
+                enableTooltip
+              />
+              <ActiveBadge $isActive={isActive === 'active'} />
+            </>
+          )}
+        </AvatarWrapper>
+      </AvatarContainer>
       <Modal
         isOpen={modalState === 'PREFERENCES'}
         onClose={() => setModalState(null)}
@@ -212,6 +225,23 @@ const AvatarWrapper = styled.div({
   display: 'flex',
   flexDirection: 'row',
   backgroundColor: 'inherit',
+});
+
+const AvatarContainer = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  backgroundColor: 'inherit',
+  gap: 8,
+});
+
+const VersionContainer = styled.div({
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  backgroundColor: 'inherit',
+  gap: 4,
+  cursor: 'pointer',
+  userSelect: 'none',
 });
 
 const EmojiBackground = styled.div({
