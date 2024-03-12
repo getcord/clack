@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { Tooltip } from 'react-tooltip';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { styled, css } from 'styled-components';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
@@ -20,12 +19,14 @@ export function MoreActionsButton({
   showOptionsDialog,
   setShowOptionsDialog,
   page,
+  setEditing,
 }: {
   thread: ThreadSummary;
   message?: CoreMessageData;
   showOptionsDialog: boolean;
   setShowOptionsDialog: (state: boolean) => void;
   page: 'threadDetails' | 'channel';
+  setEditing?: (state: boolean) => void;
 }) {
   const { userID: cordUserID } = React.useContext(CordContext);
   const { setEditingMessage } = React.useContext(MessageContext);
@@ -38,9 +39,17 @@ export function MoreActionsButton({
   );
 
   const onEditMessage = React.useCallback(() => {
-    setEditingMessage({ page, messageId: messageData?.id });
+    setEditing
+      ? setEditing(true)
+      : setEditingMessage({ page, messageId: messageData?.id });
     setShowOptionsDialog(false);
-  }, [messageData?.id, page, setEditingMessage, setShowOptionsDialog]);
+  }, [
+    messageData?.id,
+    page,
+    setEditing,
+    setShowOptionsDialog,
+    setEditingMessage,
+  ]);
 
   const onDeleteMessage = React.useCallback(async () => {
     if (!messageData) {
@@ -130,7 +139,6 @@ export function MoreActionsButton({
         onKeyDown={keyboardEvents}
         tabIndex={0}
       >
-        <Tooltip id="more-actions-button" />
         <OptionsButton
           ref={moreOptionsButtonRef}
           data-tooltip-id="more-actions-button"
@@ -192,7 +200,9 @@ export function MoreActionsButton({
         </Modal>
       </div>
       <Overlay
-        onClick={() => setShowOptionsDialog(false)}
+        onClick={() => {
+          setShowOptionsDialog(false);
+        }}
         $shouldShow={showOptionsDialog}
       />
     </>

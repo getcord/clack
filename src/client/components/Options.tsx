@@ -14,8 +14,9 @@ interface OptionsProps {
   thread: ThreadSummary;
   hovered: boolean;
   onOpenThread?: (threadID: string) => void;
-  message?: CoreMessageData;
+  message: CoreMessageData;
   page: 'threadDetails' | 'channel';
+  setEditing?: (state: boolean) => void;
 }
 
 export function Options({
@@ -24,6 +25,7 @@ export function Options({
   onOpenThread,
   message,
   page,
+  setEditing,
 }: OptionsProps) {
   const [optionsHovered, setOptionsHovered] = useState(false);
   const [showOptionsDialog, setShowOptionsDialog] = useState(false);
@@ -38,18 +40,13 @@ export function Options({
   return (
     (hovered || optionsHovered || showOptionsDialog) && (
       <OptionsStyled onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        <Tooltip id="reactions-button" />
         <div
           data-tooltip-id="reactions-button"
           data-tooltip-content="Find another reaction"
           data-tooltip-place="top"
         >
-          <Reactions
-            threadId={thread.id}
-            messageId={message?.id ?? thread.firstMessage?.id}
-          />
+          <Reactions threadId={thread.id} messageId={message.id} />
         </div>
-        <Tooltip id="options-button" />
         {onOpenThread && (
           <OptionsButton
             onClick={() => onOpenThread(thread.id)}
@@ -69,6 +66,7 @@ export function Options({
           showOptionsDialog={showOptionsDialog}
           setShowOptionsDialog={setShowOptionsDialog}
           page={page}
+          setEditing={setEditing}
         />
       </OptionsStyled>
     )
@@ -94,17 +92,19 @@ const buttonStyle = css`
 `;
 
 const OptionsStyled = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  position: absolute;
-  right: 12px;
-  top: -24px;
-  background-color: white;
-  box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
-  border-radius: 8px;
-  padding: 4px;
-  z-index: 1;
+  && {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    position: absolute;
+    right: 12px;
+    top: -24px;
+    background-color: white;
+    box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
+    border-radius: 8px;
+    padding: 4px;
+    z-index: 1;
+  }
 
   .cord-reaction-list .cord-pill {
     display: none;
@@ -122,6 +122,10 @@ const OptionsStyled = styled.div`
       }
     }
   }
+
+  .cord-add-reaction:hover {
+    box-shadow: none;
+  }
 `;
 
 export const OptionsButton = styled.div`
@@ -129,3 +133,14 @@ export const OptionsButton = styled.div`
   width: 30px;
   ${buttonStyle}
 `;
+
+// TODO could use WithTooltip
+export function OptionsMenuTooltips() {
+  return (
+    <>
+      <Tooltip id="reactions-button" />
+      <Tooltip id="options-button" />
+      <Tooltip id="more-actions-button" />
+    </>
+  );
+}
