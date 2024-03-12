@@ -1,5 +1,5 @@
 import { css, styled } from 'styled-components';
-import { Composer, Message, Thread } from '@cord-sdk/react';
+import { Composer, Message, Thread, experimental } from '@cord-sdk/react';
 import { Colors } from 'src/client/consts/Colors';
 
 export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
@@ -150,6 +150,26 @@ export const StyledComposer = styled(Composer)`
   .cord-composer:focus-within {
     box-shadow: none;
     border: 1px solid ${Colors.gray_border};
+  }
+`;
+
+export const StyledExperimentalComposer = styled(experimental.SendComposer)`
+  display: block;
+  grid-area: composer;
+  margin: 0 20px 20px;
+
+  &.cord-composer {
+    border-radius: 8px;
+  }
+
+  &.cord-composer:focus-within {
+    box-shadow: none;
+    border: 1px solid ${Colors.gray_border};
+  }
+
+  $.cord-composer .cord-button {
+    width: 30px;
+    color: red;
   }
 `;
 

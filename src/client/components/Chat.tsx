@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { styled } from 'styled-components';
-import { thread, user } from '@cord-sdk/react';
+import { thread, user, experimental } from '@cord-sdk/react';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/context/ChannelsContext';
@@ -9,12 +9,17 @@ import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
-import { StyledComposer } from 'src/client/components/style/StyledCord';
+import {
+  StyledComposer,
+  StyledExperimentalComposer,
+} from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
+import { CordVersionContext } from 'src/client/context/CordVersionContext';
+import { ClackSendButton } from 'src/client/components/ClackSendButton';
 
 interface ChatProps {
   channel: Channel;
@@ -50,6 +55,17 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const channelIcon =
     channel.org === EVERYONE_ORG_ID ? <ChannelIcon /> : <PrivateChannelIcon />;
+
+  const cordVersionContext = useContext(CordVersionContext);
+
+  const createThreadOptions = useMemo(() => {
+    return {
+      name: `#${channel.id}`,
+      location: { channel: channel.id },
+      url: '',
+      groupID: channel.org,
+    };
+  }, [channel.id, channel.org]);
 
   return (
     <Wrapper>
@@ -93,12 +109,21 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
         channel={channel}
         onOpenThread={onOpenThread}
       />
-      <StyledComposer
-        location={{ channel: channel.id }}
-        threadName={`#${channel.id}`}
-        groupId={channel.org}
-        showExpanded
-      />
+      {cordVersionContext.version === '3.0' ? (
+        <StyledComposer
+          location={{ channel: channel.id }}
+          threadName={`#${channel.id}`}
+          groupId={channel.org}
+          showExpanded
+        />
+      ) : (
+        <experimental.Replace replace={{ SendButton: ClackSendButton }}>
+          <StyledExperimentalComposer
+            createThread={createThreadOptions}
+            style={{}}
+          />
+        </experimental.Replace>
+      )}
       {clackTheme === 'winter' && <SnowFall />}
       {clackTheme === 'spring' && <Spring />}
     </Wrapper>

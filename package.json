@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cord-sdk/react": "^1.32.0",
+    "@cord-sdk/react": "^1.36.1-canary.1",
     "@cord-sdk/server": "^1.32.0",
     "@heroicons/react": "^2.0.18",
     "@slack/web-api": "^6.8.1",
