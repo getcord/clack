@@ -27,6 +27,8 @@ interface ChatProps {
   clackTheme: ClackTheme;
 }
 
+const REPLACE = { SendButton: ClackSendButton };
+
 export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   const { t } = useTranslation();
   const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
@@ -62,7 +64,11 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
     return {
       name: `#${channel.id}`,
       location: { channel: channel.id },
-      url: '',
+      // This is not always the right url, but the navigate prop in
+      // CordProvider makes sure that clicking on notifications takes
+      // to the right place. We cannot pass an empty url because then
+      // the navigate function won't be called (we should fix that)
+      url: window.location.href,
       groupID: channel.org,
     };
   }, [channel.id, channel.org]);
@@ -117,11 +123,8 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
           showExpanded
         />
       ) : (
-        <experimental.Replace replace={{ SendButton: ClackSendButton }}>
-          <StyledExperimentalComposer
-            createThread={createThreadOptions}
-            style={{}}
-          />
+        <experimental.Replace replace={REPLACE}>
+          <StyledExperimentalComposer createThread={createThreadOptions} />
         </experimental.Replace>
       )}
       {clackTheme === 'winter' && <SnowFall />}
