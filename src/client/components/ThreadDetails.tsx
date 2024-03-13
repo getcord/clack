@@ -1,10 +1,16 @@
 import * as React from 'react';
+import { useContext, useMemo } from 'react';
 import { styled } from 'styled-components';
-import { thread } from '@cord-sdk/react/';
+import { experimental, thread as ThreadSdk } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
+import type { MessageProps as ExperimentalMessageProps } from '@cord-sdk/react/dist/mjs/types/canary/message/Message';
+import type { ReplaceConfig } from '@cord-sdk/react/dist/mjs/types/experimental/components/replacements';
 import { useTranslation } from 'react-i18next';
+
+import { CordVersionContext } from 'src/client/context/CordVersionContext';
 import type { Channel } from 'src/client/context/ChannelsContext';
+import { ClackSendButton } from 'src/client/components/ClackSendButton';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Colors } from 'src/client/consts/Colors';
 import {
@@ -72,6 +78,138 @@ export type ThreadDetailsProps = {
   onClose: () => void;
   channel: Channel;
 };
+function ClackThread(props: { threadID: string }) {
+  const cordVersionContext = useContext(CordVersionContext);
+  if (cordVersionContext.version === '3.0') {
+    return <ClackThreadV3 {...props} />;
+  }
+  return <ClackThreadV4 {...props} />;
+}
+
+const INITIAL_CLACK_CONTEXT_VALUE = {};
+const ClackThreadContext = React.createContext<{
+  numReplies?: number;
+  firstMessageID?: string;
+  loading?: boolean;
+  fetchMore?: (numToLoad: number) => Promise<void>;
+  hasMore?: boolean;
+}>(INITIAL_CLACK_CONTEXT_VALUE);
+
+function MessageWithPaginationTrigger(props: ExperimentalMessageProps) {
+  const { t } = useTranslation();
+  const {
+    numReplies = 0,
+    firstMessageID,
+    loading,
+    fetchMore,
+    hasMore,
+  } = useContext(ClackThreadContext);
+  if (
+    props.message.id !== firstMessageID ||
+    loading === undefined ||
+    fetchMore === undefined ||
+    hasMore === undefined
+  ) {
+    return <experimental.Message {...props} />;
+  }
+  return (
+    <>
+      <experimental.Message {...props} />
+      <SeparatorWrap>
+        {numReplies > 0 ? (
+          <>
+            <SeparatorText>{t('replies', { count: numReplies })}</SeparatorText>
+            <SeparatorLine />
+          </>
+        ) : null}
+      </SeparatorWrap>
+      <PaginationTrigger
+        loading={loading}
+        hasMore={hasMore}
+        fetchMore={fetchMore}
+      />
+    </>
+  );
+}
+
+const REPLACE = {
+  Message: MessageWithPaginationTrigger,
+  SendButton: ClackSendButton,
+} satisfies ReplaceConfig;
+
+function ClackThreadV4({ threadID }: { threadID: string }) {
+  const thread = ThreadSdk.useThread(threadID);
+
+  const firstMessageID = thread?.messages?.[0]?.id;
+  const contextValue = useMemo(
+    () => ({
+      numReplies: thread?.thread?.total ?? 0 - 1,
+      firstMessageID,
+      loading: thread?.loading,
+      fetchMore: thread?.fetchMore,
+      hasMore: thread?.hasMore,
+    }),
+    [
+      thread?.thread?.total,
+      firstMessageID,
+      thread?.loading,
+      thread?.fetchMore,
+      thread?.hasMore,
+    ],
+  );
+  return (
+    <ClackThreadContext.Provider value={contextValue}>
+      {/* Once the cord Thread has its own ScrollContainer we can remove that. */}
+      <ScrollableContainer>
+        <StyledThread replace={REPLACE} thread={thread} />
+      </ScrollableContainer>
+    </ClackThreadContext.Provider>
+  );
+}
+
+function ClackThreadV3({ threadID }: { threadID: string }) {
+  const { t } = useTranslation();
+  const { messages, loading, hasMore, fetchMore } =
+    ThreadSdk.useThreadData(threadID);
+
+  const threadSummary = ThreadSdk.useThreadSummary(threadID);
+  if (!threadSummary || messages.length === 0) {
+    // this should never happen, the parent will return
+    return null;
+  }
+  const numReplies = threadSummary.total - 1;
+  return (
+    <ScrollableContainer>
+      <MessageListWrapper>
+        <Message
+          key={threadSummary.firstMessage!.id}
+          message={threadSummary.firstMessage!}
+          thread={threadSummary}
+        />
+        <SeparatorWrap>
+          {numReplies > 0 ? (
+            <>
+              <SeparatorText>
+                {t('replies', { count: numReplies })}
+              </SeparatorText>
+              <SeparatorLine />
+            </>
+          ) : null}
+        </SeparatorWrap>
+        <PaginationTrigger
+          loading={loading}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
+        {messages.slice(1).map((message) => (
+          <Message key={message.id} message={message} thread={threadSummary} />
+        ))}
+      </MessageListWrapper>
+      <StyledComposer autofocus threadId={threadID} showExpanded />
+      <TypingIndicator threadID={threadID} />
+    </ScrollableContainer>
+  );
+}
 
 export function ThreadDetails({
   className,
@@ -80,16 +218,13 @@ export function ThreadDetails({
   channel,
 }: ThreadDetailsProps) {
   const { t } = useTranslation();
-  const { messages, loading, hasMore, fetchMore } =
-    thread.useThreadData(threadID);
+  const { messages } = ThreadSdk.useThreadData(threadID);
 
-  const threadSummary = thread.useThreadSummary(threadID);
+  const threadSummary = ThreadSdk.useThreadSummary(threadID);
 
   if (!threadSummary || messages.length === 0) {
     return <div>{t('loading_messages')}</div>;
   }
-
-  const numReplies = threadSummary.total - 1;
 
   return (
     <ThreadDetailsWrapper className={className}>
@@ -100,39 +235,7 @@ export function ThreadDetails({
           <StyledXMarkIcon />
         </CloseButton>
       </ThreadDetailsHeader>
-      <ScrollableContainer>
-        <MessageListWrapper>
-          <Message
-            key={threadSummary.firstMessage!.id}
-            message={threadSummary.firstMessage!}
-            thread={threadSummary}
-          />
-          <SeparatorWrap>
-            {numReplies > 0 ? (
-              <>
-                <SeparatorText>
-                  {t('replies', { count: numReplies })}
-                </SeparatorText>
-                <SeparatorLine />
-              </>
-            ) : null}
-          </SeparatorWrap>
-          <PaginationTrigger
-            loading={loading}
-            hasMore={hasMore}
-            fetchMore={fetchMore}
-          />
-          {messages.slice(1).map((message) => (
-            <Message
-              key={message.id}
-              message={message}
-              thread={threadSummary}
-            />
-          ))}
-        </MessageListWrapper>
-        <StyledComposer autofocus threadId={threadID} showExpanded />
-        <TypingIndicator threadID={threadID} />
-      </ScrollableContainer>
+      <ClackThread threadID={threadID} />
     </ThreadDetailsWrapper>
   );
 }
@@ -190,20 +293,35 @@ const MessageListWrapper = styled.div({
   marginBottom: '12px',
 });
 
-const SeparatorWrap = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  padding: '0 20px',
-});
+const SeparatorWrap = styled.div`
+  :is(body, .cord-component) & {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+  }
+`;
 
-const SeparatorText = styled.span({
-  fontSize: '13px',
-  color: Colors.gray_dark,
-});
+const SeparatorText = styled.span`
+  :is(body, .cord-component) & {
+    font-size: 13px;
+    color: ${Colors.gray_dark};
+  }
+`;
 
-const SeparatorLine = styled.hr({
-  flex: 1,
-  border: 'none',
-  borderTop: `1px solid ${Colors.gray_light}`,
-});
+const SeparatorLine = styled.hr`
+  :is(body, .cord-component) & {
+    flex: 1;
+    border: none;
+    border-top: 1px solid ${Colors.gray_light};
+  }
+`;
+
+const StyledThread = styled(experimental.Thread)`
+  &.cord-component {
+    border: none;
+  }
+  &.cord-component .cord-composer {
+    margin: 0 20px 20px;
+  }
+`;
