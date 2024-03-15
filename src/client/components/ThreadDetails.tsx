@@ -143,7 +143,7 @@ function ClackThreadV4({ threadID }: { threadID: string }) {
   const firstMessageID = thread?.messages?.[0]?.id;
   const contextValue = useMemo(
     () => ({
-      numReplies: thread?.thread?.total ?? 0 - 1,
+      numReplies: (thread?.thread?.total ?? 1) - 1,
       firstMessageID,
       loading: thread?.loading,
       fetchMore: thread?.fetchMore,
