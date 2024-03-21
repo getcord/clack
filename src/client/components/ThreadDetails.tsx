@@ -3,7 +3,11 @@ import { useContext, useMemo } from 'react';
 import { styled } from 'styled-components';
 import { experimental, thread as ThreadSdk } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import type { CoreMessageData, ThreadSummary } from '@cord-sdk/types';
+import type {
+  ClientThreadData,
+  CoreMessageData,
+  ThreadSummary,
+} from '@cord-sdk/types';
 import type { MessageProps as ExperimentalMessageProps } from '@cord-sdk/react/dist/mjs/types/canary/message/Message';
 import type { ReplaceConfig } from '@cord-sdk/react/dist/mjs/types/experimental/components/replacements';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +27,9 @@ import { TypingIndicator } from 'src/client/components/TypingIndicator';
 
 import { Options } from 'src/client/components/Options';
 import { MessageContext } from 'src/client/context/MessageContext';
+import { ClackMessage } from 'src/client/components/ClackMessage';
+
+const EMPTY_FUNCTION = () => {};
 
 interface MessageProps {
   message: CoreMessageData;
@@ -93,6 +100,7 @@ const ClackThreadContext = React.createContext<{
   loading?: boolean;
   fetchMore?: (numToLoad: number) => Promise<void>;
   hasMore?: boolean;
+  thread?: ClientThreadData;
 }>(INITIAL_CLACK_CONTEXT_VALUE);
 
 function MessageWithPaginationTrigger(props: ExperimentalMessageProps) {
@@ -110,11 +118,13 @@ function MessageWithPaginationTrigger(props: ExperimentalMessageProps) {
     fetchMore === undefined ||
     hasMore === undefined
   ) {
-    return <experimental.Message {...props} />;
+    return (
+      <ClackMessage message={props.message} onOpenThread={EMPTY_FUNCTION} />
+    );
   }
   return (
     <>
-      <experimental.Message {...props} />
+      <ClackMessage message={props.message} onOpenThread={EMPTY_FUNCTION} />
       <SeparatorWrap>
         {numReplies > 0 ? (
           <>
@@ -143,19 +153,14 @@ function ClackThreadV4({ threadID }: { threadID: string }) {
   const firstMessageID = thread?.messages?.[0]?.id;
   const contextValue = useMemo(
     () => ({
+      thread,
       numReplies: (thread?.thread?.total ?? 1) - 1,
       firstMessageID,
       loading: thread?.loading,
       fetchMore: thread?.fetchMore,
       hasMore: thread?.hasMore,
     }),
-    [
-      thread?.thread?.total,
-      firstMessageID,
-      thread?.loading,
-      thread?.fetchMore,
-      thread?.hasMore,
-    ],
+    [thread, firstMessageID],
   );
   return (
     <ClackThreadContext.Provider value={contextValue}>

@@ -25,6 +25,7 @@ import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 import { theme } from 'src/client/consts/theme';
 import { CordVersionProvider } from 'src/client/context/CordVersionContext';
+import { OptionsMenuTooltips } from 'src/client/components/Options';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -159,6 +160,7 @@ export function App() {
           >
             <CordVersionProvider>
               <BrowserNotificationBridge />
+              <OptionsMenuTooltips />
 
               <PresenceObserver
                 location={{ page: 'clack', durable: true }}

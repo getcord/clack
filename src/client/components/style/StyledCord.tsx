@@ -140,6 +140,98 @@ export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
   }
 `;
 
+export const StyledExperimentalMessage = styled(experimental.Message)`
+  &.cord-message {
+    padding: 0;
+    align-items: flex-start;
+    background-color: inherit;
+    grid-template-columns: auto auto auto auto 1fr auto;
+    padding: 8px 20px;
+    position: relative;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: ${Colors.gray_highlight};
+    }
+
+    .cord-image-attachment {
+      max-height: 300px;
+    }
+
+    .cord-image {
+      max-height: 300px;
+      max-width: 300px;
+    }
+  }
+
+  .cord-avatar-container {
+    height: 36px;
+    width: 36px;
+    margin-top: var(--cord-space-3xs, 4px);
+  }
+
+  .linkified,
+  .cord-message-text a {
+    color: ${Colors.blue_link};
+    font-weight: 400;
+    &:hover {
+      color: ${Colors.blue_link};
+    }
+  }
+
+  .cord-pill > .cord-count {
+    font-size: 11px;
+  }
+
+  .cord-pill.cord-from-viewer {
+    background-color: ${Colors.blue_selected_bg};
+    box-shadow: inset 0 0 0 1.5px ${Colors.blue_selected_border};
+    &:hover {
+      background-color: ${Colors.blue_selected_bg};
+    }
+  }
+
+  .cord-pill.cord-from-viewer.cord-count {
+    color: ${Colors.blue_active};
+  }
+
+  .cord-pill,
+  .cord-add-reaction {
+    border-radius: 99px;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 16px;
+    background-color: #efefef;
+
+    svg {
+      stroke-width: 1.5;
+    }
+
+    .cord-emoji {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background-color: white;
+      box-shadow: inset 0 0 0 1px ${Colors.gray_dark};
+
+      svg {
+        fill: #f2c744;
+      }
+    }
+  }
+
+  .cord-with-icon > svg {
+    height: 20px;
+    width: 20px;
+  }
+
+  .cord-message-options-buttons > button {
+    display: none;
+  }
+`;
+
 export const StyledComposer = styled(Composer)`
   display: block;
   grid-area: composer;

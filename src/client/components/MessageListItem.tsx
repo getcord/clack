@@ -3,6 +3,7 @@ import type { ThreadSummary } from '@cord-sdk/types';
 import { useParams } from 'react-router-dom';
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -18,6 +19,8 @@ import { ProfileDetails } from 'src/client/components/ProfileDetails';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Modal as DefaultModal } from 'src/client/components/Modal';
 import { MessageContext } from 'src/client/context/MessageContext';
+import { CordVersionContext } from 'src/client/context/CordVersionContext';
+import { MessageListItem4 } from 'src/client/components/MessageListItem4';
 
 const backgroundFadeToNone = keyframes`
   from {background-color: #FAF5E5;}
@@ -57,10 +60,18 @@ export type MessageListItemProps = {
   onOpenThread: (threadID: string) => void;
 };
 
-export function MessageListItem({
-  thread,
-  onOpenThread,
-}: MessageListItemProps) {
+export function MessageListItem(props: MessageListItemProps) {
+  const { version } = useContext(CordVersionContext);
+
+  switch (version) {
+    case '3.0':
+      return <MessageListItem3 {...props} />;
+    case '4.0':
+      return <MessageListItem4 {...props} />;
+  }
+}
+
+function MessageListItem3({ thread, onOpenThread }: MessageListItemProps) {
   const { threadID: threadIDParam } = useParams();
   const { editingMessage, setEditingMessage } =
     React.useContext(MessageContext);
@@ -197,6 +208,7 @@ export function MessageListItem({
           hovered={hovered}
           onOpenThread={onOpenThread}
           page={'channel'}
+          message={thread.firstMessage!}
         />
       )}
     </MessageListItemStyled>
