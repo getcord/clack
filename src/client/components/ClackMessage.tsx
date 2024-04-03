@@ -17,21 +17,14 @@ const StyledTimestamp = styled(experimental.Timestamp)`
   }
 `;
 
-const REPLACE = {
-  Reactions: MessageWithReplies,
-  Timestamp: StyledTimestamp,
-  Username: UsernameWithStatus,
-  OptionsMenu: MessageOptionsMenu,
-  Composer: MessageEditComposer,
-  SendButton: ClackSendButton,
-};
-
 export function ClackMessage({
   message,
   onOpenThread,
+  inThreadDetails,
 }: {
   message: ClientMessageData;
   onOpenThread: (threadID: string) => void;
+  inThreadDetails?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -43,6 +36,22 @@ export function ClackMessage({
   }, []);
 
   const { thread } = threadSDK.useThread(message.threadID);
+
+  const [replace] = useState(() => {
+    const replaceConfig: experimental.ReplaceConfig = {
+      Timestamp: StyledTimestamp,
+      Username: UsernameWithStatus,
+      OptionsMenu: MessageOptionsMenu,
+      Composer: MessageEditComposer,
+      SendButton: ClackSendButton,
+    };
+
+    if (!inThreadDetails) {
+      replaceConfig.Reactions = MessageWithReplies;
+    }
+
+    return replaceConfig;
+  });
 
   return (
     <MessageListItem4Context.Provider
@@ -57,7 +66,9 @@ export function ClackMessage({
         <StyledExperimentalMessage
           threadID={message.threadID}
           message={message}
-          replace={REPLACE}
+          replace={replace}
+          $hasReactions={(message.reactions?.length ?? 0) > 0}
+          $hasReplies={(thread?.total ?? 0) > 1}
         />
       </div>
     </MessageListItem4Context.Provider>
@@ -73,22 +84,12 @@ function MessageWithReplies(props: experimental.ReactionsProps) {
   const reactionCount = threadData?.firstMessage?.reactions?.length ?? 0;
 
   return (
-    <div
-      style={{
-        gridArea: 'reactions',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {reactionCount > 0 ? (
-        <div style={{ marginBottom: 8 }}>
-          <experimental.Reactions {...props} />
-        </div>
-      ) : null}
+    <>
+      {reactionCount > 0 ? <experimental.Reactions {...props} /> : null}
       {isMessageFirst && threadData && (
         <ThreadReplies summary={threadData} onOpenThread={onOpenThread} />
       )}
-    </div>
+    </>
   );
 }
 

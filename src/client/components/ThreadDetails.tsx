@@ -119,12 +119,20 @@ function MessageWithPaginationTrigger(props: ExperimentalMessageProps) {
     hasMore === undefined
   ) {
     return (
-      <ClackMessage message={props.message} onOpenThread={EMPTY_FUNCTION} />
+      <ClackMessage
+        message={props.message}
+        onOpenThread={EMPTY_FUNCTION}
+        inThreadDetails
+      />
     );
   }
   return (
     <>
-      <ClackMessage message={props.message} onOpenThread={EMPTY_FUNCTION} />
+      <ClackMessage
+        message={props.message}
+        onOpenThread={EMPTY_FUNCTION}
+        inThreadDetails
+      />
       <SeparatorWrap>
         {numReplies > 0 ? (
           <>

@@ -140,15 +140,30 @@ export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
   }
 `;
 
-export const StyledExperimentalMessage = styled(experimental.Message)`
+export const StyledExperimentalMessage = styled(experimental.Message)<{
+  $hasReplies: boolean;
+  $hasReactions: boolean;
+}>`
   &.cord-message {
     padding: 0;
     align-items: flex-start;
     background-color: inherit;
-    grid-template-columns: auto auto auto auto 1fr auto;
     padding: 8px 20px;
     position: relative;
     transition: background-color 0.2s;
+
+    grid-template-columns: auto auto auto auto 1fr auto;
+
+    grid-template-rows: ${({ $hasReplies, $hasReactions }) =>
+      `24px auto auto ${$hasReplies ? 'auto' : ''} ${
+        $hasReactions ? 'auto' : ''
+      }`};
+
+    grid-template-areas: ${({ $hasReplies, $hasReactions }) =>
+      `'avatar authorName timestamp sentViaIcon . optionsMenu'
+      '. messageContent messageContent messageContent messageContent optionsMenu'
+      ${$hasReactions ? `'. reactions reactions reactions reactions .'` : ''}
+      ${$hasReplies ? `'. replies replies replies replies .'` : ''}`};
 
     &:hover {
       background-color: ${Colors.gray_highlight};
