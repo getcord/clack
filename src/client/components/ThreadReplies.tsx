@@ -11,6 +11,7 @@ import {
 
 const RepliesWrapper = styled.div<{ $cordVersion: CordVersion }>`
   && {
+    grid-area: replies;
     cursor: pointer;
     display: flex;
     border-radius: 6px;
