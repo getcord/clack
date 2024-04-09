@@ -64,7 +64,6 @@ export function ClackMessage({
     >
       <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <StyledExperimentalMessage
-          threadID={message.threadID}
           message={message}
           replace={replace}
           $hasReactions={(message.reactions?.length ?? 0) > 0}
