@@ -8,7 +8,7 @@ import type {
   CoreMessageData,
   ThreadSummary,
 } from '@cord-sdk/types';
-import type { MessageProps as ExperimentalMessageProps } from '@cord-sdk/react/dist/mjs/types/canary/message/Message';
+
 import type { ReplaceConfig } from '@cord-sdk/react/dist/mjs/types/experimental/components/replacements';
 import { useTranslation } from 'react-i18next';
 
@@ -103,7 +103,7 @@ const ClackThreadContext = React.createContext<{
   thread?: ClientThreadData;
 }>(INITIAL_CLACK_CONTEXT_VALUE);
 
-function MessageWithPaginationTrigger(props: ExperimentalMessageProps) {
+function MessageWithPaginationTrigger(props: experimental.MessageProps) {
   const { t } = useTranslation();
   const {
     numReplies = 0,
