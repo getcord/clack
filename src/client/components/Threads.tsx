@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import type { ThreadSummary } from '@cord-sdk/types';
 import type { Channel } from 'src/client/context/ChannelsContext';
 import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 import { MessageListItem } from 'src/client/components/MessageListItem';
@@ -24,11 +23,10 @@ export function Threads({
   onScrollToBottom,
   onScrollUp,
 }: ThreadsProps) {
-  const { threads, loading, hasMore, fetchMore } = thread.useThreads({
+  const { threads, counts, loading, hasMore, fetchMore } = thread.useThreads({
     filter: { location: { channel: channel.id } },
     sortDirection: 'descending',
   });
-  const [unseenMessages, setUnseenMessages] = useState<ThreadSummary[]>([]);
   const threadListRef = useRef<HTMLDivElement>(null);
 
   const isAtBottomOfThreads = useCallback(() => {
@@ -39,9 +37,7 @@ export function Threads({
   }, []);
 
   useEffect(() => {
-    if (!isAtBottomOfThreads()) {
-      setUnseenMessages(threads.filter((thread) => !thread.firstMessage?.seen));
-    } else {
+    if (isAtBottomOfThreads()) {
       onScrollToBottom();
     }
   }, [isAtBottomOfThreads, threads, onScrollToBottom]);
@@ -134,12 +130,11 @@ export function Threads({
           <EmptyChannel channel={channel} />
         </>
       ) : null}
-      {unseenMessages.length && !isAtBottomOfThreads() ? (
+      {counts && counts.new > 0 && !isAtBottomOfThreads() ? (
         <NewMessagePill
-          count={unseenMessages.length}
+          count={counts.new}
           onClick={() => {
             scrollToBottom();
-            setUnseenMessages([]);
           }}
           onClose={() => markAsRead()}
         />
