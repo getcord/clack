@@ -7,11 +7,9 @@ import { thread } from '@cord-sdk/react';
 export function ChannelThreadCountFetcher({
   setHasUnread,
   channelID,
-  isMuted,
 }: {
   setHasUnread: React.Dispatch<React.SetStateAction<boolean>>;
   channelID: string;
-  isMuted: boolean;
 }) {
   const summary = thread.useThreadCounts({
     filter: {
@@ -22,7 +20,7 @@ export function ChannelThreadCountFetcher({
     },
   });
 
-  setHasUnread(!isMuted && !!summary?.new);
+  setHasUnread(!!summary?.new);
 
   return null;
 }
