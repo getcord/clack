@@ -32,20 +32,16 @@ export function ChannelButton({
   isActive: boolean;
   icon: React.ReactNode;
 }) {
-  // Just show website-events as always unread. Lol.  Because we were having perf
-  // issues regarding subscriptions for its thread counts.
   const [hasUnread, setHasUnread] = useState<boolean>(
-    option.id === 'website-events',
+    option.id === 'website-events' ? !option.muted : false,
   );
 
   return (
     <>
-      {/* See comment above.... don't fetch thread counts for website-events */}
-      {option.id !== 'website-events' && (
+      {option.id !== 'website-events' && !option.muted && (
         <ChannelThreadCountFetcher
           setHasUnread={setHasUnread}
           channelID={option.id}
-          isMuted={option.muted}
         />
       )}
       <SidebarButton
