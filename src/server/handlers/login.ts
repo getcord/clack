@@ -10,6 +10,7 @@ import {
   CORD_APP_ID,
   CORD_SIGNING_SECRET,
   EVERYONE_ORG_ID,
+  EVERYONE_ORG_NAME,
 } from 'src/server/consts';
 
 const slackClient = new Slack.WebClient();
@@ -190,18 +191,17 @@ function redirectToSlackLogin(req: Request, res: Response) {
 }
 
 async function ensureMemberOfEveryoneOrg(userID: string) {
-  // Make sure the user exists. Their details are put into their token and get
-  // set that way, so we don't need to actually set any fields here (which lets
-  // us do this unconditionally since it won't overwrite anything).
-  await fetchCordRESTApi(`users/${userID}`, 'PUT');
-
-  // Adding a user who is already a member is explicitly documented as not an
-  // error, so we can do this unconditionally.
-  await fetchCordRESTApi(
-    `groups/${EVERYONE_ORG_ID}/members`,
-    'POST',
-    JSON.stringify({
-      add: [userID],
-    }),
-  );
+  // Ensure the group exists
+  await fetchCordRESTApi(`groups/${EVERYONE_ORG_ID}`, 'PUT', {
+    name: EVERYONE_ORG_NAME,
+  });
+  // Make sure the user exists and is a member of the everyone org. Their
+  // details are put into their token and get set that way, so we don't need to
+  // actually set any fields here (which lets us do this unconditionally since
+  // it won't overwrite anything).
+  await fetchCordRESTApi(`users/${userID}`, 'PUT', {
+    // Adding a user to a group they're already a member of is explicitly
+    // documented as not an error, so we can do this unconditionally.
+    addGroups: [EVERYONE_ORG_ID],
+  });
 }
