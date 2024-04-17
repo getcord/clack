@@ -147,14 +147,14 @@ function MessageEditComposer(props: experimental.ComposerProps) {
   return (
     messageData && (
       <StyledComposerWrapper>
-        <StyledAvatar userId={messageData.authorID} />
+        <StyledAvatar userID={messageData.authorID} />
         <StyledComposer {...props} />
       </StyledComposerWrapper>
     )
   );
 }
 
-const StyledAvatar = styled(experimental.Avatar)`
+const StyledAvatar = styled(experimental.Avatar.ByID)`
   && {
     width: 36px;
     height: 36px;

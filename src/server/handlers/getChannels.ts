@@ -6,9 +6,7 @@ import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 export async function handleGetChannels(req: Request, res: Response) {
   const { user_id } = (req as any).loginTokenData;
 
-  const { organizations } = await fetchCordRESTApi<ServerGetUser>(
-    `users/${user_id}`,
-  );
+  const { groups } = await fetchCordRESTApi<ServerGetUser>(`users/${user_id}`);
 
   const mostChannels = (
     await fetchCordRESTApi<ServerUserData>('users/all_channels_holder')
@@ -18,7 +16,7 @@ export async function handleGetChannels(req: Request, res: Response) {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (acc, [key, value]) => {
-        if (organizations.includes(value)) {
+        if (groups.includes(value)) {
           acc[key] = value;
         }
         return acc;
