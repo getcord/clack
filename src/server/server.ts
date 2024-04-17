@@ -8,7 +8,6 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import {
   enforceLoginMiddleware,
-  handleGetSlackLogin,
   handleGetToken,
 } from 'src/server/handlers/login';
 import { handleGetChannels } from 'src/server/handlers/getChannels';
@@ -25,6 +24,7 @@ import {
   handleRemoveOrgMember,
 } from 'src/server/handlers/orgMembers';
 import { handleAddChannel } from 'src/server/handlers/updateChannels';
+import { handleGetSlackLogin } from 'src/server/auth/slack';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
