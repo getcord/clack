@@ -8,9 +8,20 @@ export async function handleGetChannels(req: Request, res: Response) {
 
   const { groups } = await fetchCordRESTApi<ServerGetUser>(`users/${user_id}`);
 
-  const mostChannels = (
-    await fetchCordRESTApi<ServerUserData>('users/all_channels_holder')
-  ).metadata as Record<string, string>;
+  let mostChannels: Record<string, string>;
+  try {
+    mostChannels = (
+      await fetchCordRESTApi<ServerUserData>('users/all_channels_holder')
+    ).metadata as Record<string, string>;
+  } catch (e: any) {
+    if (e instanceof Error && e.message.includes('user_not_found')) {
+      // Create the holder user
+      await fetchCordRESTApi('users/all_channels_holder', 'PUT');
+      mostChannels = {};
+    } else {
+      throw e;
+    }
+  }
 
   const availableChannels = Object.entries(mostChannels)
     .sort((a, b) => a[0].localeCompare(b[0]))

@@ -8,7 +8,7 @@ import {
 export async function fetchCordRESTApi<T>(
   endpoint: string,
   method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
-  body?: string,
+  body?: string | object,
 ): Promise<T> {
   return await serverFetchCordRESTApi(`v1/${endpoint}`, {
     method,
