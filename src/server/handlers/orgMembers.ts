@@ -1,4 +1,4 @@
-import type { ServerOrganizationData } from '@cord-sdk/types';
+import type { ServerGroupData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
@@ -22,7 +22,7 @@ export async function handleAddOrgMember(req: Request, res: Response) {
       message: string;
     }>
   >(
-    `organizations/${req.params.channelName}/members`,
+    `groups/${req.params.channelName}/members`,
     'POST',
     JSON.stringify({ add: userIDs }),
   );
@@ -50,7 +50,7 @@ export async function handleRemoveOrgMember(req: Request, res: Response) {
       message: string;
     }>
   >(
-    `organizations/${req.params.channelName}/members`,
+    `groups/${req.params.channelName}/members`,
     'POST',
     JSON.stringify({ remove: userIDs }),
   );
@@ -59,7 +59,7 @@ export async function handleRemoveOrgMember(req: Request, res: Response) {
 
 async function isUserInChannel(userID: string, channel: string) {
   const allOrgUsers = (
-    await fetchCordRESTApi<ServerOrganizationData>(`organizations/${channel}`)
+    await fetchCordRESTApi<ServerGroupData>(`groups/${channel}`)
   ).members;
 
   return !!allOrgUsers?.includes(userID);

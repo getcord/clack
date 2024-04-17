@@ -1,5 +1,5 @@
 import type {
-  ServerOrganizationData,
+  ServerGroupData,
   ServerUpdateUser,
   ServerUserData,
 } from '@cord-sdk/types';
@@ -8,15 +8,15 @@ import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 import { EVERYONE_ORG_ID } from 'src/server/consts';
 
 export async function handleGetCordUsers(_: Request, res: Response) {
-  const org = await fetchCordRESTApi<ServerOrganizationData>(
-    `organizations/${EVERYONE_ORG_ID}`,
+  const org = await fetchCordRESTApi<ServerGroupData>(
+    `groups/${EVERYONE_ORG_ID}`,
   );
   res.send(org.members);
 }
 
 export async function handleGetCordUsersData(_: Request, res: Response) {
-  const org = await fetchCordRESTApi<ServerOrganizationData>(
-    `organizations/${EVERYONE_ORG_ID}`,
+  const org = await fetchCordRESTApi<ServerGroupData>(
+    `groups/${EVERYONE_ORG_ID}`,
   );
 
   const users = org.members;

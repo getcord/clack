@@ -1,4 +1,4 @@
-import { getServerAuthToken } from '@cord-sdk/server';
+import { fetchCordRESTApi as serverFetchCordRESTApi } from '@cord-sdk/server';
 import {
   CORD_APP_ID,
   CORD_SIGNING_SECRET,
@@ -10,22 +10,11 @@ export async function fetchCordRESTApi<T>(
   method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
   body?: string,
 ): Promise<T> {
-  const serverAuthToken = getServerAuthToken(CORD_APP_ID, CORD_SIGNING_SECRET);
-  const response = await fetch(`${CORD_API_URL}${endpoint}`, {
+  return await serverFetchCordRESTApi(`v1/${endpoint}`, {
     method,
+    project_id: CORD_APP_ID,
+    project_secret: CORD_SIGNING_SECRET,
+    api_url: CORD_API_URL,
     body,
-    headers: {
-      Authorization: `Bearer ${serverAuthToken}`,
-      'Content-Type': 'application/json',
-    },
   });
-
-  if (response.ok) {
-    return response.json();
-  } else {
-    const responseText = await response.text();
-    throw new Error(
-      `Error making Cord API call: ${response.status} ${response.statusText} ${responseText}`,
-    );
-  }
 }

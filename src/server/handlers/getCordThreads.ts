@@ -7,7 +7,7 @@ export async function handleGetMyCordThreads(_: Request, res: Response) {
   const allThreads = await fetchCordRESTApi<CoreThreadData[]>('threads');
   const myThreads = allThreads.filter(
     //notes: would have been useful to filter this directly in the filters
-    (thread: CoreThreadData) => thread.organizationID === EVERYONE_ORG_ID,
+    (thread: CoreThreadData) => thread.groupID === EVERYONE_ORG_ID,
   );
 
   res.send(myThreads);
