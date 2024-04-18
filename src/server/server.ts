@@ -17,7 +17,7 @@ import {
   handleGetCordUsersData,
   handleUpdateUserStatus,
 } from 'src/server/handlers/getUsersInOrg';
-import { FRONT_END_HOST } from 'src/server/consts';
+import { AUTH_METHOD, FRONT_END_HOST } from 'src/server/consts';
 import { handleRoot } from 'src/server/handlers/root';
 import {
   handleAddOrgMember,
@@ -25,6 +25,7 @@ import {
 } from 'src/server/handlers/orgMembers';
 import { handleAddChannel } from 'src/server/handlers/updateChannels';
 import { handleGetSlackLogin } from 'src/server/auth/slack';
+import { handleFakeLogin } from 'src/server/auth/fake';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -70,7 +71,12 @@ function main() {
   // ----- Routes which DO NOT require login ----
   app.get('/', handleRoot);
   app.get('/token', handleGetToken);
-  app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
+  if (AUTH_METHOD === 'slack') {
+    app.get('/slackLogin', wrapAsyncHandler(handleGetSlackLogin));
+  }
+  if (AUTH_METHOD === 'fake') {
+    app.get('/fakeLogin', wrapAsyncHandler(handleFakeLogin));
+  }
 
   // ----- Routes which DO require login -----
   app.use(enforceLoginMiddleware);
