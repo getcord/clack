@@ -21,3 +21,5 @@ export const COOKIE_OPTIONS = {
 export const LOGIN_SIGNING_SECRET = CORD_SIGNING_SECRET; // TODO: should this be a different key?
 export const LOGIN_EXPIRES_IN = 60 * 60 * 24; // 1 day
 export const LOGIN_TOKEN_COOKIE_NAME = 'login_token';
+
+export const AUTH_METHOD = process.env.CLACK_AUTH_METHOD ?? 'slack';

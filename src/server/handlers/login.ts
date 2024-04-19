@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { getClientAuthToken } from '@cord-sdk/server';
 import * as jwt from 'jsonwebtoken';
 import {
+  AUTH_METHOD,
   CORD_APP_ID,
   CORD_SIGNING_SECRET,
   LOGIN_SIGNING_SECRET,
@@ -10,8 +11,21 @@ import {
 import type { LoginTokenData } from 'src/server/auth';
 import { getCookie } from 'src/server/util';
 import { makeSlackAuth } from 'src/server/auth/slack';
+import { makeFakeAuth } from 'src/server/auth/fake';
 
-const authSystem = makeSlackAuth();
+function getAuthSystem() {
+  if (AUTH_METHOD === 'slack') {
+    return makeSlackAuth();
+  }
+  if (AUTH_METHOD === 'fake') {
+    return makeFakeAuth();
+  }
+  throw new Error(
+    'CLACK_AUTH_METHOD .env var must be set to "slack" or "fake"',
+  );
+}
+
+const authSystem = getAuthSystem();
 
 if (!CORD_APP_ID || !CORD_SIGNING_SECRET) {
   throw new Error('Missing keys from .env, is it set up properly?');

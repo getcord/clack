@@ -3,16 +3,13 @@ import type { Request, Response } from 'express';
 import { nanoid } from 'nanoid';
 import * as Slack from '@slack/web-api';
 import * as jwt from 'jsonwebtoken';
-import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
+import { COOKIE_OPTIONS } from 'src/server/consts';
 import {
-  COOKIE_OPTIONS,
-  EVERYONE_ORG_ID,
-  EVERYONE_ORG_NAME,
-  LOGIN_EXPIRES_IN,
-  LOGIN_SIGNING_SECRET,
-  LOGIN_TOKEN_COOKIE_NAME,
-} from 'src/server/consts';
-import type { AuthSystem, LoginTokenData } from 'src/server/auth';
+  ensureMemberOfEveryoneOrg,
+  type AuthSystem,
+  type LoginTokenData,
+  addLoginCookie,
+} from 'src/server/auth';
 import { getCookie } from 'src/server/util';
 
 const slackClient = new Slack.WebClient();
@@ -98,34 +95,11 @@ export async function handleGetSlackLogin(req: Request, res: Response) {
   };
 
   res.clearCookie(NONCE_COOKIE_NAME);
-  res.cookie(
-    LOGIN_TOKEN_COOKIE_NAME,
-    jwt.sign(tokenData, LOGIN_SIGNING_SECRET, {
-      algorithm: 'HS512',
-      expiresIn: LOGIN_EXPIRES_IN,
-    }),
-    COOKIE_OPTIONS,
-  );
+  addLoginCookie(res, tokenData);
 
   res.send({ redirect: state });
 }
 
 function makeRedirectUri(req: Request) {
   return new URL('/slackRedirect', req.get('Referer') ?? '').toString();
-}
-
-async function ensureMemberOfEveryoneOrg(userID: string) {
-  // Ensure the group exists
-  await fetchCordRESTApi(`groups/${EVERYONE_ORG_ID}`, 'PUT', {
-    name: EVERYONE_ORG_NAME,
-  });
-  // Make sure the user exists and is a member of the everyone org. Their
-  // details are put into their token and get set that way, so we don't need to
-  // actually set any fields here (which lets us do this unconditionally since
-  // it won't overwrite anything).
-  await fetchCordRESTApi(`users/${userID}`, 'PUT', {
-    // Adding a user to a group they're already a member of is explicitly
-    // documented as not an error, so we can do this unconditionally.
-    addGroups: [EVERYONE_ORG_ID],
-  });
 }

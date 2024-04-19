@@ -6,11 +6,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { App } from 'src/client/App';
+import { FakeLogin } from 'src/client/components/FakeLogin';
 import { SlackRedirect } from 'src/client/components/SlackRedirect';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const router = createBrowserRouter([
   { path: '/slackRedirect', element: <SlackRedirect /> },
+  { path: '/fakeLogin', element: <FakeLogin /> },
   {
     path: '/',
     element: <Navigate to="channel/general/" replace />,
