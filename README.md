@@ -22,6 +22,9 @@ localhost.
 
 Finally, run `npm run dev` and visit https://local.cord.com:7307
 
+To try out Clack as multiple users, return to
+https://local.cord.com:7307/fakeLogin and choose a different user.
+
 ## Cord Employees
 
 See the Clack file in Notion for instructions.
