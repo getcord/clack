@@ -1,0 +1,43 @@
+name: update-sdk-version
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 0 * * *'
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Adjust as needed
+
+      - name: Determine Latest Canary Version
+        id: latest-version
+        run: |
+          LATEST_VERSION=$(npm show @cord-sdk/react@canary version)
+          echo "Latest canary version is $LATEST_VERSION"
+          echo "::set-output name=version::$LATEST_VERSION"
+
+      - name: Update @cord-sdk/react to Latest Canary Version
+        run: |
+          npm install @cord-sdk/react@${{ steps.latest-version.outputs.version }} --save
+          npm install
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-email@example.com'
+          git add package*.json
+          git commit -m "Update @cord-sdk/react to latest canary version"
+          git push
+
+      - name: Deploy
+        run: |
+          # Your deployment commands
