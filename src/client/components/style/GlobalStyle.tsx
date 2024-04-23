@@ -52,7 +52,7 @@ export const GlobalStyle = createGlobalStyle`
     color: rgb(29,28,29);
   }
 
-  html .cord-component {
+  html .cord-thread, html .cord-message {
     /* This is very hard to override, Cord bug? */
     font-size: inherit;
   }
