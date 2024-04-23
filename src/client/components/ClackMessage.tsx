@@ -168,6 +168,6 @@ const StyledComposerWrapper = styled.div`
   padding: 8px 20px;
 `;
 
-const StyledComposer = styled(experimental.CordComposer)`
+const StyledComposer = styled(experimental.Composer)`
   flex-grow: 1;
 `;

@@ -174,7 +174,7 @@ function ClackThreadV4({ threadID }: { threadID: string }) {
     <ClackThreadContext.Provider value={contextValue}>
       {/* Once the cord Thread has its own ScrollContainer we can remove that. */}
       <ScrollableContainer>
-        <StyledThread replace={REPLACE} thread={thread} />
+        <StyledThreadByID replace={REPLACE} threadID={threadID} />
       </ScrollableContainer>
     </ClackThreadContext.Provider>
   );
@@ -330,11 +330,14 @@ const SeparatorLine = styled.hr`
   }
 `;
 
-const StyledThread = styled(experimental.Thread)`
+const StyledThreadByID = styled(experimental.Thread.ByID)`
   &.cord-component {
     border: none;
   }
   &.cord-component .cord-composer {
     margin: 0 20px 20px;
+  }
+  &.cord-component .cord-thread-header-container {
+    display: none;
   }
 `;
