@@ -1,0 +1,44 @@
+name: Update @cord-sdk/react package
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # Run every hour
+
+jobs:
+  update-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          # checkout pull request HEAD commit instead of merge commit
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Check for new version
+        id: check-version
+        run: npx -p npm-check-updates ncu "/^@cord-sdk.*/" -u
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.CORD_OPS_USER_PAT }}
+          title: 'Update cord sdk to newest version'
+          commit-message: 'Update sdk to newest version'
+          body: |
+            This PR updates the cord sdk packages to the latest version.
+            Don't forgt to deploy the changes when approving them.
+          branch: update-cord-sdk
+          base: main
+          team-reviewers: getcord/e
