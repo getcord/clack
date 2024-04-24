@@ -1,5 +1,5 @@
 import { css, styled } from 'styled-components';
-import { Composer, Message, Thread, experimental } from '@cord-sdk/react';
+import { Composer, Message, Thread, betaV2 } from '@cord-sdk/react';
 import { Colors } from 'src/client/consts/Colors';
 
 export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
@@ -140,7 +140,7 @@ export const StyledMessage = styled(Message)<{ $statusEmoji?: string }>`
   }
 `;
 
-export const StyledExperimentalMessage = styled(experimental.Message)<{
+export const StyledExperimentalMessage = styled(betaV2.Message)<{
   $hasReplies: boolean;
   $hasReactions: boolean;
 }>`
@@ -260,7 +260,7 @@ export const StyledComposer = styled(Composer)`
   }
 `;
 
-export const StyledExperimentalComposer = styled(experimental.SendComposer)`
+export const StyledExperimentalComposer = styled(betaV2.SendComposer)`
   display: block;
   grid-area: composer;
   margin: 0 20px 20px;

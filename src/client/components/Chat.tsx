@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { styled } from 'styled-components';
-import { thread, user, experimental } from '@cord-sdk/react';
+import { thread, user, betaV2 } from '@cord-sdk/react';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/context/ChannelsContext';
@@ -123,9 +123,9 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
           showExpanded
         />
       ) : (
-        <experimental.Replace replace={REPLACE}>
+        <betaV2.Replace replace={REPLACE}>
           <StyledExperimentalComposer createThread={createThreadOptions} />
-        </experimental.Replace>
+        </betaV2.Replace>
       )}
       {clackTheme === 'winter' && <SnowFall />}
       {clackTheme === 'spring' && <Spring />}
