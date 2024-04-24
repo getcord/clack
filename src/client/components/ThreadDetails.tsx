@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useContext, useMemo } from 'react';
 import { styled } from 'styled-components';
-import { experimental, thread as ThreadSdk } from '@cord-sdk/react/';
+import { betaV2, thread as ThreadSdk } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type {
   ClientThreadData,
@@ -9,7 +9,6 @@ import type {
   ThreadSummary,
 } from '@cord-sdk/types';
 
-import type { ReplaceConfig } from '@cord-sdk/react/dist/mjs/types/experimental/components/replacements';
 import { useTranslation } from 'react-i18next';
 
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
@@ -103,7 +102,7 @@ const ClackThreadContext = React.createContext<{
   thread?: ClientThreadData;
 }>(INITIAL_CLACK_CONTEXT_VALUE);
 
-function MessageWithPaginationTrigger(props: experimental.MessageProps) {
+function MessageWithPaginationTrigger(props: betaV2.MessageProps) {
   const { t } = useTranslation();
   const {
     numReplies = 0,
@@ -153,7 +152,7 @@ function MessageWithPaginationTrigger(props: experimental.MessageProps) {
 const REPLACE = {
   Message: MessageWithPaginationTrigger,
   SendButton: ClackSendButton,
-} satisfies ReplaceConfig;
+} satisfies betaV2.ReplaceConfig;
 
 function ClackThreadV4({ threadID }: { threadID: string }) {
   const thread = ThreadSdk.useThread(threadID);
@@ -330,14 +329,17 @@ const SeparatorLine = styled.hr`
   }
 `;
 
-const StyledThreadByID = styled(experimental.Thread.ByID)`
+const StyledThreadByID = styled(betaV2.Thread.ByID)`
   &.cord-component {
     border: none;
+    height: 100%;
   }
   &.cord-component .cord-composer {
     margin: 0 20px 20px;
   }
   &.cord-component .cord-thread-header-container {
     display: none;
+  }
+  &.cord-component .cord-scroll-container {
   }
 `;

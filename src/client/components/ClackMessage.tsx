@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { experimental, thread as threadSDK } from '@cord-sdk/react';
+import { betaV2, thread as threadSDK } from '@cord-sdk/react';
 import type { ClientMessageData } from '@cord-sdk/types';
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ import { MessageListItem4Context } from 'src/client/context/MessageListItem4Cont
 import { Options } from 'src/client/components/Options';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
 
-const StyledTimestamp = styled(experimental.Timestamp)`
+const StyledTimestamp = styled(betaV2.Timestamp)`
   && {
     font-size: var(--cord-font-size-small, 12px);
     align-self: end;
@@ -38,7 +38,7 @@ export function ClackMessage({
   const { thread } = threadSDK.useThread(message.threadID);
 
   const [replace] = useState(() => {
-    const replaceConfig: experimental.ReplaceConfig = {
+    const replaceConfig: betaV2.ReplaceConfig = {
       Timestamp: StyledTimestamp,
       Username: UsernameWithStatus,
       OptionsMenu: MessageOptionsMenu,
@@ -74,7 +74,7 @@ export function ClackMessage({
   );
 }
 
-function MessageWithReplies(props: experimental.ReactionsProps) {
+function MessageWithReplies(props: betaV2.ReactionsProps) {
   const { threadData, onOpenThread, messageData } = useContext(
     MessageListItem4Context,
   );
@@ -84,7 +84,7 @@ function MessageWithReplies(props: experimental.ReactionsProps) {
 
   return (
     <>
-      {reactionCount > 0 ? <experimental.Reactions {...props} /> : null}
+      {reactionCount > 0 ? <betaV2.Reactions {...props} /> : null}
       {isMessageFirst && threadData && (
         <ThreadReplies summary={threadData} onOpenThread={onOpenThread} />
       )}
@@ -92,7 +92,7 @@ function MessageWithReplies(props: experimental.ReactionsProps) {
   );
 }
 
-function UsernameWithStatus(props: experimental.UsernameProps) {
+function UsernameWithStatus(props: betaV2.UsernameProps) {
   const { messageData } = useContext(MessageListItem4Context);
   const [authorStatus] = useUserStatus(messageData?.authorID);
   const statusEmojiURL = authorStatus?.emojiUrl ?? undefined;
@@ -100,7 +100,7 @@ function UsernameWithStatus(props: experimental.UsernameProps) {
   return (
     messageData && (
       <UsernameWithStatusWrapper>
-        <experimental.Username {...props} />
+        <betaV2.Username {...props} />
         {statusEmojiURL && <img src={statusEmojiURL} />}
       </UsernameWithStatusWrapper>
     )
@@ -121,7 +121,7 @@ const UsernameWithStatusWrapper = styled.div({
   },
 });
 
-function MessageOptionsMenu(props: experimental.OptionsMenuProps) {
+function MessageOptionsMenu(props: betaV2.OptionsMenuProps) {
   const { threadData, hovered, messageData, onOpenThread } = useContext(
     MessageListItem4Context,
   );
@@ -141,7 +141,7 @@ function MessageOptionsMenu(props: experimental.OptionsMenuProps) {
   ) : null;
 }
 
-function MessageEditComposer(props: experimental.ComposerProps) {
+function MessageEditComposer(props: betaV2.ComposerProps) {
   const { messageData } = useContext(MessageListItem4Context);
 
   return (
@@ -154,7 +154,7 @@ function MessageEditComposer(props: experimental.ComposerProps) {
   );
 }
 
-const StyledAvatar = styled(experimental.Avatar.ByID)`
+const StyledAvatar = styled(betaV2.Avatar.ByID)`
   && {
     width: 36px;
     height: 36px;
@@ -168,6 +168,6 @@ const StyledComposerWrapper = styled.div`
   padding: 8px 20px;
 `;
 
-const StyledComposer = styled(experimental.Composer)`
+const StyledComposer = styled(betaV2.Composer)`
   flex-grow: 1;
 `;
