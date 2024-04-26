@@ -11,9 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          # checkout pull request HEAD commit instead of merge commit
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
