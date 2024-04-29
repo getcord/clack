@@ -9,6 +9,7 @@ import {
 import { UserPlusIcon } from '@heroicons/react/24/outline';
 import { LockClosedIcon, HashtagIcon } from '@heroicons/react/24/solid';
 import type { ClientUserData } from '@cord-sdk/types';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/20/solid';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { ActiveBadge } from 'src/client/components/ActiveBadge';
@@ -16,6 +17,7 @@ import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 type UsersInChannelModalProps = {
   onClose: () => void;
@@ -40,7 +42,12 @@ export function UsersInChannelModal({
         <Box>
           <Header>
             <Heading>
-              {channel.org === EVERYONE_ORG_ID ? (
+              {channel.id.startsWith(DM_CHANNEL_PREFIX) ? (
+                <ChatBubbleLeftRightIcon
+                  width={20}
+                  style={{ padding: '1px', marginRight: '4px' }}
+                />
+              ) : channel.org === EVERYONE_ORG_ID ? (
                 <HashtagIcon width={20} style={{ padding: '1px' }} />
               ) : (
                 <LockClosedIcon
@@ -48,7 +55,7 @@ export function UsersInChannelModal({
                   style={{ padding: '1px', marginRight: '2px' }}
                 />
               )}
-              {channel.id}
+              {channel.name}
             </Heading>
             <CloseButton onClick={onClose}>
               <XIcon />
@@ -56,21 +63,22 @@ export function UsersInChannelModal({
           </Header>
           <UsersList>
             {/* Show the Add People modal option if this is a private org */}
-            {channel.org !== EVERYONE_ORG_ID && (
-              <UserDetails onClick={() => setShowAddUsersModal(true)}>
-                <AddPeopleIconWrapper>
-                  <UserPlusIcon
-                    width={32}
-                    height={32}
-                    style={{
-                      backgroundColor: '#e8f5fa',
-                      color: 'rgba(18,100,163,1)',
-                    }}
-                  />
-                </AddPeopleIconWrapper>
-                <Name $variant="main">Add people</Name>
-              </UserDetails>
-            )}
+            {channel.org !== EVERYONE_ORG_ID &&
+              !channel.id.startsWith(DM_CHANNEL_PREFIX) && (
+                <UserDetails onClick={() => setShowAddUsersModal(true)}>
+                  <AddPeopleIconWrapper>
+                    <UserPlusIcon
+                      width={32}
+                      height={32}
+                      style={{
+                        backgroundColor: '#e8f5fa',
+                        color: 'rgba(18,100,163,1)',
+                      }}
+                    />
+                  </AddPeopleIconWrapper>
+                  <Name $variant="main">Add people</Name>
+                </UserDetails>
+              )}
             {users.map((user) => {
               const isUserPresent = usersPresent?.some(
                 (presence) => presence.id === user.id,
@@ -78,7 +86,7 @@ export function UsersInChannelModal({
               return (
                 <UserRow
                   key={user.id}
-                  org={channel.org}
+                  channel={channel}
                   isUserPresent={!!isUserPresent}
                   user={user}
                 />
@@ -99,11 +107,11 @@ export function UsersInChannelModal({
 }
 
 function UserRow({
-  org,
+  channel,
   isUserPresent,
   user,
 }: {
-  org: string | undefined;
+  channel: Channel;
   isUserPresent: boolean;
   user: ClientUserData;
 }) {
@@ -127,19 +135,21 @@ function UserRow({
         </Name>
         <ActiveBadge $isActive={isUserPresent} />
         <Name $variant="simple">{user?.name}</Name>
-        {showDelete && org && (
-          // TODO: the org members API currently doesn't have subscriptions, so
-          // it looks like nothing's happened in the FE atm
-          <DeleteButton
-            onClick={() => {
-              void update(`/channelMembers/${org}`, 'DELETE', {
-                userIDs: [user.id],
-              });
-            }}
-          >
-            Remove
-          </DeleteButton>
-        )}
+        {showDelete &&
+          !channel.id.startsWith(DM_CHANNEL_PREFIX) &&
+          channel.org !== EVERYONE_ORG_ID && (
+            // TODO: the org members API currently doesn't have subscriptions, so
+            // it looks like nothing's happened in the FE atm
+            <DeleteButton
+              onClick={() => {
+                void update(`/channelMembers/${channel.org}`, 'DELETE', {
+                  userIDs: [user.id],
+                });
+              }}
+            >
+              Remove
+            </DeleteButton>
+          )}
       </UserDetails>
     </>
   );

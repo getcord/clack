@@ -1,5 +1,6 @@
 import type { ServerGetUser, ServerUserData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
+import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { EVERYONE_ORG_ID } from 'src/server/consts';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
@@ -39,6 +40,12 @@ export async function handleGetChannels(req: Request, res: Response) {
   // Special channels: everyone gets these testing channels at the end of their list
   availableChannels['noise'] = EVERYONE_ORG_ID;
   availableChannels['what-the-quack'] = EVERYONE_ORG_ID;
+
+  groups
+    .filter((group) => group.toString().startsWith(DM_CHANNEL_PREFIX))
+    .forEach((group) => {
+      availableChannels[group.toString()] = group.toString();
+    });
 
   res.send(availableChannels);
 }

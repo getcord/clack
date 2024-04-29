@@ -79,17 +79,17 @@ export function ChannelPicker({
       const text = e.target.value.trim();
       setChannelText(text);
       const newFilteredChannels = channels
-        .filter((channel) => channel.id.includes(text))
+        .filter((channel) => channel.name.includes(text))
         .sort((a, b) => {
           // Sort exact matches to the top
-          if (a.id === text) {
+          if (a.name === text) {
             return -1;
           }
-          if (b.id === text) {
+          if (b.name === text) {
             return 1;
           }
           // Otherwise prefer things that match earlier in the channel id
-          return a.id.indexOf(text) - b.id.indexOf(text);
+          return a.name.indexOf(text) - b.name.indexOf(text);
         });
 
       setFilteredChannels(newFilteredChannels);
@@ -125,10 +125,10 @@ export function ChannelPicker({
           {filteredChannels.map((channel) =>
             channel.id === filteredChannels[selectedChannelIndex].id ? (
               <SelectedListItem key={channel.id} ref={selectedRef}>
-                #{channel.id}
+                #{channel.name}
               </SelectedListItem>
             ) : (
-              <ListItem key={channel.id}>#{channel.id}</ListItem>
+              <ListItem key={channel.id}>#{channel.name}</ListItem>
             ),
           )}
         </List>

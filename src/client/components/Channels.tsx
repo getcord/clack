@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import {
+  ChatBubbleLeftRightIcon,
   HashtagIcon,
   LockClosedIcon,
   PlusIcon,
@@ -16,44 +17,67 @@ import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 import { ChannelPicker } from 'src/client/components/ChannelPicker';
 import { ChannelThreadCountFetcher } from 'src/client/components/ChannelThreadCountFetcher';
+import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 type ChannelWithMute = Channel & { muted: boolean };
 
-export function ChannelButton({
-  option,
+function ChannelButton({
+  channel,
   onClick,
   onContextMenu,
   isActive,
   icon,
 }: {
-  option: ChannelWithMute;
+  channel: ChannelWithMute;
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
   icon: React.ReactNode;
 }) {
   const [hasUnread, setHasUnread] = useState<boolean>(
-    option.id === 'website-events' ? !option.muted : false,
+    channel.id === 'website-events' ? !channel.muted : false,
   );
 
   return (
     <>
-      {option.id !== 'website-events' && !option.muted && (
+      {channel.id !== 'website-events' && !channel.muted && (
         <ChannelThreadCountFetcher
           setHasUnread={setHasUnread}
-          channelID={option.id}
+          channelID={channel.id}
         />
       )}
       <SidebarButton
-        option={option.id}
+        displayName={channel.name}
         isActive={isActive}
-        isMuted={option.muted}
+        isMuted={channel.muted}
         onClick={onClick}
         onContextMenu={onContextMenu}
         hasUnread={hasUnread}
         icon={icon}
       />
     </>
+  );
+}
+
+function DmButton({
+  channel,
+  onClick,
+  onContextMenu,
+  isActive,
+}: {
+  channel: ChannelWithMute;
+  onClick: () => void;
+  onContextMenu: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  isActive: boolean;
+}) {
+  return (
+    <ChannelButton
+      channel={channel}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
+      isActive={isActive}
+      icon={<DirectMessageIcon />}
+    />
   );
 }
 
@@ -75,6 +99,18 @@ export function Channels({
   >(undefined);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const onContextMenu = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>, channel: ChannelWithMute) => {
+      e.preventDefault();
+      setContextMenuPosition({
+        x: e.clientX,
+        y: e.clientY,
+      });
+      setContextMenuOpenForChannel(channel);
+    },
+    [],
+  );
+
   const [muted] = useMutedChannels();
   if (muted === undefined) {
     return null;
@@ -82,8 +118,11 @@ export function Channels({
 
   const unmutedChannels: ChannelWithMute[] = [];
   const mutedChannels: ChannelWithMute[] = [];
+  const dms: ChannelWithMute[] = [];
   unsortedChannels.forEach((channel) => {
-    if (muted.has(channel.id)) {
+    if (channel.id.startsWith(DM_CHANNEL_PREFIX)) {
+      dms.push({ ...channel, muted: false });
+    } else if (muted.has(channel.id)) {
       mutedChannels.push({ ...channel, muted: true });
     } else {
       unmutedChannels.push({ ...channel, muted: false });
@@ -100,15 +139,10 @@ export function Channels({
             isActive={currentChannel.id === channel.id}
             key={channel.id}
             onClick={() => setCurrentChannelID(channel.id)}
-            onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) => {
-              e.preventDefault();
-              setContextMenuPosition({
-                x: e.clientX,
-                y: e.clientY,
-              });
-              setContextMenuOpenForChannel(channel);
-            }}
-            option={channel}
+            onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) =>
+              onContextMenu(e, channel)
+            }
+            channel={channel}
             icon={
               channel.org === EVERYONE_ORG_ID ? (
                 <ChannelIcon />
@@ -125,6 +159,17 @@ export function Channels({
           <AddChannelsButtonText>{t('add_channels')}</AddChannelsButtonText>
         </AddChannelsButton>
         <AddChannelModals isOpen={modalOpen} setModalOpen={setModalOpen} />
+        {dms.map((dm) => (
+          <DmButton
+            key={dm.id}
+            channel={dm}
+            onClick={() => setCurrentChannelID(dm.id)}
+            onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) =>
+              onContextMenu(e, dm)
+            }
+            isActive={currentChannel.id === dm.id}
+          />
+        ))}
         {contextMenuOpenForChannel && (
           <ChannelsRightClickMenu
             position={contextMenuPosition}
@@ -133,7 +178,7 @@ export function Channels({
           ></ChannelsRightClickMenu>
         )}
         <ChannelPicker
-          channels={channels}
+          channels={unsortedChannels}
           onSelect={(id) => setCurrentChannelID(id)}
         />
       </ChannelsList>
@@ -193,7 +238,13 @@ export const ChannelIcon = styled(HashtagIcon)`
   height: 16px;
 `;
 
-export const PrivateChannelIcon = styled(LockClosedIcon)`
+const PrivateChannelIcon = styled(LockClosedIcon)`
+  grid-area: hash;
+  width: 16px;
+  height: 16px;
+`;
+
+const DirectMessageIcon = styled(ChatBubbleLeftRightIcon)`
   grid-area: hash;
   width: 16px;
   height: 16px;
