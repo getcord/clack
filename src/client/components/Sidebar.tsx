@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { NotificationListLauncher } from '@cord-sdk/react';
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Channels } from 'src/client/components/Channels';
 import { NotificationsRequestBanner } from 'src/client/components/NotificationsRequestBanner';

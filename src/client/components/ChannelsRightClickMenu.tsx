@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { ReactPortal } from 'src/client/components/ReactPortal';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 

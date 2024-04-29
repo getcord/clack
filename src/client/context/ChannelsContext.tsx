@@ -1,8 +1,5 @@
 import { createContext } from 'react';
-export type Channel = {
-  id: string;
-  org: string;
-};
+import type { Channel } from 'src/client/consts/Channel';
 
 type ChannelsContextType = {
   channels: Channel[];
