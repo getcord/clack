@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { thread, user, betaV2 } from '@cord-sdk/react';
 import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
 import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';

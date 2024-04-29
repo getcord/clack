@@ -4,7 +4,7 @@ import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { Facepile } from '@cord-sdk/react';
 import type { ClientUserData } from '@cord-sdk/types';
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { combine } from 'src/client/utils';
 import { UsersInChannelModal } from 'src/client/components/UsersInChannelModal';

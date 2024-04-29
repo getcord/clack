@@ -9,7 +9,7 @@ import cx from 'classnames';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { useAPIFetch, useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
 import { Chat } from 'src/client/components/Chat';

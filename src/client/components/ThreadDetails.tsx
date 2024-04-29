@@ -12,7 +12,7 @@ import type {
 import { useTranslation } from 'react-i18next';
 
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
-import type { Channel } from 'src/client/context/ChannelsContext';
+import type { Channel } from 'src/client/consts/Channel';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
 import { PageHeader } from 'src/client/components/PageHeader';
 import { Colors } from 'src/client/consts/Colors';
