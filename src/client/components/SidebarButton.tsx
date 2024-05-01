@@ -51,7 +51,7 @@ const SidebarButtonStyled = styled.button<{
   padding: 0 10px 0 16px;
 
   font-size: 15px;
-  line-height: 28px;
+  line-height: 20px;
   min-height: 28px;
   font-weight: ${({ $hasUnread }) => ($hasUnread ? '900' : '400')};
 
