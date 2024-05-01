@@ -3,7 +3,11 @@ import * as React from 'react';
 import type { PropsWithChildren } from 'react';
 import { createContext, useCallback, useEffect, useMemo } from 'react';
 import type { Channel } from 'src/client/consts/Channel';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import {
+  EVERYONE_ORG_ID,
+  DM_CHANNEL_PREFIX,
+  isDirectMessageChannel,
+} from 'src/common/consts';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 
 type ChannelsContextType = {
@@ -78,7 +82,7 @@ function useChannels(): { channels: Channel[]; refetch: () => void } {
   const userIDsToQuery = useMemo(() => {
     const userIDs = new Set<string>();
     for (const key in channelFetchResponse) {
-      if (key.startsWith(DM_CHANNEL_PREFIX)) {
+      if (isDirectMessageChannel(key)) {
         key
           .substring(DM_CHANNEL_PREFIX.length)
           .split(',')
@@ -97,7 +101,7 @@ function useChannels(): { channels: Channel[]; refetch: () => void } {
     }
     const channels: Channel[] = [];
     for (const key in channelFetchResponse) {
-      if (key.startsWith(DM_CHANNEL_PREFIX)) {
+      if (isDirectMessageChannel(key)) {
         const name = key
           .substring(DM_CHANNEL_PREFIX.length)
           .split(',')

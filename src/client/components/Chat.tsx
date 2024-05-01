@@ -18,7 +18,7 @@ import {
   StyledExperimentalComposer,
 } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
@@ -59,7 +59,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
-  const channelIcon = channel.id.startsWith(DM_CHANNEL_PREFIX) ? (
+  const channelIcon = isDirectMessageChannel(channel.id) ? (
     <DirectMessageIcon />
   ) : channel.org === EVERYONE_ORG_ID ? (
     <ChannelIcon />

@@ -20,7 +20,7 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX } from 'src/client/consts/consts';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 import { ChannelsProvider } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
@@ -101,7 +101,7 @@ export function App() {
       <GlobalStyle />
       <Helmet>
         <title>
-          {channel.id.startsWith(DM_CHANNEL_PREFIX) ? '' : '#'}
+          {isDirectMessageChannel(channel.id) ? '' : '#'}
           {channel.name} - {t('name')}
         </title>
       </Helmet>
