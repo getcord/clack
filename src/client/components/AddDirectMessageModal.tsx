@@ -200,8 +200,7 @@ const Avatar = styled(DefaultAvatar)`
 
 const Heading = styled.h2({
   display: 'flex',
-  marginTop: 0,
-  marginBottom: 0,
+  marginBlock: 0,
   alignItems: 'center',
 });
 
