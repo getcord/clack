@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { styled } from 'styled-components';
 import { thread, user, betaV2 } from '@cord-sdk/react';
-import { HashtagIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import {
+  ChatBubbleLeftRightIcon,
+  HashtagIcon,
+  LockClosedIcon,
+} from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import type { Channel } from 'src/client/consts/Channel';
 import { PinnedMessages } from 'src/client/components/PinnedMessages';
@@ -20,6 +24,7 @@ import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
+import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 interface ChatProps {
   channel: Channel;
@@ -55,14 +60,19 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const showToolbar = pinnedThreads.length > 0 && isAtBottomOfThreads;
 
-  const channelIcon =
-    channel.org === EVERYONE_ORG_ID ? <ChannelIcon /> : <PrivateChannelIcon />;
+  const channelIcon = channel.id.startsWith(DM_CHANNEL_PREFIX) ? (
+    <DirectMessageIcon />
+  ) : channel.org === EVERYONE_ORG_ID ? (
+    <ChannelIcon />
+  ) : (
+    <PrivateChannelIcon />
+  );
 
   const cordVersionContext = useContext(CordVersionContext);
 
   const createThreadOptions = useMemo(() => {
     return {
-      name: `#${channel.id}`,
+      name: `#${channel.name}`,
       location: { channel: channel.id },
       // This is not always the right url, but the navigate prop in
       // CordProvider makes sure that clicking on notifications takes
@@ -71,7 +81,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
       url: window.location.href,
       groupID: channel.org,
     };
-  }, [channel.id, channel.org]);
+  }, [channel.id, channel.name, channel.org]);
 
   return (
     <Wrapper>
@@ -81,7 +91,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
             {channel.org && (
               <>
                 {channelIcon}
-                {channel.id}
+                {channel.name}
               </>
             )}
           </ChannelDetailsHeader>
@@ -118,7 +128,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
       {cordVersionContext.version === '3.0' ? (
         <StyledComposer
           location={{ channel: channel.id }}
-          threadName={`#${channel.id}`}
+          threadName={`#${channel.name}`}
           groupId={channel.org}
           showExpanded
         />
@@ -172,13 +182,19 @@ const StyledThreads = styled(Threads)`
   grid-area: threads;
 `;
 
-export const ChannelIcon = styled(HashtagIcon)`
+const ChannelIcon = styled(HashtagIcon)`
   margin-right: 4px;
   width: 16px;
   height: 16px;
 `;
 
-export const PrivateChannelIcon = styled(LockClosedIcon)`
+const PrivateChannelIcon = styled(LockClosedIcon)`
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+`;
+
+const DirectMessageIcon = styled(ChatBubbleLeftRightIcon)`
   margin-right: 4px;
   width: 16px;
   height: 16px;

@@ -242,7 +242,7 @@ export function ThreadDetails({
     <ThreadDetailsWrapper className={className}>
       <ThreadDetailsHeader>
         <span style={{ gridArea: 'thread' }}>{t('thread_header')}</span>
-        <ChannelName># {channel.id}</ChannelName>
+        <ChannelName>#{channel.name}</ChannelName>
         <CloseButton onClick={onClose}>
           <StyledXMarkIcon />
         </CloseButton>

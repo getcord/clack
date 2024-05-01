@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { Colors } from 'src/client/consts/Colors';
 
 export function SidebarButton({
-  option,
+  displayName,
   onClick,
   onContextMenu,
   isActive,
@@ -11,7 +11,7 @@ export function SidebarButton({
   hasUnread,
   icon,
 }: {
-  option: string;
+  displayName: string;
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isActive: boolean;
@@ -28,7 +28,7 @@ export function SidebarButton({
       $hasUnread={hasUnread}
     >
       {icon}
-      <SidebarButtonName>{option}</SidebarButtonName>
+      <SidebarButtonName>{displayName}</SidebarButtonName>
     </SidebarButtonStyled>
   );
 }

@@ -1,6 +1,6 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
 import type { Channel } from 'src/client/consts/Channel';
-import { useAPIFetch, useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
+import { useAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { Topbar as TopbarDefault } from 'src/client/components/Topbar';
 import { Chat } from 'src/client/components/Chat';
 import { ThreadDetails as ThreadDetailsDefault } from 'src/client/components/ThreadDetails';
@@ -20,12 +20,13 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
-import { ChannelsContext } from 'src/client/context/ChannelsContext';
+import { ChannelsProvider } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 import { theme } from 'src/client/consts/theme';
 import { CordVersionProvider } from 'src/client/context/CordVersionContext';
 import { OptionsMenuTooltips } from 'src/client/components/Options';
+import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -48,12 +49,13 @@ export function App() {
   const { t } = useTranslation();
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
+  const [channel, setChannel] = useState<Channel>({
+    id: '',
+    name: '',
+    org: EVERYONE_ORG_ID,
+  });
   // We only hide the sidebar on mobile, to regain some space.
   const [showSidebar, setShowSidebar] = React.useState(false);
-  const [allChannelsObj, setAllChannelsObj] = React.useState<
-    Record<string, string>
-  >({});
-  const [allChannelsArray, setAllChannelsArray] = React.useState<Channel[]>([]);
   const [lang, setLang] = useStateWithLocalStoragePersistence<Language>(
     'clack-language',
     'en',
@@ -67,46 +69,7 @@ export function App() {
   const location = useLocation();
   const openPanel = location.pathname.split('/')[1];
 
-  const fetch = useLazyAPIFetch();
-
-  const fetchChannels = React.useCallback(
-    () =>
-      void fetch('/channels', 'GET')
-        .then((allChannelsToOrg: { string: string }) => {
-          if (allChannelsToOrg) {
-            setAllChannelsObj(allChannelsToOrg);
-            const allChannelsArray = Object.entries(allChannelsToOrg).reduce(
-              (acc, [key, value]) => {
-                acc.push({ id: key, org: value });
-                return acc;
-              },
-              [] as Channel[],
-            );
-            setAllChannelsArray(allChannelsArray);
-          }
-        })
-        .catch((e) => console.error(e)),
-    [fetch],
-  );
-
-  React.useEffect(() => {
-    fetchChannels();
-    // Refetch channels every 5 mins in case someone else added one
-    const int = setInterval(
-      () => {
-        void fetchChannels();
-      },
-      1000 * 60 * 5,
-    );
-
-    return () => clearInterval(int);
-  }, [fetchChannels]);
-
   const channelID = channelIDParam ?? 'general';
-  const channel: Channel =
-    openPanel === 'channel'
-      ? { id: channelID, org: allChannelsObj[channelID] }
-      : { id: '', org: EVERYONE_ORG_ID };
 
   const onOpenThread = (threadID: string) => {
     navigate(`/channel/${channel.id}/thread/${threadID}`);
@@ -125,8 +88,8 @@ export function App() {
   );
 
   const translations = useMemo(
-    () => getCordTranslations(channel.id),
-    [channel.id],
+    () => getCordTranslations(channel.name),
+    [channel.name],
   );
 
   useEffect(() => {
@@ -138,7 +101,8 @@ export function App() {
       <GlobalStyle />
       <Helmet>
         <title>
-          #{channel.id} - {t('name')}
+          {channel.id.startsWith(DM_CHANNEL_PREFIX) ? '' : '#'}
+          {channel.name} - {t('name')}
         </title>
       </Helmet>
       <CordProvider
@@ -152,12 +116,7 @@ export function App() {
         translations={translations}
       >
         <UsersProvider>
-          <ChannelsContext.Provider
-            value={{
-              channels: allChannelsArray,
-              refetch: fetchChannels,
-            }}
-          >
+          <ChannelsProvider channelID={channelID} setChannel={setChannel}>
             <CordVersionProvider>
               <BrowserNotificationBridge />
               <OptionsMenuTooltips />
@@ -204,7 +163,7 @@ export function App() {
                 </ResponsiveLayout>
               </PresenceObserver>
             </CordVersionProvider>
-          </ChannelsContext.Provider>
+          </ChannelsProvider>
         </UsersProvider>
       </CordProvider>
     </ThemeProvider>
