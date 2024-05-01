@@ -18,7 +18,11 @@ import {
   StyledExperimentalComposer,
 } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
-import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
+import {
+  EVERYONE_ORG_ID,
+  extractUsersFromDirectMessageChannel,
+  isDirectMessageChannel,
+} from 'src/common/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
@@ -71,7 +75,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const createThreadOptions = useMemo(() => {
     return {
-      name: `#${channel.name}`,
+      name: `${isDirectMessageChannel(channel.id) ? '' : '#'}${channel.name}`,
       location: { channel: channel.id },
       // This is not always the right url, but the navigate prop in
       // CordProvider makes sure that clicking on notifications takes
@@ -79,6 +83,9 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
       // the navigate function won't be called (we should fix that)
       url: window.location.href,
       groupID: channel.org,
+      ...(isDirectMessageChannel(channel.id) && {
+        addSubscribers: extractUsersFromDirectMessageChannel(channel.id),
+      }),
     };
   }, [channel.id, channel.name, channel.org]);
 
