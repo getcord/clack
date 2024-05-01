@@ -1,10 +1,10 @@
 import { CordProvider, PresenceObserver } from '@cord-sdk/react';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, styled } from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import type { NavigateFn } from '@cord-sdk/types';
+import type { ClientCreateMessage, NavigateFn } from '@cord-sdk/types';
 import cx from 'classnames';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
@@ -20,7 +20,11 @@ import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
 import { BREAKPOINTS_PX } from 'src/client/consts/consts';
-import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
+import {
+  EVERYONE_ORG_ID,
+  extractUsersFromDirectMessageChannel,
+  isDirectMessageChannel,
+} from 'src/common/consts';
 import { ChannelsProvider } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
@@ -92,6 +96,27 @@ export function App() {
     [channel.name],
   );
 
+  const beforeMessageCreate = useCallback(
+    (
+      clientCreateMessage: ClientCreateMessage,
+      context: { firstMessage: boolean },
+    ) => {
+      if (context.firstMessage && clientCreateMessage.createThread) {
+        const location = clientCreateMessage.createThread.location;
+        if (
+          'channel' in location &&
+          typeof location.channel === 'string' &&
+          isDirectMessageChannel(location.channel)
+        ) {
+          clientCreateMessage.createThread.addSubscribers =
+            extractUsersFromDirectMessageChannel(location.channel);
+        }
+      }
+      return clientCreateMessage;
+    },
+    [],
+  );
+
   useEffect(() => {
     void i18n.changeLanguage(lang);
   }, [lang]);
@@ -114,6 +139,7 @@ export function App() {
         navigate={onCordNavigate}
         language={lang}
         translations={translations}
+        beforeMessageCreate={beforeMessageCreate}
       >
         <UsersProvider>
           <ChannelsProvider channelID={channelID} setChannel={setChannel}>
