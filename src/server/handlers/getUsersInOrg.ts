@@ -5,7 +5,7 @@ import type {
 } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
-import { EVERYONE_ORG_ID } from 'src/server/consts';
+import { EVERYONE_ORG_ID } from 'src/common/consts';
 
 export async function handleGetCordUsers(_: Request, res: Response) {
   const org = await fetchCordRESTApi<ServerGroupData>(

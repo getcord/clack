@@ -3,9 +3,8 @@ import * as React from 'react';
 import type { PropsWithChildren } from 'react';
 import { createContext, useCallback, useEffect, useMemo } from 'react';
 import type { Channel } from 'src/client/consts/Channel';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 type ChannelsContextType = {
   channels: Channel[];

@@ -1,7 +1,6 @@
 import type { ServerUserData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
-import { EVERYONE_ORG_ID } from 'src/server/consts';
+import { DM_CHANNEL_PREFIX, EVERYONE_ORG_ID } from 'src/common/consts';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
 export async function handleAddChannel(req: Request, res: Response) {

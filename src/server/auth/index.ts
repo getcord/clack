@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { EVERYONE_ORG_ID } from 'src/common/consts';
 import {
   COOKIE_OPTIONS,
-  EVERYONE_ORG_ID,
   EVERYONE_ORG_NAME,
   LOGIN_EXPIRES_IN,
   LOGIN_SIGNING_SECRET,

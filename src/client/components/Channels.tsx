@@ -11,13 +11,12 @@ import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 import { ChannelPicker } from 'src/client/components/ChannelPicker';
 import { ChannelThreadCountFetcher } from 'src/client/components/ChannelThreadCountFetcher';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { AddDirectMessageModal } from 'src/client/components/AddDirectMessageModal';
 
 type ChannelWithMute = Channel & { muted: boolean };

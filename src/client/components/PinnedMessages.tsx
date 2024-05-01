@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import type { Channel } from 'src/client/consts/Channel';
 import { Colors } from 'src/client/consts/Colors';
 import { Modal } from 'src/client/components/Modal';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID } from 'src/common/consts';
 
 interface PinnedMessagesProps extends React.ComponentProps<typeof Modal> {
   channel: Channel;

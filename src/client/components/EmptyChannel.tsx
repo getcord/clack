@@ -6,8 +6,7 @@ import {
   LockClosedIcon,
 } from '@heroicons/react/20/solid';
 import type { Channel } from 'src/client/consts/Channel';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 interface EmptyChannelProps {
   channel: Channel;

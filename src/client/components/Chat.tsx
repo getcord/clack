@@ -18,13 +18,12 @@ import {
   StyledExperimentalComposer,
 } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 interface ChatProps {
   channel: Channel;
