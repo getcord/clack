@@ -27,12 +27,12 @@ export function AddDirectMessageModal({
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const {
-    orgMembers: allOrgMembers,
+    groupMembers: allGroupMembers,
     loading,
     hasMore,
     fetchMore,
-  } = user.useOrgMembers({
-    organizationID: EVERYONE_ORG_ID,
+  } = user.useGroupMembers({
+    groupID: EVERYONE_ORG_ID,
   });
   const viewer = user.useViewerData();
 
@@ -43,10 +43,10 @@ export function AddDirectMessageModal({
   }, [hasMore, loading, fetchMore]);
 
   const addableUsers = useMemo(() => {
-    return allOrgMembers
-      .filter((om) => om.id !== viewer?.id)
+    return allGroupMembers
+      .filter((gm) => gm.id !== viewer?.id)
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
-  }, [allOrgMembers, viewer?.id]);
+  }, [allGroupMembers, viewer?.id]);
 
   const [usersToAdd, setUsersToAdd] = useState<string[]>([]);
 

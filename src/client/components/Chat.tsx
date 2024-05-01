@@ -36,15 +36,15 @@ const REPLACE = { SendButton: ClackSendButton };
 
 export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   const { t } = useTranslation();
-  const { orgMembers, loading, hasMore, fetchMore } = user.useOrgMembers({
-    organizationID: channel.org,
+  const { groupMembers, loading, hasMore, fetchMore } = user.useGroupMembers({
+    groupID: channel.org,
   });
 
   useEffect(() => {
     if (!loading && hasMore) {
       void fetchMore(50);
     }
-  }, [orgMembers, hasMore, loading, fetchMore]);
+  }, [groupMembers, hasMore, loading, fetchMore]);
 
   const { threads: pinnedThreads } = thread.useThreads({
     filter: {
@@ -95,8 +95,8 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
               </>
             )}
           </ChannelDetailsHeader>
-          {orgMembers && (
-            <PageUsersLabel users={orgMembers} channel={channel} />
+          {groupMembers && (
+            <PageUsersLabel users={groupMembers} channel={channel} />
           )}
         </PageHeaderWrapper>
       </ChannelDetailsBar>
