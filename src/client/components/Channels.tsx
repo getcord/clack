@@ -18,6 +18,7 @@ import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
 import { ChannelPicker } from 'src/client/components/ChannelPicker';
 import { ChannelThreadCountFetcher } from 'src/client/components/ChannelThreadCountFetcher';
 import { DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { AddDirectMessageModal } from 'src/client/components/AddDirectMessageModal';
 
 type ChannelWithMute = Channel & { muted: boolean };
 
@@ -97,7 +98,9 @@ export function Channels({
   const [contextMenuOpenForChannel, setContextMenuOpenForChannel] = useState<
     Channel | undefined
   >(undefined);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [addChannelModalOpen, setAddChannelModalOpen] = useState(false);
+  const [addDirectMessageModalOpen, setAddDirectMessageModalOpen] =
+    useState(false);
 
   const onContextMenu = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>, channel: ChannelWithMute) => {
@@ -130,6 +133,7 @@ export function Channels({
   });
 
   const channels = [...unmutedChannels, ...mutedChannels];
+  dms.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <>
@@ -152,13 +156,16 @@ export function Channels({
             }
           />
         ))}
-        <AddChannelsButton onClick={() => setModalOpen(true)}>
+        <AddChannelsButton onClick={() => setAddChannelModalOpen(true)}>
           <PlusIconWrapper>
             <PlusIcon width={12} />
           </PlusIconWrapper>
           <AddChannelsButtonText>{t('add_channels')}</AddChannelsButtonText>
         </AddChannelsButton>
-        <AddChannelModals isOpen={modalOpen} setModalOpen={setModalOpen} />
+        <AddChannelModals
+          isOpen={addChannelModalOpen}
+          setModalOpen={setAddChannelModalOpen}
+        />
         {dms.map((dm) => (
           <DmButton
             key={dm.id}
@@ -170,6 +177,18 @@ export function Channels({
             isActive={currentChannel.id === dm.id}
           />
         ))}
+        <AddChannelsButton onClick={() => setAddDirectMessageModalOpen(true)}>
+          <PlusIconWrapper>
+            <PlusIcon width={12} />
+          </PlusIconWrapper>
+          <AddChannelsButtonText>
+            {t('add_direct_message')}
+          </AddChannelsButtonText>
+        </AddChannelsButton>
+        <AddDirectMessageModal
+          isOpen={addDirectMessageModalOpen}
+          setModalOpen={setAddDirectMessageModalOpen}
+        />
         {contextMenuOpenForChannel && (
           <ChannelsRightClickMenu
             position={contextMenuPosition}
