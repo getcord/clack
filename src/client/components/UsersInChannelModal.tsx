@@ -167,12 +167,12 @@ function AddUsersToChannelModal({
   channel,
 }: AddUsersToChannelModalProps) {
   const {
-    orgMembers: allOrgMembers,
+    groupMembers: allGroupMembers,
     loading,
     hasMore,
     fetchMore,
-  } = user.useOrgMembers({
-    organizationID: EVERYONE_ORG_ID,
+  } = user.useGroupMembers({
+    groupID: EVERYONE_ORG_ID,
   });
 
   useEffect(() => {
@@ -182,15 +182,10 @@ function AddUsersToChannelModal({
   }, [hasMore, loading, fetchMore]);
 
   const addableUsers = useMemo(() => {
-    return allOrgMembers
-      .filter((om) => !existingUsers.includes(om.id))
-      .sort(
-        (a, b) =>
-          (a.shortName ?? a.name ?? 'Unknown')?.localeCompare(
-            b.shortName ?? b.name ?? 'Unknown',
-          ),
-      );
-  }, [allOrgMembers, existingUsers]);
+    return allGroupMembers
+      .filter((gm) => !existingUsers.includes(gm.id))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }, [allGroupMembers, existingUsers]);
 
   const [usersToAdd, setUsersToAdd] = useState<string[]>([]);
 
