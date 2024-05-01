@@ -338,10 +338,11 @@ const Modal = styled.div<{ $order: number }>(({ $order }) => ({
 }));
 
 const Box = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
   backgroundColor: 'white',
   borderRadius: '12px',
   color: 'black',
-  gap: '12px',
   minWidth: '550px',
   maxHeight: '700px',
   minHeight: '500px',
@@ -350,6 +351,7 @@ const Box = styled.div({
 const Header = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
   backgroundColor: 'transparent',
   padding: '24px 24px',
   borderBottom: `1px solid ${Colors.gray_light}`,
@@ -358,6 +360,7 @@ const Header = styled.div({
 const Heading = styled.h2({
   display: 'flex',
   marginTop: 0,
+  marginBottom: 0,
 });
 
 const UsersList = styled.div({
