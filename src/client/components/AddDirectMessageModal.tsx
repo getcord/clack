@@ -14,10 +14,9 @@ import { XIcon } from 'src/client/components/Buttons';
 import { Modal as DefaultModal } from 'src/client/components/Modal';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { Colors } from 'src/client/consts/Colors';
 import { Name } from 'src/client/components/Name';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 export function AddDirectMessageModal({
   isOpen,

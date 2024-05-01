@@ -18,7 +18,8 @@ import { ActiveBadge as DefaultActiveBadge } from 'src/client/components/ActiveB
 import { SetToActiveModal } from 'src/client/components/SetToActiveModal';
 import { UserPreferencesDropdown } from 'src/client/components/UserPreferenceDropdown';
 import { SearchBar } from 'src/client/components/SearchBar';
-import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { BREAKPOINTS_PX } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID } from 'src/common/consts';
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
 
 type ModalState = null | 'SET_STATUS' | 'PREFERENCES';

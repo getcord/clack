@@ -16,8 +16,7 @@ import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 type UsersInChannelModalProps = {
   onClose: () => void;

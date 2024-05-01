@@ -19,14 +19,14 @@ import { BrowserNotificationBridge } from 'src/client/components/BrowserNotifica
 import { GlobalStyle } from 'src/client/components/style/GlobalStyle';
 import { MessageProvider } from 'src/client/context/MessageContext';
 import { UsersProvider } from 'src/client/context/UsersProvider';
-import { BREAKPOINTS_PX, EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { BREAKPOINTS_PX } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
 import { ChannelsProvider } from 'src/client/context/ChannelsContext';
 import { getCordTranslations, type Language } from 'src/client/l10n';
 import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 import { theme } from 'src/client/consts/theme';
 import { CordVersionProvider } from 'src/client/context/CordVersionContext';
 import { OptionsMenuTooltips } from 'src/client/components/Options';
-import { DM_CHANNEL_PREFIX } from 'src/common/consts';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { EVERYONE_ORG_ID } from 'src/client/consts/consts';
+import { EVERYONE_ORG_ID } from 'src/common/consts';
 
 export const localStorageKey = 'activity';
 
