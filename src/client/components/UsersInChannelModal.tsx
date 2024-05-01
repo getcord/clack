@@ -16,7 +16,7 @@ import { ActiveBadge } from 'src/client/components/ActiveBadge';
 import { Name } from 'src/client/components/Name';
 import { XIcon } from 'src/client/components/Buttons';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 
 type UsersInChannelModalProps = {
   onClose: () => void;
@@ -41,7 +41,7 @@ export function UsersInChannelModal({
         <Box>
           <Header>
             <Heading>
-              {channel.id.startsWith(DM_CHANNEL_PREFIX) ? (
+              {isDirectMessageChannel(channel.id) ? (
                 <ChatBubbleLeftRightIcon
                   width={20}
                   style={{ padding: '1px', marginRight: '4px' }}
@@ -63,7 +63,7 @@ export function UsersInChannelModal({
           <UsersList>
             {/* Show the Add People modal option if this is a private org */}
             {channel.org !== EVERYONE_ORG_ID &&
-              !channel.id.startsWith(DM_CHANNEL_PREFIX) && (
+              !isDirectMessageChannel(channel.id) && (
                 <UserDetails onClick={() => setShowAddUsersModal(true)}>
                   <AddPeopleIconWrapper>
                     <UserPlusIcon
@@ -135,7 +135,7 @@ function UserRow({
         <ActiveBadge $isActive={isUserPresent} />
         <Name $variant="simple">{user?.name}</Name>
         {showDelete &&
-          !channel.id.startsWith(DM_CHANNEL_PREFIX) &&
+          !isDirectMessageChannel(channel.id) &&
           channel.org !== EVERYONE_ORG_ID && (
             // TODO: the org members API currently doesn't have subscriptions, so
             // it looks like nothing's happened in the FE atm

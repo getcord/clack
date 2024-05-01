@@ -1,6 +1,10 @@
 import type { ServerUserData } from '@cord-sdk/types';
 import type { Request, Response } from 'express';
-import { DM_CHANNEL_PREFIX, EVERYONE_ORG_ID } from 'src/common/consts';
+import {
+  DM_CHANNEL_PREFIX,
+  EVERYONE_ORG_ID,
+  isDirectMessageChannel,
+} from 'src/common/consts';
 import { fetchCordRESTApi } from 'src/server/fetchCordRESTApi';
 
 export async function handleAddChannel(req: Request, res: Response) {
@@ -8,7 +12,7 @@ export async function handleAddChannel(req: Request, res: Response) {
   const { channelName } = req.params;
   const { isPrivate } = req.body;
 
-  if (channelName.startsWith(DM_CHANNEL_PREFIX)) {
+  if (isDirectMessageChannel(channelName)) {
     const users = channelName
       .substring(DM_CHANNEL_PREFIX.length)
       .split(',')

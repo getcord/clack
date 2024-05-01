@@ -11,7 +11,7 @@ import { SidebarButton } from 'src/client/components/SidebarButton';
 import type { Channel } from 'src/client/consts/Channel';
 import { ChannelsRightClickMenu } from 'src/client/components/ChannelsRightClickMenu';
 import { Overlay } from 'src/client/components/MoreActionsButton';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 import { AddChannelModals } from 'src/client/components/AddChannelModals';
 import { ChannelsContext } from 'src/client/context/ChannelsContext';
 import { useMutedChannels } from 'src/client/hooks/useMutedChannels';
@@ -122,7 +122,7 @@ export function Channels({
   const mutedChannels: ChannelWithMute[] = [];
   const dms: ChannelWithMute[] = [];
   unsortedChannels.forEach((channel) => {
-    if (channel.id.startsWith(DM_CHANNEL_PREFIX)) {
+    if (isDirectMessageChannel(channel.id)) {
       dms.push({ ...channel, muted: false });
     } else if (muted.has(channel.id)) {
       mutedChannels.push({ ...channel, muted: true });

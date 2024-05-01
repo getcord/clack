@@ -6,7 +6,7 @@ import {
   LockClosedIcon,
 } from '@heroicons/react/20/solid';
 import type { Channel } from 'src/client/consts/Channel';
-import { EVERYONE_ORG_ID, DM_CHANNEL_PREFIX } from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 
 interface EmptyChannelProps {
   channel: Channel;
@@ -14,7 +14,7 @@ interface EmptyChannelProps {
 
 export function EmptyChannel({ channel }: EmptyChannelProps) {
   const icon = (type: 'title' | 'text') => {
-    if (channel.id.startsWith(DM_CHANNEL_PREFIX)) {
+    if (isDirectMessageChannel(channel.id)) {
       return <DirectMessageIcon $type={type} />;
     } else if (channel.org === EVERYONE_ORG_ID) {
       return <ChannelIcon $type={type} />;
@@ -32,7 +32,7 @@ export function EmptyChannel({ channel }: EmptyChannelProps) {
       <TextContainer>
         <span>
           This is the very beginning of{' '}
-          {channel.id.startsWith(DM_CHANNEL_PREFIX)
+          {isDirectMessageChannel(channel.id)
             ? 'your direct message with'
             : 'the'}{' '}
         </span>
@@ -40,9 +40,7 @@ export function EmptyChannel({ channel }: EmptyChannelProps) {
           {icon('text')}
           {channel.name}
         </Emphasis>{' '}
-        <span>
-          {channel.id.startsWith(DM_CHANNEL_PREFIX) ? '' : ' channel'}.
-        </span>
+        <span>{isDirectMessageChannel(channel.id) ? '' : ' channel'}.</span>
       </TextContainer>
     </Root>
   );
