@@ -5,8 +5,8 @@ import { createContext, useCallback, useEffect, useMemo } from 'react';
 import type { Channel } from 'src/client/consts/Channel';
 import {
   EVERYONE_ORG_ID,
-  DM_CHANNEL_PREFIX,
   isDirectMessageChannel,
+  extractUsersFromDirectMessageChannel,
 } from 'src/common/consts';
 import { useLazyAPIFetch } from 'src/client/hooks/useAPIFetch';
 
@@ -83,10 +83,9 @@ function useChannels(): { channels: Channel[]; refetch: () => void } {
     const userIDs = new Set<string>();
     for (const key in channelFetchResponse) {
       if (isDirectMessageChannel(key)) {
-        key
-          .substring(DM_CHANNEL_PREFIX.length)
-          .split(',')
-          .forEach((userID) => userIDs.add(userID));
+        extractUsersFromDirectMessageChannel(key).forEach((userID) =>
+          userIDs.add(userID),
+        );
       }
     }
     return [...userIDs];
@@ -102,9 +101,7 @@ function useChannels(): { channels: Channel[]; refetch: () => void } {
     const channels: Channel[] = [];
     for (const key in channelFetchResponse) {
       if (isDirectMessageChannel(key)) {
-        const name = key
-          .substring(DM_CHANNEL_PREFIX.length)
-          .split(',')
+        const name = extractUsersFromDirectMessageChannel(key)
           .filter((userID) => userID !== viewer.id)
           .map((userID) => userData[userID]!.displayName)
           .join(', ');
