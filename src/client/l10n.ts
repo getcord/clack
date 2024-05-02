@@ -81,6 +81,12 @@ export function getCordTranslations(channel: string): Translations {
       composer: {
         send_message_placeholder: `Message #${channel}`,
       },
+      notification_templates: {
+        cord: {
+          thread_create:
+            '<user>{{senders.0.displayName}}</user> sent you a direct message',
+        },
+      },
     },
     fr: {
       composer: {
@@ -232,6 +238,12 @@ export function getCordTranslations(channel: string): Translations {
           next_week_format: 'dddd',
           this_year_format: 'MMM D, YYYY',
           other_format: 'MMM D, YYYY',
+        },
+      },
+      notification_templates: {
+        cord: {
+          thread_create:
+            '<user>{{senders.0.displayName}}</user> vous a envoyé un message direct',
         },
       },
     },
@@ -395,6 +407,12 @@ export function getCordTranslations(channel: string): Translations {
           next_week_format: 'dddd',
           this_year_format: 'D MMM, YYYY',
           other_format: 'D MMM, YYYY',
+        },
+      },
+      notification_templates: {
+        cord: {
+          thread_create:
+            '<user>{{senders.0.displayName}}</user> שלח לך הודעה ישירה',
         },
       },
     },
