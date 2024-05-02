@@ -76,20 +76,25 @@ export function ChannelPicker({
 
   const handleTextChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const text = e.target.value.trim();
+      const text = e.target.value;
       setChannelText(text);
+      const comparisonText = text.toLowerCase();
       const newFilteredChannels = channels
-        .filter((channel) => channel.name.includes(text))
+        .filter((channel) =>
+          channel.name.toLowerCase().includes(comparisonText),
+        )
         .sort((a, b) => {
+          const aText = a.name.toLowerCase();
+          const bText = b.name.toLowerCase();
           // Sort exact matches to the top
-          if (a.name === text) {
+          if (aText === comparisonText) {
             return -1;
           }
-          if (b.name === text) {
+          if (bText === comparisonText) {
             return 1;
           }
           // Otherwise prefer things that match earlier in the channel id
-          return a.name.indexOf(text) - b.name.indexOf(text);
+          return aText.indexOf(comparisonText) - bText.indexOf(comparisonText);
         });
 
       setFilteredChannels(newFilteredChannels);
