@@ -145,7 +145,6 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
   $hasReactions: boolean;
 }>`
   &.cord-message {
-    padding: 0;
     align-items: flex-start;
     background-color: inherit;
     padding: 8px 20px;
@@ -177,6 +176,11 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
       max-height: 300px;
       max-width: 300px;
     }
+  }
+
+  &.cord-message.cord-deleted {
+    display: flex;
+    align-items: center;
   }
 
   .cord-avatar-container {
@@ -244,6 +248,11 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
 
   .cord-message-options-buttons > button {
     display: none;
+  }
+
+  .cord-link-preview-image {
+    max-width: 300px;
+    max-height: 200px;
   }
 `;
 
