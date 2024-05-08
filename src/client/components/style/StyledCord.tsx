@@ -144,7 +144,7 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
   $hasReplies: boolean;
   $hasReactions: boolean;
 }>`
-  &.cord-message {
+  &.cord-message:not(.cord-deleted, .cord-action) {
     align-items: flex-start;
     background-color: inherit;
     padding: 8px 20px;
@@ -176,11 +176,6 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
       max-height: 300px;
       max-width: 300px;
     }
-  }
-
-  &.cord-message.cord-deleted {
-    display: flex;
-    align-items: center;
   }
 
   .cord-avatar-container {
