@@ -1,4 +1,5 @@
 import { thread } from '@cord-sdk/react';
+import { useEffect } from 'react';
 
 /**
  * Just a hack so that we can conditionally call a hook that was in Channels.tsx
@@ -20,7 +21,10 @@ export function ChannelThreadCountFetcher({
     },
   });
 
-  setHasUnread(!!summary?.new);
+  const hasUnread = !!summary?.new;
+  useEffect(() => {
+    setHasUnread(hasUnread);
+  }, [hasUnread, setHasUnread]);
 
   return null;
 }
