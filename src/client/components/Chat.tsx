@@ -75,7 +75,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
 
   const createThreadOptions = useMemo(() => {
     return {
-      name: `${isDirectMessageChannel(channel.id) ? '' : '#'}${channel.name}`,
+      name: channel.threadName,
       location: { channel: channel.id },
       // This is not always the right url, but the navigate prop in
       // CordProvider makes sure that clicking on notifications takes
@@ -87,7 +87,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
         addSubscribers: extractUsersFromDirectMessageChannel(channel.id),
       }),
     };
-  }, [channel.id, channel.name, channel.org]);
+  }, [channel.id, channel.threadName, channel.org]);
 
   return (
     <Wrapper>
@@ -134,7 +134,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
       {cordVersionContext.version === '3.0' ? (
         <StyledComposer
           location={{ channel: channel.id }}
-          threadName={`#${channel.name}`}
+          threadName={channel.threadName}
           groupId={channel.org}
           showExpanded
         />

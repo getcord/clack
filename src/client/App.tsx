@@ -56,6 +56,7 @@ export function App() {
   const [channel, setChannel] = useState<Channel>({
     id: '',
     name: '',
+    threadName: '',
     org: EVERYONE_ORG_ID,
   });
   // We only hide the sidebar on mobile, to regain some space.
