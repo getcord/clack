@@ -36,6 +36,7 @@ export function ChannelsProvider({
       channels.find((c) => c.id === channelID) ?? {
         id: '',
         name: '',
+        threadName: '',
         org: EVERYONE_ORG_ID,
       },
     );
@@ -105,9 +106,17 @@ function useChannels(): { channels: Channel[]; refetch: () => void } {
           .filter((userID) => userID !== viewer.id)
           .map((userID) => userData[userID]!.displayName)
           .join(', ');
-        channels.push({ id: key, name, org: key });
+        const threadName = extractUsersFromDirectMessageChannel(key)
+          .map((userID) => userData[userID]!.displayName)
+          .join(', ');
+        channels.push({ id: key, name, threadName, org: key });
       } else {
-        channels.push({ id: key, name: key, org: channelFetchResponse[key] });
+        channels.push({
+          id: key,
+          name: key,
+          threadName: `#${key}`,
+          org: channelFetchResponse[key],
+        });
       }
     }
     return { channels, refetch: fetchChannels };
