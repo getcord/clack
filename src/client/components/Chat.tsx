@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { thread, user, betaV2 } from '@cord-sdk/react';
+import { thread, user } from '@cord-sdk/react';
 import {
   ChatBubbleLeftRightIcon,
   HashtagIcon,
@@ -13,29 +13,19 @@ import { Toolbar } from 'src/client/components/Toolbar';
 import { PushPinSvg } from 'src/client/components/svg/PushPinSVG';
 import { Threads } from 'src/client/components/Threads';
 import { PageHeader } from 'src/client/components/PageHeader';
-import {
-  StyledComposer,
-  StyledExperimentalComposer,
-} from 'src/client/components/style/StyledCord';
+import { StyledComposer } from 'src/client/components/style/StyledCord';
 import { PageUsersLabel } from 'src/client/components/PageUsersLabel';
-import {
-  EVERYONE_ORG_ID,
-  extractUsersFromDirectMessageChannel,
-  isDirectMessageChannel,
-} from 'src/common/consts';
+import { EVERYONE_ORG_ID, isDirectMessageChannel } from 'src/common/consts';
 import { SnowFall } from 'src/client/components/SnowFall';
 import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
-import { ClackSendButton } from 'src/client/components/ClackSendButton';
 
 interface ChatProps {
   channel: Channel;
   onOpenThread: (threadID: string) => void;
   clackTheme: ClackTheme;
 }
-
-const REPLACE = { SendButton: ClackSendButton };
 
 export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   const { t } = useTranslation();
@@ -72,22 +62,6 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   );
 
   const cordVersionContext = useContext(CordVersionContext);
-
-  const createThreadOptions = useMemo(() => {
-    return {
-      name: channel.threadName,
-      location: { channel: channel.id },
-      // This is not always the right url, but the navigate prop in
-      // CordProvider makes sure that clicking on notifications takes
-      // to the right place. We cannot pass an empty url because then
-      // the navigate function won't be called (we should fix that)
-      url: window.location.href,
-      groupID: channel.org,
-      ...(isDirectMessageChannel(channel.id) && {
-        addSubscribers: extractUsersFromDirectMessageChannel(channel.id),
-      }),
-    };
-  }, [channel.id, channel.threadName, channel.org]);
 
   return (
     <Wrapper>
@@ -138,11 +112,7 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
           groupId={channel.org}
           showExpanded
         />
-      ) : (
-        <betaV2.Replace replace={REPLACE}>
-          <StyledExperimentalComposer createThread={createThreadOptions} />
-        </betaV2.Replace>
-      )}
+      ) : null}
       {clackTheme === 'winter' && <SnowFall />}
       {clackTheme === 'spring' && <Spring />}
     </Wrapper>
