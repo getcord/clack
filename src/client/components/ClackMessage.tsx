@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { betaV2, thread as threadSDK } from '@cord-sdk/react';
-import type { ClientMessageData } from '@cord-sdk/types';
+import type { ClientMessageData, ThreadSummary } from '@cord-sdk/types';
 import styled from 'styled-components';
 
 import { StyledExperimentalMessage } from 'src/client/components/style/StyledCord';
@@ -9,7 +9,11 @@ import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { MessageListItem4Context } from 'src/client/context/MessageListItem4Context';
 import { Options } from 'src/client/components/Options';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
-import { OpenThreadContext } from 'src/client/components/Threads';
+import {
+  LoadMoreThreadsContext,
+  OpenThreadContext,
+} from 'src/client/components/Threads';
+import { DateDivider } from 'src/client/components/DateDivider';
 
 const StyledTimestamp = styled(betaV2.Timestamp)`
   && {
@@ -19,12 +23,33 @@ const StyledTimestamp = styled(betaV2.Timestamp)`
 `;
 export function Message({ message, className }: betaV2.MessageProps) {
   const { onOpenThread } = useContext(OpenThreadContext);
+  const { threads } = useContext(LoadMoreThreadsContext);
+
+  const { lastMessageTimestamp, isDifferentDay } = useMemo(() => {
+    const index = threads.findIndex(
+      (thread: ThreadSummary) => thread.id === message.threadID,
+    );
+
+    const lastMessageTimestamp =
+      threads[index - 1]?.firstMessage?.createdTimestamp;
+
+    const isDifferentDay =
+      lastMessageTimestamp &&
+      message.createdTimestamp.getDate() !== lastMessageTimestamp.getDate();
+    return { lastMessageTimestamp, isDifferentDay };
+  }, [message.createdTimestamp, message.threadID, threads]);
+
   return (
-    <ClackMessage
-      message={message}
-      onOpenThread={onOpenThread}
-      className={className}
-    />
+    <div>
+      {lastMessageTimestamp && isDifferentDay ? (
+        <DateDivider timestamp={lastMessageTimestamp} />
+      ) : null}
+      <ClackMessage
+        message={message}
+        onOpenThread={onOpenThread}
+        className={className}
+      />
+    </div>
   );
 }
 
