@@ -330,16 +330,17 @@ const SeparatorLine = styled.hr`
 `;
 
 const StyledThreadByID = styled(betaV2.Thread.ByID)`
-  &.cord-component {
+  &.cord-v2 {
     border: none;
     height: 100%;
   }
-  &.cord-component .cord-composer {
+  & .cord-composer {
     margin: 0 20px 20px;
   }
-  &.cord-component .cord-thread-header-container {
+  & .cord-thread-header-container {
     display: none;
   }
-  &.cord-component .cord-scroll-container {
+  & .cord-scroll-container {
+    gap: 0;
   }
 `;
