@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { styled } from 'styled-components';
-import { thread, user, betaV2 } from '@cord-sdk/react';
+import type { betaV2 } from '@cord-sdk/react';
+import { thread, user } from '@cord-sdk/react';
 import {
   ChatBubbleLeftRightIcon,
   HashtagIcon,
@@ -28,6 +29,7 @@ import type { ClackTheme } from 'src/client/consts/theme';
 import { Spring } from 'src/client/components/SpringFall';
 import { CordVersionContext } from 'src/client/context/CordVersionContext';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
+import { ToolbarLayoutWithGiphyButton } from 'src/client/components/ToolbarWithGiphy';
 
 interface ChatProps {
   channel: Channel;
@@ -35,7 +37,10 @@ interface ChatProps {
   clackTheme: ClackTheme;
 }
 
-const REPLACE = { SendButton: ClackSendButton };
+const REPLACE: betaV2.ReplaceConfig = {
+  SendButton: ClackSendButton,
+  ToolbarLayout: ToolbarLayoutWithGiphyButton,
+};
 
 export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
   const { t } = useTranslation();
@@ -139,9 +144,10 @@ export function Chat({ channel, onOpenThread, clackTheme }: ChatProps) {
           showExpanded
         />
       ) : (
-        <betaV2.Replace replace={REPLACE}>
-          <StyledExperimentalComposer createThread={createThreadOptions} />
-        </betaV2.Replace>
+        <StyledExperimentalComposer
+          createThread={createThreadOptions}
+          replace={REPLACE}
+        />
       )}
       {clackTheme === 'winter' && <SnowFall />}
       {clackTheme === 'spring' && <Spring />}

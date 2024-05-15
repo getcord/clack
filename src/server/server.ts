@@ -26,6 +26,7 @@ import {
 import { handleAddChannel } from 'src/server/handlers/updateChannels';
 import { handleGetSlackLogin } from 'src/server/auth/slack';
 import { handleFakeLogin } from 'src/server/auth/fake';
+import { handleGetConfig } from 'src/server/handlers/getConfig';
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
 dotenv.config({ path: path.join(REPO_ROOT, '.env') });
@@ -93,7 +94,7 @@ function main() {
   );
 
   app.put('/channels/:channelName', wrapAsyncHandler(handleAddChannel));
-
+  app.get('/config', handleGetConfig);
   // Catch errors and log them
   app.use(
     '/',
