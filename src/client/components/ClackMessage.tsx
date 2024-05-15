@@ -158,6 +158,7 @@ const StyledAvatar = styled(betaV2.Avatar.ByID)`
   && {
     width: 36px;
     height: 36px;
+    flex-shrink: 0;
   }
 `;
 
