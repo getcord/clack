@@ -53,12 +53,7 @@ export function App() {
   const { t } = useTranslation();
   const [cordToken, cordUserID] = useCordToken();
   const { channelID: channelIDParam, threadID } = useParams();
-  const [channel, setChannel] = useState<Channel>({
-    id: '',
-    name: '',
-    threadName: '',
-    org: EVERYONE_ORG_ID,
-  });
+  const [channel, setChannel] = useState<Channel | undefined>();
   // We only hide the sidebar on mobile, to regain some space.
   const [showSidebar, setShowSidebar] = React.useState(false);
   const [lang, setLang] = useStateWithLocalStoragePersistence<Language>(
@@ -77,7 +72,9 @@ export function App() {
   const channelID = channelIDParam ?? 'general';
 
   const onOpenThread = (threadID: string) => {
-    navigate(`/channel/${channel.id}/thread/${threadID}`);
+    if (channel) {
+      navigate(`/channel/${channel.id}/thread/${threadID}`);
+    }
   };
 
   const onCordNavigate: NavigateFn = React.useCallback(
@@ -93,8 +90,8 @@ export function App() {
   );
 
   const translations = useMemo(
-    () => getCordTranslations(channel.name),
-    [channel.name],
+    () => getCordTranslations(channel?.name ?? ''),
+    [channel?.name],
   );
 
   const beforeMessageCreate = useCallback(
@@ -127,8 +124,11 @@ export function App() {
       <GlobalStyle />
       <Helmet>
         <title>
-          {isDirectMessageChannel(channel.id) ? '' : '#'}
-          {channel.name} - {t('name')}
+          {channel
+            ? `${isDirectMessageChannel(channel.id) ? '' : '#'}${
+                channel.name
+              } - ${t('name')}`
+            : t('name')}
         </title>
       </Helmet>
       <CordProvider
@@ -170,7 +170,7 @@ export function App() {
                   />
                   <MessageProvider>
                     <ResponsiveContent>
-                      {openPanel === 'channel' && channel.org && (
+                      {openPanel === 'channel' && channel && (
                         <Chat
                           key={channel.id}
                           channel={channel}
@@ -179,7 +179,7 @@ export function App() {
                         />
                       )}
                     </ResponsiveContent>
-                    {threadID && (
+                    {channel && threadID && (
                       <ThreadDetails
                         channel={channel}
                         threadID={threadID}

@@ -13,7 +13,7 @@ import { themeOptions, type ClackTheme } from 'src/client/consts/theme';
 
 type SidebarProps = {
   className?: string;
-  channel: Channel;
+  channel: Channel | undefined;
   setShowSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
   lang: Language;
   setLang: React.Dispatch<React.SetStateAction<Language>>;

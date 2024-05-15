@@ -4,7 +4,6 @@ import type { PropsWithChildren } from 'react';
 import { createContext, useCallback, useEffect, useMemo } from 'react';
 import type { Channel } from 'src/client/consts/Channel';
 import {
-  EVERYONE_ORG_ID,
   isDirectMessageChannel,
   extractUsersFromDirectMessageChannel,
 } from 'src/common/consts';
@@ -22,7 +21,7 @@ export const ChannelsContext = createContext<ChannelsContextType>({
 
 type ChannelsProviderProps = PropsWithChildren<{
   channelID: string;
-  setChannel: (channel: Channel) => void;
+  setChannel: (channel: Channel | undefined) => void;
 }>;
 
 export function ChannelsProvider({
@@ -32,14 +31,7 @@ export function ChannelsProvider({
 }: ChannelsProviderProps) {
   const { channels, refetch } = useChannels();
   useEffect(() => {
-    setChannel(
-      channels.find((c) => c.id === channelID) ?? {
-        id: '',
-        name: '',
-        threadName: '',
-        org: EVERYONE_ORG_ID,
-      },
-    );
+    setChannel(channels.find((c) => c.id === channelID));
   }, [channelID, channels, setChannel]);
   return (
     <ChannelsContext.Provider value={{ channels, refetch }}>
