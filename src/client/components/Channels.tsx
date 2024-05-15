@@ -86,7 +86,7 @@ export function Channels({
   currentChannel,
 }: {
   setCurrentChannelID: (channel: string) => void;
-  currentChannel: Channel;
+  currentChannel: Channel | undefined;
 }) {
   const { t } = useTranslation();
   const { channels: unsortedChannels } = useContext(ChannelsContext);
@@ -139,7 +139,7 @@ export function Channels({
       <ChannelsList>
         {channels.map((channel) => (
           <ChannelButton
-            isActive={currentChannel.id === channel.id}
+            isActive={currentChannel?.id === channel.id}
             key={channel.id}
             onClick={() => setCurrentChannelID(channel.id)}
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) =>
@@ -173,7 +173,7 @@ export function Channels({
             onContextMenu={(e: React.MouseEvent<HTMLButtonElement>) =>
               onContextMenu(e, dm)
             }
-            isActive={currentChannel.id === dm.id}
+            isActive={currentChannel?.id === dm.id}
           />
         ))}
         <AddChannelsButton onClick={() => setAddDirectMessageModalOpen(true)}>
