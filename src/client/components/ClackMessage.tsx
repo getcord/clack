@@ -9,6 +9,7 @@ import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { MessageListItem4Context } from 'src/client/context/MessageListItem4Context';
 import { Options } from 'src/client/components/Options';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
+import { OpenThreadContext } from 'src/client/components/Threads';
 
 const StyledTimestamp = styled(betaV2.Timestamp)`
   && {
@@ -16,15 +17,27 @@ const StyledTimestamp = styled(betaV2.Timestamp)`
     align-self: end;
   }
 `;
+export function Message({ message, className }: betaV2.MessageProps) {
+  const { onOpenThread } = useContext(OpenThreadContext);
+  return (
+    <ClackMessage
+      message={message}
+      onOpenThread={onOpenThread}
+      className={className}
+    />
+  );
+}
 
 export function ClackMessage({
   message,
   onOpenThread,
   inThreadDetails,
+  className,
 }: {
   message: ClientMessageData;
   onOpenThread: (threadID: string) => void;
   inThreadDetails?: boolean;
+  className?: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -68,6 +81,7 @@ export function ClackMessage({
           replace={replace}
           $hasReactions={(message.reactions?.length ?? 0) > 0}
           $hasReplies={(thread?.total ?? 0) > 1}
+          className={className}
         />
       </div>
     </MessageListItem4Context.Provider>
