@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { experimental, thread } from '@cord-sdk/react';
+import { betaV2, experimental, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { Channel } from 'src/client/consts/Channel';
@@ -235,6 +235,7 @@ const XIcon = styled(XMarkIcon)({
 const REPLACE = {
   SendButton: ClackSendButton,
   Message: Message,
+  ScrollContainer: ThreadsScrollContainer,
 };
 
 function Threads4({ channel, onOpenThread }: ThreadsProps) {
@@ -286,3 +287,13 @@ export const OpenThreadContext = createContext<{
 }>({
   onOpenThread: () => {},
 });
+
+function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
+  return (
+    <betaV2.ScrollContainer
+      {...props}
+      autoScrollToNewest="auto"
+      autoScrollDirection="bottom"
+    />
+  );
+}
