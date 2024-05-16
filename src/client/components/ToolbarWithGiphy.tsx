@@ -74,12 +74,12 @@ function GiphyMenuButton() {
         },
       ]}
       button={
-        <StyledGiphtMenuButton
+        <StyledGiphyMenuButton
           onClick={() => setShowGiphyMenu((prev) => !prev)}
           buttonAction="open-giphy"
         >
           <StyledGifIcon />
-        </StyledGiphtMenuButton>
+        </StyledGiphyMenuButton>
       }
       buttonTooltipLabel="Send a Giphy"
     />
@@ -168,7 +168,7 @@ function GiphyMenu({ setShowGiphyMenu }: GiphyMenuProps) {
 }
 
 // The &&& is to increase specificity
-const StyledGiphtMenuButton = styled(betaV2.Button).attrs({
+const StyledGiphyMenuButton = styled(betaV2.Button).attrs({
   className: 'cord-tertiary',
 })`
   &&& {
