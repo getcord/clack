@@ -24,6 +24,8 @@ import {
   isDirectMessageChannel,
 } from 'src/common/consts';
 
+const FETCH_MORE_THREADS_COUNT = 20;
+
 type ThreadsProps = {
   channel: Channel;
   onOpenThread: (threadID: string) => void;
@@ -242,6 +244,7 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
   const threadsData = thread.useThreads({
     filter: { location: { channel: channel.id } },
     sortDirection: 'descending',
+    initialFetchCount: FETCH_MORE_THREADS_COUNT,
   });
 
   const threadsDataReversed = useMemo(() => {
@@ -265,13 +268,17 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
       };
     }, [channel.id, channel.org, channel.threadName]);
 
+  const { loading, hasMore, fetchMore } = threadsDataReversed;
+
   return (
     <OpenThreadContext.Provider value={{ onOpenThread }}>
-      <StyledExperimentalThreads
-        threadsData={threadsDataReversed}
-        composerOptions={composerOptions}
-        replace={REPLACE}
-      />
+      <LoadMoreThreadsContext.Provider value={{ hasMore, loading, fetchMore }}>
+        <StyledExperimentalThreads
+          threadsData={threadsDataReversed}
+          composerOptions={composerOptions}
+          replace={REPLACE}
+        />
+      </LoadMoreThreadsContext.Provider>
     </OpenThreadContext.Provider>
   );
 }
@@ -288,12 +295,35 @@ export const OpenThreadContext = createContext<{
   onOpenThread: () => {},
 });
 
+const LoadMoreThreadsContext = createContext<{
+  fetchMore: (howMany: number) => Promise<void>;
+  loading: boolean;
+  hasMore: boolean;
+}>({
+  fetchMore: async (_: number) => {},
+  loading: true,
+  hasMore: false,
+});
+
 function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
+  const { fetchMore, loading, hasMore } = useContext(LoadMoreThreadsContext);
+  const onScrollToEdge = useCallback(
+    (edge: string) => {
+      if (edge === 'top') {
+        if (hasMore && !loading) {
+          void fetchMore(FETCH_MORE_THREADS_COUNT);
+        }
+      }
+    },
+    [fetchMore, hasMore, loading],
+  );
+
   return (
     <betaV2.ScrollContainer
       {...props}
       autoScrollToNewest="auto"
       autoScrollDirection="bottom"
+      onScrollToEdge={onScrollToEdge}
     />
   );
 }
