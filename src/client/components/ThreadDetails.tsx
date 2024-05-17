@@ -331,17 +331,20 @@ const SeparatorLine = styled.hr`
   }
 `;
 
-const StyledThreadByID = styled(betaV2.Thread.ByID)`
-  &.cord-component {
-    border: none;
-    height: 100%;
-  }
-  &.cord-component .cord-composer {
-    margin: 0 20px 20px;
-  }
-  &.cord-component .cord-thread-header-container {
-    display: none;
-  }
-  &.cord-component .cord-scroll-container {
-  }
-`;
+const StyledThreadByID = styled(betaV2.Thread.ByID)({
+  '&.cord-v2': {
+    border: 'none',
+    height: '100%',
+    padding: 0,
+  },
+  '& .cord-composer': {
+    margin: '0 20px 20px',
+  },
+  '& .cord-thread-header-container': {
+    display: 'none',
+  },
+  '& .cord-scroll-container': {
+    padding: 0,
+    gap: 0,
+  },
+});

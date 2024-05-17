@@ -21,6 +21,12 @@ jobs:
         shell: bash
         run: npm ci
 
+      - name: 'Build'
+        shell: bash
+        run: |
+          npm run build-client
+          npm run build-server
+
       - name: 'Check TypeScript'
         shell: bash
         run: npm run tsc-once

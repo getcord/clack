@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { thread } from '@cord-sdk/react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { betaV2, experimental, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { Channel } from 'src/client/consts/Channel';
@@ -9,6 +16,16 @@ import { EmptyChannel } from 'src/client/components/EmptyChannel';
 import { DateDivider } from 'src/client/components/DateDivider';
 import { Colors } from 'src/client/consts/Colors';
 import { MessageContext } from 'src/client/context/MessageContext';
+import { CordVersionContext } from 'src/client/context/CordVersionContext';
+import { ClackSendButton } from 'src/client/components/ClackSendButton';
+import { Message } from 'src/client/components/ClackMessage';
+import {
+  extractUsersFromDirectMessageChannel,
+  isDirectMessageChannel,
+} from 'src/common/consts';
+import { ToolbarLayoutWithGiphyButton } from 'src/client/components/ToolbarWithGiphy';
+
+const FETCH_MORE_THREADS_COUNT = 20;
 
 type ThreadsProps = {
   channel: Channel;
@@ -17,7 +34,16 @@ type ThreadsProps = {
   onScrollToBottom: () => void;
 };
 
-export function Threads({
+export function Threads(props: ThreadsProps) {
+  const cordVersionContext = useContext(CordVersionContext);
+
+  if (cordVersionContext.version === '3.0') {
+    return <Threads3 {...props} />;
+  }
+  return <Threads4 {...props} />;
+}
+
+function Threads3({
   channel,
   onOpenThread,
   onScrollToBottom,
@@ -208,3 +234,98 @@ const XIcon = styled(XMarkIcon)({
   width: '16px',
   height: '16px',
 });
+
+const REPLACE = {
+  SendButton: ClackSendButton,
+  Message: Message,
+  ScrollContainer: ThreadsScrollContainer,
+  ToolbarLayout: ToolbarLayoutWithGiphyButton,
+};
+
+function Threads4({ channel, onOpenThread }: ThreadsProps) {
+  const threadsData = thread.useThreads({
+    filter: { location: { channel: channel.id } },
+    sortDirection: 'descending',
+    initialFetchCount: FETCH_MORE_THREADS_COUNT,
+  });
+
+  const threadsDataReversed = useMemo(() => {
+    return {
+      ...threadsData,
+      threads: [...threadsData.threads].reverse(),
+    };
+  }, [threadsData]);
+
+  const composerOptions: experimental.ThreadsProps['composerOptions'] =
+    useMemo(() => {
+      return {
+        position: 'bottom',
+        groupID: channel.org,
+        location: { channel: channel.id },
+        name: channel.threadName,
+        url: window.location.href,
+        ...(isDirectMessageChannel(channel.id) && {
+          addSubscribers: extractUsersFromDirectMessageChannel(channel.id),
+        }),
+      };
+    }, [channel.id, channel.org, channel.threadName]);
+
+  const { loading, hasMore, fetchMore } = threadsDataReversed;
+
+  return (
+    <OpenThreadContext.Provider value={{ onOpenThread }}>
+      <LoadMoreThreadsContext.Provider value={{ hasMore, loading, fetchMore }}>
+        <StyledExperimentalThreads
+          threadsData={threadsDataReversed}
+          composerOptions={composerOptions}
+          replace={REPLACE}
+        />
+      </LoadMoreThreadsContext.Provider>
+    </OpenThreadContext.Provider>
+  );
+}
+
+const StyledExperimentalThreads = styled(experimental.Threads)({
+  '&&': { overflowY: 'auto', border: 'none', padding: 0 },
+  '& .cord-inline-reply-button': { display: 'none' },
+  '& .cord-composer': { margin: '0 20px 20px 20px' },
+});
+
+export const OpenThreadContext = createContext<{
+  onOpenThread: (threadID: string) => void;
+}>({
+  onOpenThread: () => {},
+});
+
+const LoadMoreThreadsContext = createContext<{
+  fetchMore: (howMany: number) => Promise<void>;
+  loading: boolean;
+  hasMore: boolean;
+}>({
+  fetchMore: async (_: number) => {},
+  loading: true,
+  hasMore: false,
+});
+
+function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
+  const { fetchMore, loading, hasMore } = useContext(LoadMoreThreadsContext);
+  const onScrollToEdge = useCallback(
+    (edge: string) => {
+      if (edge === 'top') {
+        if (hasMore && !loading) {
+          void fetchMore(FETCH_MORE_THREADS_COUNT);
+        }
+      }
+    },
+    [fetchMore, hasMore, loading],
+  );
+
+  return (
+    <betaV2.ScrollContainer
+      {...props}
+      autoScrollToNewest="auto"
+      autoScrollDirection="bottom"
+      onScrollToEdge={onScrollToEdge}
+    />
+  );
+}
