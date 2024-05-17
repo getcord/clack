@@ -25,7 +25,7 @@ const GlobalAttachmentStyles = createGlobalStyle`
         width: 50px;
     } 
 `;
-
+// Refer to https://developers.giphy.com/docs/api/ for a Giphy api key
 export const ToolbarLayoutWithGiphyButton = forwardRef(
   function ToolbarLayoutWithGiphyButton(
     props: betaV2.ToolbarLayoutProps,
