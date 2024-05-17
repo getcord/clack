@@ -10,6 +10,8 @@ import { MoreActionsButton } from 'src/client/components/MoreActionsButton';
 export const OPTIONS_ICON_HEIGHT = 20;
 export const OPTIONS_ICON_WIDTH = 20;
 
+export const OPTIONS_Z_INDEX = 1;
+
 interface OptionsProps {
   thread: ThreadSummary;
   hovered: boolean;
@@ -41,7 +43,7 @@ export function Options({
     (hovered || optionsHovered || showOptionsDialog) && (
       <OptionsStyled onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <div
-          data-tooltip-id="reactions-button"
+          data-tooltip-id="options-menu-tooltip"
           data-tooltip-content="Find another reaction"
           data-tooltip-place="top"
         >
@@ -50,7 +52,7 @@ export function Options({
         {onOpenThread && (
           <OptionsButton
             onClick={() => onOpenThread(thread.id)}
-            data-tooltip-id="options-button"
+            data-tooltip-id="options-menu-tooltip"
             data-tooltip-content="Reply in thread"
             data-tooltip-place="top"
           >
@@ -103,7 +105,7 @@ const OptionsStyled = styled.div`
     box-shadow: inset 0 0 0 1.15px ${Colors.gray_light};
     border-radius: 8px;
     padding: 4px;
-    z-index: 1;
+    z-index: ${OPTIONS_Z_INDEX};
   }
 
   .cord-reaction-list .cord-pill {
@@ -136,11 +138,9 @@ export const OptionsButton = styled.div`
 
 // TODO could use WithTooltip
 export function OptionsMenuTooltips() {
-  return (
-    <>
-      <Tooltip id="reactions-button" />
-      <Tooltip id="options-button" />
-      <Tooltip id="more-actions-button" />
-    </>
-  );
+  return <StyledTooltip id="options-menu-tooltip" />;
 }
+
+const StyledTooltip = styled(Tooltip)`
+  z-index: ${OPTIONS_Z_INDEX + 1};
+`;
