@@ -141,7 +141,7 @@ export function MoreActionsButton({
       >
         <OptionsButton
           ref={moreOptionsButtonRef}
-          data-tooltip-id="more-actions-button"
+          data-tooltip-id="options-menu-tooltip"
           data-tooltip-content="More actions"
           data-tooltip-place="top"
           onClick={onMoreOptionsClick}
