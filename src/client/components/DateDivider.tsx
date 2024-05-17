@@ -27,7 +27,7 @@ export function DateDivider({ timestamp }: { timestamp: Date }) {
 }
 
 const Root = styled.div({
-  '.cord-v2 &': {
+  '.cord-v2 &, &': {
     width: '100%',
     position: 'relative',
     padding: '20px 0',
@@ -35,7 +35,7 @@ const Root = styled.div({
 });
 
 const Pill = styled.div({
-  '.cord-v2 &': {
+  '.cord-v2 &, &': {
     position: 'absolute',
     left: '50%',
     top: '50%',
@@ -51,7 +51,7 @@ const Pill = styled.div({
 });
 
 const Line = styled.div({
-  '.cord-v2 &': {
+  '.cord-v2 &, &': {
     borderBottom: `1px solid ${Colors.gray_light}`,
   },
 });

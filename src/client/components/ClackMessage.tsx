@@ -201,13 +201,15 @@ const StyledAvatar = styled(betaV2.Avatar.ByID)`
   }
 `;
 
-const StyledComposerWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  padding: 8px 20px;
-`;
+const StyledComposerWrapper = styled.div({
+  '&&': {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '8px',
+    padding: '8px 20px',
+  },
+});
 
-const StyledComposer = styled(betaV2.Composer)`
-  flex-grow: 1;
-`;
+const StyledComposer = styled(betaV2.Composer)({
+  '&': { flexGrow: 1 },
+});
