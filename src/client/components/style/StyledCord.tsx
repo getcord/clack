@@ -144,6 +144,10 @@ export const StyledExperimentalMessage = styled(betaV2.Message)<{
   $hasReplies: boolean;
   $hasReactions: boolean;
 }>`
+  &.cord-message {
+    margin: 0;
+  }
+
   &.cord-message:not(.cord-deleted, .cord-action, .cord-composer) {
     align-items: flex-start;
     background-color: inherit;

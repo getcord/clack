@@ -289,9 +289,14 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
 }
 
 const StyledExperimentalThreads = styled(experimental.Threads)({
-  '&&': { overflowY: 'auto', border: 'none', padding: 0 },
+  '&&': {
+    overflowY: 'auto',
+    border: 'none',
+    padding: 0,
+    justifyContent: 'space-between',
+  },
   '& .cord-inline-reply-button': { display: 'none' },
-  '& .cord-composer': { margin: '0 20px 20px 20px' },
+  '& :not(.cord-message).cord-composer': { margin: '0 20px 20px 20px' },
 });
 
 export const OpenThreadContext = createContext<{
