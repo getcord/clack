@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { betaV2, experimental, thread } from '@cord-sdk/react';
+import { betaV2, experimental, thread, user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { ThreadSummary } from '@cord-sdk/types';
@@ -311,7 +311,13 @@ export const LoadMoreThreadsContext = createContext<{
 });
 
 function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
-  const { fetchMore, loading, hasMore } = useContext(LoadMoreThreadsContext);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const prevLatestMessageID = useRef<string | null>(null);
+
+  const { threads, fetchMore, loading, hasMore } = useContext(
+    LoadMoreThreadsContext,
+  );
+
   const onScrollToEdge = useCallback(
     (edge: string) => {
       if (edge === 'top') {
@@ -323,8 +329,29 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
     [fetchMore, hasMore, loading],
   );
 
+  const viewer = user.useViewerData();
+
+  useEffect(() => {
+    const latest = threads[threads.length - 1];
+    if (!latest) {
+      return;
+    }
+
+    if (prevLatestMessageID.current !== latest?.id) {
+      if (latest.firstMessage?.authorID === viewer?.id) {
+        scrollContainerRef.current &&
+          scrollContainerRef.current.scroll({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: 'smooth',
+          });
+      }
+      prevLatestMessageID.current = latest.id;
+    }
+  }, [prevLatestMessageID, threads, viewer?.id]);
+
   return (
     <betaV2.ScrollContainer
+      ref={scrollContainerRef}
       {...props}
       autoScrollToNewest="auto"
       autoScrollDirection="bottom"
