@@ -14,8 +14,8 @@ npm run build-client
 npm run build-server -- --watch=forever &
 npm run build-client -- --watch=forever &
 
-cp -r ./src/client/static ./dist/client/static & 
-cp -r ./src/client/index.html ./dist/client/index.html & 
+cp -r ./src/client ./dist/client/static &
+cp ./src/client/index.html ./dist/client/index.html &
 
 npm run run-server-dev &
 npm run run-client-dev &
