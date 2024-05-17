@@ -27,25 +27,31 @@ export function DateDivider({ timestamp }: { timestamp: Date }) {
 }
 
 const Root = styled.div({
-  width: '100%',
-  position: 'relative',
-  padding: '20px 0',
+  '.cord-v2 &': {
+    width: '100%',
+    position: 'relative',
+    padding: '20px 0',
+  },
 });
 
 const Pill = styled.div({
-  position: 'absolute',
-  left: '50%',
-  top: '50%',
-  translate: '-50% -50%',
-  backgroundColor: 'white',
-  padding: '2px 12px',
-  border: `1px solid ${Colors.gray_light}`,
-  width: 'fit-content',
-  borderRadius: '99px',
-  fontSize: '13px',
-  lineHeight: '27px',
+  '.cord-v2 &': {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    translate: '-50% -50%',
+    backgroundColor: 'white',
+    padding: '2px 12px',
+    border: `1px solid ${Colors.gray_light}`,
+    width: 'fit-content',
+    borderRadius: '99px',
+    fontSize: '13px',
+    lineHeight: '27px',
+  },
 });
 
 const Line = styled.div({
-  borderBottom: `1px solid ${Colors.gray_light}`,
+  '.cord-v2 &': {
+    borderBottom: `1px solid ${Colors.gray_light}`,
+  },
 });

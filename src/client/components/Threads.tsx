@@ -9,6 +9,7 @@ import React, {
 import { betaV2, experimental, thread } from '@cord-sdk/react';
 import { styled } from 'styled-components';
 import { ArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import type { ThreadSummary } from '@cord-sdk/types';
 import type { Channel } from 'src/client/consts/Channel';
 import { PaginationTrigger } from 'src/client/components/PaginationTrigger';
 import { MessageListItem } from 'src/client/components/MessageListItem';
@@ -268,11 +269,13 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
       };
     }, [channel.id, channel.org, channel.threadName]);
 
-  const { loading, hasMore, fetchMore } = threadsDataReversed;
+  const { threads, loading, hasMore, fetchMore } = threadsDataReversed;
 
   return (
     <OpenThreadContext.Provider value={{ onOpenThread }}>
-      <LoadMoreThreadsContext.Provider value={{ hasMore, loading, fetchMore }}>
+      <LoadMoreThreadsContext.Provider
+        value={{ threads, hasMore, loading, fetchMore }}
+      >
         <StyledExperimentalThreads
           threadsData={threadsDataReversed}
           composerOptions={composerOptions}
@@ -295,14 +298,16 @@ export const OpenThreadContext = createContext<{
   onOpenThread: () => {},
 });
 
-const LoadMoreThreadsContext = createContext<{
+export const LoadMoreThreadsContext = createContext<{
   fetchMore: (howMany: number) => Promise<void>;
   loading: boolean;
   hasMore: boolean;
+  threads: ThreadSummary[];
 }>({
   fetchMore: async (_: number) => {},
   loading: true,
   hasMore: false,
+  threads: [],
 });
 
 function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
