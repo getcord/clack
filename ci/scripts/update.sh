@@ -17,8 +17,8 @@ echo "Build server and client:"
 npm run build-server
 npm run build-client
 
-cp -r ./src/client/static ./dist/client/static
-cp -r ./src/client/index.html ./dist/client/index.html
+cp -r ./src/client/static ./dist/client
+cp ./src/client/index.html ./dist/client/index.html
 
 sudo cp -r /home/ec2-user/clack/dist/client /var/www/clack
 
