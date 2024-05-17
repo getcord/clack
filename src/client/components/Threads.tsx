@@ -24,6 +24,7 @@ import {
   extractUsersFromDirectMessageChannel,
   isDirectMessageChannel,
 } from 'src/common/consts';
+import { ToolbarLayoutWithGiphyButton } from 'src/client/components/ToolbarWithGiphy';
 
 const FETCH_MORE_THREADS_COUNT = 20;
 
@@ -239,6 +240,7 @@ const REPLACE = {
   SendButton: ClackSendButton,
   Message: Message,
   ScrollContainer: ThreadsScrollContainer,
+  ToolbarLayout: ToolbarLayoutWithGiphyButton,
 };
 
 function Threads4({ channel, onOpenThread }: ThreadsProps) {

@@ -31,6 +31,7 @@ import { useStateWithLocalStoragePersistence } from 'src/client/utils';
 import { theme } from 'src/client/consts/theme';
 import { CordVersionProvider } from 'src/client/context/CordVersionContext';
 import { OptionsMenuTooltips } from 'src/client/components/Options';
+import { ConfigContextProvider } from 'src/client/context/ConfigContext';
 
 function useCordToken(): [string | undefined, string | undefined] {
   const data = useAPIFetch<
@@ -153,41 +154,46 @@ export function App() {
                 style={{ height: '100%' }}
                 groupId={EVERYONE_ORG_ID}
               >
-                <ResponsiveLayout
-                  className={cx({
-                    openThread: threadID,
-                    openSidebar: showSidebar,
-                  })}
-                >
-                  <Topbar userID={cordUserID} setShowSidebar={setShowSidebar} />
-                  <Sidebar
-                    channel={channel}
-                    setShowSidebar={setShowSidebar}
-                    lang={lang}
-                    setLang={setLang}
-                    clackTheme={clackTheme}
-                    setClackTheme={setClackTheme}
-                  />
-                  <MessageProvider>
-                    <ResponsiveContent>
-                      {openPanel === 'channel' && channel && (
-                        <Chat
-                          key={channel.id}
+                <ConfigContextProvider>
+                  <ResponsiveLayout
+                    className={cx({
+                      openThread: threadID,
+                      openSidebar: showSidebar,
+                    })}
+                  >
+                    <Topbar
+                      userID={cordUserID}
+                      setShowSidebar={setShowSidebar}
+                    />
+                    <Sidebar
+                      channel={channel}
+                      setShowSidebar={setShowSidebar}
+                      lang={lang}
+                      setLang={setLang}
+                      clackTheme={clackTheme}
+                      setClackTheme={setClackTheme}
+                    />
+                    <MessageProvider>
+                      <ResponsiveContent>
+                        {openPanel === 'channel' && channel && (
+                          <Chat
+                            key={channel.id}
+                            channel={channel}
+                            onOpenThread={onOpenThread}
+                            clackTheme={clackTheme}
+                          />
+                        )}
+                      </ResponsiveContent>
+                      {channel && threadID && (
+                        <ThreadDetails
                           channel={channel}
-                          onOpenThread={onOpenThread}
-                          clackTheme={clackTheme}
+                          threadID={threadID}
+                          onClose={() => navigate(`/channel/${channel.id}`)}
                         />
                       )}
-                    </ResponsiveContent>
-                    {channel && threadID && (
-                      <ThreadDetails
-                        channel={channel}
-                        threadID={threadID}
-                        onClose={() => navigate(`/channel/${channel.id}`)}
-                      />
-                    )}
-                  </MessageProvider>
-                </ResponsiveLayout>
+                    </MessageProvider>
+                  </ResponsiveLayout>
+                </ConfigContextProvider>
               </PresenceObserver>
             </CordVersionProvider>
           </ChannelsProvider>

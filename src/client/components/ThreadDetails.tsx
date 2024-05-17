@@ -27,6 +27,7 @@ import { TypingIndicator } from 'src/client/components/TypingIndicator';
 import { Options } from 'src/client/components/Options';
 import { MessageContext } from 'src/client/context/MessageContext';
 import { ClackMessage } from 'src/client/components/ClackMessage';
+import { ToolbarLayoutWithGiphyButton } from 'src/client/components/ToolbarWithGiphy';
 
 const EMPTY_FUNCTION = () => {};
 
@@ -152,6 +153,7 @@ function MessageWithPaginationTrigger(props: betaV2.MessageProps) {
 const REPLACE = {
   Message: MessageWithPaginationTrigger,
   SendButton: ClackSendButton,
+  ToolbarLayout: ToolbarLayoutWithGiphyButton,
 } satisfies betaV2.ReplaceConfig;
 
 function ClackThreadV4({ threadID }: { threadID: string }) {
