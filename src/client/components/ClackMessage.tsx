@@ -42,7 +42,7 @@ export function Message({ message, className }: betaV2.MessageProps) {
   return (
     <div>
       {lastMessageTimestamp && isDifferentDay ? (
-        <DateDivider timestamp={lastMessageTimestamp} />
+        <DateDivider timestamp={message.createdTimestamp} />
       ) : null}
       <ClackMessage
         message={message}
