@@ -295,6 +295,9 @@ const StyledExperimentalThreads = styled(experimental.Threads)({
     padding: 0,
     justifyContent: 'space-between',
   },
+  '& .cord-inline-thread': {
+    border: 'none',
+  },
   '& .cord-inline-reply-button': { display: 'none' },
   '& :not(.cord-message).cord-composer': { margin: '0 20px 20px 20px' },
 });
