@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useContext, useMemo } from 'react';
+import { forwardRef, useContext, useMemo } from 'react';
+import type { Ref } from 'react';
 import { styled } from 'styled-components';
 import { betaV2, thread as ThreadSdk } from '@cord-sdk/react/';
 import { XMarkIcon } from '@heroicons/react/20/solid';
@@ -103,52 +104,60 @@ const ClackThreadContext = React.createContext<{
   thread?: ClientThreadData;
 }>(INITIAL_CLACK_CONTEXT_VALUE);
 
-function MessageWithPaginationTrigger(props: betaV2.MessageProps) {
-  const { t } = useTranslation();
-  const {
-    numReplies = 0,
-    firstMessageID,
-    loading,
-    fetchMore,
-    hasMore,
-  } = useContext(ClackThreadContext);
-  if (
-    props.message.id !== firstMessageID ||
-    loading === undefined ||
-    fetchMore === undefined ||
-    hasMore === undefined
+const MessageWithPaginationTrigger = forwardRef(
+  function MessageWithPaginationTrigger(
+    props: betaV2.MessageProps,
+    ref: Ref<HTMLDivElement>,
   ) {
+    const { t } = useTranslation();
+    const {
+      numReplies = 0,
+      firstMessageID,
+      loading,
+      fetchMore,
+      hasMore,
+    } = useContext(ClackThreadContext);
+    if (
+      props.message.id !== firstMessageID ||
+      loading === undefined ||
+      fetchMore === undefined ||
+      hasMore === undefined
+    ) {
+      return (
+        <ClackMessage
+          message={props.message}
+          onOpenThread={EMPTY_FUNCTION}
+          inThreadDetails
+        />
+      );
+    }
     return (
-      <ClackMessage
-        message={props.message}
-        onOpenThread={EMPTY_FUNCTION}
-        inThreadDetails
-      />
+      <>
+        <ClackMessage
+          ref={ref}
+          message={props.message}
+          onOpenThread={EMPTY_FUNCTION}
+          inThreadDetails
+        />
+        <SeparatorWrap>
+          {numReplies > 0 ? (
+            <>
+              <SeparatorText>
+                {t('replies', { count: numReplies })}
+              </SeparatorText>
+              <SeparatorLine />
+            </>
+          ) : null}
+        </SeparatorWrap>
+        <PaginationTrigger
+          loading={loading}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
+      </>
     );
-  }
-  return (
-    <>
-      <ClackMessage
-        message={props.message}
-        onOpenThread={EMPTY_FUNCTION}
-        inThreadDetails
-      />
-      <SeparatorWrap>
-        {numReplies > 0 ? (
-          <>
-            <SeparatorText>{t('replies', { count: numReplies })}</SeparatorText>
-            <SeparatorLine />
-          </>
-        ) : null}
-      </SeparatorWrap>
-      <PaginationTrigger
-        loading={loading}
-        hasMore={hasMore}
-        fetchMore={fetchMore}
-      />
-    </>
-  );
-}
+  },
+);
 
 const REPLACE = {
   Message: MessageWithPaginationTrigger,

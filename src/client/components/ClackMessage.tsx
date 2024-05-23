@@ -1,4 +1,11 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+import type { Ref } from 'react';
 import { betaV2, thread as threadSDK } from '@cord-sdk/react';
 import type { ClientMessageData, ThreadSummary } from '@cord-sdk/types';
 import styled from 'styled-components';
@@ -21,7 +28,10 @@ const StyledTimestamp = styled(betaV2.Timestamp)`
     align-self: end;
   }
 `;
-export function Message({ message, className }: betaV2.MessageProps) {
+export const Message = forwardRef(function Message(
+  { message, className }: betaV2.MessageProps,
+  ref: Ref<HTMLDivElement>,
+) {
   const { onOpenThread } = useContext(OpenThreadContext);
   const { threads } = useContext(LoadMoreThreadsContext);
 
@@ -40,7 +50,7 @@ export function Message({ message, className }: betaV2.MessageProps) {
   }, [message.createdTimestamp, message.threadID, threads]);
 
   return (
-    <div>
+    <div ref={ref}>
       {lastMessageTimestamp && isDifferentDay ? (
         <DateDivider timestamp={message.createdTimestamp} />
       ) : null}
@@ -51,19 +61,22 @@ export function Message({ message, className }: betaV2.MessageProps) {
       />
     </div>
   );
-}
+});
 
-export function ClackMessage({
-  message,
-  onOpenThread,
-  inThreadDetails,
-  className,
-}: {
-  message: ClientMessageData;
-  onOpenThread: (threadID: string) => void;
-  inThreadDetails?: boolean;
-  className?: string;
-}) {
+export const ClackMessage = forwardRef(function ClackMessage(
+  {
+    message,
+    onOpenThread,
+    inThreadDetails,
+    className,
+  }: {
+    message: ClientMessageData;
+    onOpenThread: (threadID: string) => void;
+    inThreadDetails?: boolean;
+    className?: string;
+  },
+  ref: Ref<HTMLDivElement>,
+) {
   const [hovered, setHovered] = useState(false);
 
   const onMouseEnter = useCallback(() => {
@@ -100,7 +113,7 @@ export function ClackMessage({
         hovered,
       }}
     >
-      <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <div ref={ref} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <StyledExperimentalMessage
           message={message}
           replace={replace}
@@ -111,7 +124,7 @@ export function ClackMessage({
       </div>
     </MessageListItem4Context.Provider>
   );
-}
+});
 
 function MessageWithReplies(props: betaV2.ReactionsProps) {
   const { threadData, onOpenThread, messageData } = useContext(

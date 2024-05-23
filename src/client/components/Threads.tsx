@@ -257,7 +257,7 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
     };
   }, [threadsData]);
 
-  const composerOptions: experimental.ThreadsProps['composerOptions'] =
+  const composerOptions: betaV2.ThreadsProps['composerOptions'] =
     useMemo(() => {
       return {
         position: 'bottom',
