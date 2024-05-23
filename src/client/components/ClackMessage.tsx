@@ -16,10 +16,7 @@ import { ThreadReplies } from 'src/client/components/ThreadReplies';
 import { MessageListItem4Context } from 'src/client/context/MessageListItem4Context';
 import { Options } from 'src/client/components/Options';
 import { ClackSendButton } from 'src/client/components/ClackSendButton';
-import {
-  LoadMoreThreadsContext,
-  OpenThreadContext,
-} from 'src/client/components/Threads';
+import { ThreadsContext } from 'src/client/components/Threads';
 import { DateDivider } from 'src/client/components/DateDivider';
 
 const StyledTimestamp = styled(betaV2.Timestamp)`
@@ -32,8 +29,7 @@ export const Message = forwardRef(function Message(
   { message, className }: betaV2.MessageProps,
   ref: Ref<HTMLDivElement>,
 ) {
-  const { onOpenThread } = useContext(OpenThreadContext);
-  const { threads } = useContext(LoadMoreThreadsContext);
+  const { threads, onOpenThread } = useContext(ThreadsContext);
 
   const { lastMessageTimestamp, isDifferentDay } = useMemo(() => {
     const index = threads.findIndex(
