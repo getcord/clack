@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cord-sdk/react": "^1.46.1",
+    "@cord-sdk/react": "^1.46.2",
     "@cord-sdk/server": "^1.46.1",
     "@giphy/js-fetch-api": "^5.5.0",
     "@giphy/react-components": "^9.5.0",
