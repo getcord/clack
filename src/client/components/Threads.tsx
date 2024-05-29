@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { betaV2, experimental, thread, user } from '@cord-sdk/react';
 import { styled } from 'styled-components';
@@ -273,18 +274,56 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
 
   const { threads, loading, hasMore, fetchMore } = threadsDataReversed;
 
+  const { counts } = threadsData;
+  const scrollToBottom = useCallback(() => {
+    scrollContainerRef?.current?.scroll({
+      top: scrollContainerRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, []);
+
+  const markAsRead = useCallback(() => {
+    void window.CordSDK!.thread.setSeen(
+      {
+        location: {
+          value: { channel: channel.id },
+          partialMatch: false,
+        },
+      },
+      true,
+    );
+  }, [channel]);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const [onBottom, setOnBottom] = useState<boolean>(false);
+
   return (
-    <OpenThreadContext.Provider value={{ onOpenThread }}>
-      <LoadMoreThreadsContext.Provider
-        value={{ threads, hasMore, loading, fetchMore }}
-      >
-        <StyledExperimentalThreads
-          threadsData={threadsDataReversed}
-          composerOptions={composerOptions}
-          replace={REPLACE}
+    <ThreadsContext.Provider
+      value={{
+        threads,
+        hasMore,
+        loading,
+        fetchMore,
+        scrollContainerRef,
+        setOnBottom,
+        onBottom,
+        onOpenThread,
+      }}
+    >
+      <StyledExperimentalThreads
+        threadsData={threadsDataReversed}
+        composerOptions={composerOptions}
+        replace={REPLACE}
+      />
+      {counts && counts.new > 0 && !onBottom ? (
+        <NewMessagePill
+          count={counts.new}
+          onClick={scrollToBottom}
+          onClose={() => markAsRead()}
         />
-      </LoadMoreThreadsContext.Provider>
-    </OpenThreadContext.Provider>
+      ) : null}
+    </ThreadsContext.Provider>
   );
 }
 
@@ -302,31 +341,39 @@ const StyledExperimentalThreads = styled(experimental.Threads)({
   '& :not(.cord-message).cord-composer': { margin: '0 20px 20px 20px' },
 });
 
-export const OpenThreadContext = createContext<{
-  onOpenThread: (threadID: string) => void;
-}>({
-  onOpenThread: () => {},
-});
-
-export const LoadMoreThreadsContext = createContext<{
+export const ThreadsContext = createContext<{
   fetchMore: (howMany: number) => Promise<void>;
   loading: boolean;
   hasMore: boolean;
   threads: ThreadSummary[];
+  scrollContainerRef: React.RefObject<HTMLDivElement> | null;
+  setOnBottom: (onBottom: boolean) => void;
+  onBottom: boolean;
+  onOpenThread: (threadID: string) => void;
 }>({
   fetchMore: async (_: number) => {},
   loading: true,
   hasMore: false,
   threads: [],
+  scrollContainerRef: null,
+  setOnBottom: (_: boolean) => {},
+  onBottom: false,
+  onOpenThread: () => {},
 });
 
+const SCROLL_THRESHOLD = 40;
+
 function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const prevLatestMessageID = useRef<string | null>(null);
 
-  const { threads, fetchMore, loading, hasMore } = useContext(
-    LoadMoreThreadsContext,
-  );
+  const {
+    threads,
+    fetchMore,
+    loading,
+    hasMore,
+    scrollContainerRef,
+    setOnBottom,
+  } = useContext(ThreadsContext);
 
   const onScrollToEdge = useCallback(
     (edge: string) => {
@@ -349,7 +396,7 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
 
     if (prevLatestMessageID.current !== latest?.id) {
       if (latest.firstMessage?.authorID === viewer?.id) {
-        scrollContainerRef.current &&
+        scrollContainerRef?.current &&
           scrollContainerRef.current.scroll({
             top: scrollContainerRef.current.scrollHeight,
             behavior: 'smooth',
@@ -357,7 +404,22 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
       }
       prevLatestMessageID.current = latest.id;
     }
-  }, [prevLatestMessageID, threads, viewer?.id]);
+  }, [prevLatestMessageID, threads, viewer?.id, scrollContainerRef]);
+
+  const onScroll = useCallback(
+    (
+      e: React.UIEvent<HTMLElement>,
+      scrollData: { edge: 'top' | 'bottom' | 'none' },
+    ) => {
+      const target = e.target as HTMLElement;
+
+      const onBottom =
+        target.scrollTop + target.clientHeight + SCROLL_THRESHOLD >=
+          target.scrollHeight || scrollData.edge === 'bottom';
+      setOnBottom(onBottom);
+    },
+    [setOnBottom],
+  );
 
   return (
     <betaV2.ScrollContainer
@@ -366,6 +428,7 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
       autoScrollToNewest="auto"
       autoScrollDirection="bottom"
       onScrollToEdge={onScrollToEdge}
+      onScroll={onScroll}
     />
   );
 }
