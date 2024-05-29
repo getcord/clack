@@ -244,7 +244,12 @@ const REPLACE = {
   ToolbarLayout: ToolbarLayoutWithGiphyButton,
 };
 
-function Threads4({ channel, onOpenThread }: ThreadsProps) {
+function Threads4({
+  channel,
+  onOpenThread,
+  onScrollToBottom,
+  onScrollUp,
+}: ThreadsProps) {
   const threadsData = thread.useThreads({
     filter: { location: { channel: channel.id } },
     sortDirection: 'descending',
@@ -297,6 +302,14 @@ function Threads4({ channel, onOpenThread }: ThreadsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const [onBottom, setOnBottom] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (onBottom) {
+      onScrollToBottom();
+    } else {
+      onScrollUp();
+    }
+  }, [onBottom, onScrollToBottom, onScrollUp]);
 
   return (
     <ThreadsContext.Provider
