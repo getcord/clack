@@ -399,6 +399,21 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
     [fetchMore, hasMore, loading],
   );
 
+  const handleContentSizeChange = useCallback(
+    (hasOverflow: boolean) => {
+      // On smaller screens, we hide the main Threads view with either the channel selection
+      // sidebar, or with the single thread view. We don't want to keep fetching in the background
+      // when Threads is hidden.
+      const isHidden = scrollContainerRef.current?.clientHeight === 0;
+      if (isHidden) {
+        return;
+      }
+
+      props.onContentSizeChange?.(hasOverflow);
+    },
+    [props],
+  );
+
   const viewer = user.useViewerData();
 
   useEffect(() => {
@@ -441,7 +456,7 @@ function ThreadsScrollContainer(props: betaV2.ScrollContainerProps) {
       autoScrollToNewest="auto"
       autoScrollDirection="bottom"
       onScrollToEdge={onScrollToEdge}
-      onScroll={onScroll}
+      onContentSizeChange={handleContentSizeChange}
     />
   );
 }
