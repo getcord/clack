@@ -15,7 +15,7 @@ export const CordVersionContext = createContext<CordVersionType>({
 });
 
 export const CordVersionProvider = ({ children }: { children: ReactNode }) => {
-  const [version, setVersion] = useState<CordVersion>('4.0');
+  const [version, setVersion] = useState<CordVersion>('3.0');
 
   const toggleVersion = useCallback(() => {
     if (version === '3.0') {
